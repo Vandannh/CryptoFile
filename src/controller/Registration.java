@@ -22,7 +22,7 @@ public class Registration {
 		this.email=email;
 	}
 	public static void main(String[] args) throws NoSuchAlgorithmException {
-		Registration r = new Registration("Matte5","12345","matte1@lodde.se");
+		Registration r = new Registration("Username","password","email@emails.se");
 		System.out.println(r.register());
 	}
 	public boolean register() {
