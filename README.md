@@ -25,4 +25,6 @@ INSERT INTO table_name (username, email)
 VALUES (value1, value2);
 ```
 
-After this step you can run the application by running the class UI.java in the folder src/design. You will be promted with a window where you can enter your username or password. 
+After this step you need to change the value of some rows in both Authentication and Registration.java. These are marked by "Edit this" and are in regards to information about your database such as username and password. 
+
+Finally you can run the application by running the class UI.java in the folder src/design. You will be promted with a window where you can enter your username or password. 
