@@ -5,9 +5,11 @@ In order to run this version of the application you need to have localhost insta
 
 `CREATE IF NOT EXISTS DATABASE database_name;`
 
-After you've created the database you need to create a table. Below is SQL-code to do this. Change "table_name" to a table name of your choice.
+After you've created the database you need to create a table. Below is SQL-code to do this. Change "table_name" to a table name of your choice and "database_name" to the name of the databas just created.
 
 ```
+USE database_name;
+
 CREATE TABLE table_name (
     id int(11) PRIMARY KEY
     username varchar(250),
@@ -15,7 +17,9 @@ CREATE TABLE table_name (
 );
 ```
 
-After successfully created a database and a table you need to insert data to the table. You can do this in two ways. First, and easiest way is to run Registration.java which will insert a username of "Username" and a password of a hashed "password". The hash algotithem used is BCrypt. The other way is to insert the data by yourself. Below is SQL-code to do this. Change table_name to your table name. You also need to change value1 to a username and a password, which has been hased using BCrypt. Both within apostrophes(').
+After successfully created a database and a table you need to insert data to the table. You can do this in two ways. First, and easiest way is to run Registration.java which will insert a username of "Username" and a password of a hashed "password". The hash algotithem used is BCrypt. 
+
+The other way is to insert the data by yourself. Below is SQL-code to do this. Change "table_name" to your table name. You also need to change "value1" to a username and "value2" to a password, which has been hased using BCrypt. Both within apostrophes(').
 ```
 INSERT INTO table_name (username, email)
 VALUES (value1, value2);
