@@ -86,7 +86,10 @@ public class UI {
 		
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(usernameField.getText().equals("Mattias") && passwordField.getText().equals("hejsan")){
+				String username = usernameField.getText();
+				String password="";
+				for(char c : passwordField.getPassword()) password+=c+"";
+				if(auth.getAuthentication(username, password)) {
 					lblResult.setText("You successfully logged in");
 					loginPanel.setVisible(false);
 					homePage(true);
