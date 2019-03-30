@@ -33,7 +33,7 @@ CREATE TABLE table_name (
 ## Insert data
 You can do this in two ways. First, and easiest way is to run Registration.java which will insert a username of "Username" and a password of a hashed "password". The hash algotithem used is BCrypt. 
 
-The other way is to insert the data by yourself. Below is SQL-code to do this. Change "table_name" to your table name. You also need to change "value1" to a username and "value2" to a password, which has been hased using BCrypt. Both within apostrophes(').
+The other way is to insert the data by yourself. Below is SQL-code to do this. Change "table_name" to your table name. You also need to change "value1" to a username and "value2" to a password, which has been hashed using BCrypt. Both within apostrophes(').
 ```
 INSERT INTO table_name (username, email)
 VALUES (value1, value2);
