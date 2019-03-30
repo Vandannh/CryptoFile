@@ -1,4 +1,5 @@
 # CryptoFile
+An application to store files on a secure and smooth way.
 
 # Get started
 Each point will be explain in it's seperate paragraph.
