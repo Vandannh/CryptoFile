@@ -5,7 +5,7 @@ In order to run this version of the application you need to have localhost insta
 
 `CREATE IF NOT EXISTS DATABASE database_name;`
 
-After you've created the database you need to create a table. Below is SQL-code to do this. Change "table_name" to a table name of your choice and "database_name" to the name of the databas just created.
+After you've created the database you need to create a table. Below is SQL-code to do this. Change "table_name" to a table name of your choice and "database_name" to the name of the database just created.
 
 ```
 USE database_name;
