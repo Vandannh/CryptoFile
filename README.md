@@ -46,4 +46,4 @@ VALUES (value1, value2, value3);
 You need to change the value of some rows in both Authentication.java and Registration.java. These are marked by "Edit this" and are in regards to information about your database such as username and password. 
 
 ## Run application
-You run the application by running the class UI.java in the folder src/design. You will be promted with a window where you can enter your username or password. 
+You run the application by running the class UI.java in the folder src/design. You will be promted with a window where you can enter your username or password. If you enter a correct username and password you will be moved to another page, else a text saying "Wrong username/password".
