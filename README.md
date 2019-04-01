@@ -16,12 +16,12 @@ In order to run this version of the application you need to have localhost insta
 ## Create database
 Go to https://localhost:XXXX/phpmyadmin (XXXX is the port of your localhost, if you use XAMPP this is visable when you start Apache). 
 
-Below is SQL-code to do this. Change "database_name" to a database name of your choice.
+Below is SQL-code to create a database. Change "database_name" to a database name of your choice.
 
 `CREATE IF NOT EXISTS DATABASE database_name;`
 
 ## Create table
-Below is SQL-code to do this. Change "table_name" to a table name of your choice and "database_name" to the name of the database just created.
+Below is SQL-code to create a table. Change "table_name" to a table name of your choice and "database_name" to the name of the database just created.
 
 ```
 USE database_name;
