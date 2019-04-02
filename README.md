@@ -2,7 +2,7 @@
 An application to store files on a secure and smooth way.
 
 # Get started
-If you download the project make sure you have JavaSE-1.8 other wise it not work.
+If you download the project make sure you have JavaSE-1.8 otherwise it not work.
 
 Each point will be explain in it's seperate paragraph.
 * Install localhost
