@@ -1,7 +1,7 @@
 package controller;
 
-import database.MySQL;
 import org.mindrot.jbcrypt.BCrypt;
+import database.MySQL;
 
 public class Authentication {
 	private MySQL mysql;
