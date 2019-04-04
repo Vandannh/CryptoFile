@@ -10,13 +10,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-<<<<<<< HEAD
 import controller.Authentication;
-=======
-
 import controller.Authentication;
-
->>>>>>> branch 'master' of https://github.com/Vandannh/CryptoFile.git
 import java.awt.Font;
 
 public class UI {
@@ -30,11 +25,8 @@ public class UI {
 	private JButton btnDowload;
 	private JButton btnRegister;
 	private JLabel lblCryptofile;
-<<<<<<< HEAD
 	private Authentication auth = new Authentication();
-=======
 	private Authentication auth;
->>>>>>> branch 'master' of https://github.com/Vandannh/CryptoFile.git
 
 	/**
 	 * Launch the application.
