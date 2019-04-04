@@ -10,6 +10,9 @@ import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+
+import controller.Authentication;
+
 import java.awt.Font;
 
 public class UI {
@@ -23,6 +26,7 @@ public class UI {
 	private JButton btnDowload;
 	private JButton btnRegister;
 	private JLabel lblCryptofile;
+	private Authentication auth;
 
 	/**
 	 * Launch the application.
