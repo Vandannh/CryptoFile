@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="src" path="src"/>
+<<<<<<< HEAD
 	<classpathentry kind="lib" path="C:/Users/TheComputer/git/CryptoFile/jar_files/javax.mail.jar"/>
 	<classpathentry kind="lib" path="C:/Users/TheComputer/git/CryptoFile/jar_files/jBCrypt.jar"/>
 	<classpathentry kind="lib" path="C:/Users/TheComputer/git/CryptoFile/jar_files/MySQL.jar"/>
 	<classpathentry kind="lib" path="C:/Users/TheComputer/git/CryptoFile/jar_files/mysql-connector.jar"/>
+=======
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="lib" path="jar_files/javax.mail.jar"/>
+	<classpathentry kind="lib" path="jar_files/jBCrypt.jar"/>
+	<classpathentry kind="lib" path="jar_files/mysql-connector.jar"/>
+	<classpathentry kind="lib" path="jar_files/MySQL.jar"/>
+>>>>>>> branch 'master' of https://github.com/Vandannh/CryptoFile.git
 	<classpathentry kind="output" path="bin"/>
 </classpath>
