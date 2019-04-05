@@ -9,9 +9,9 @@ import database.MySQL;
 public class Registration {
 	private String username,password,email;
 	private MySQL mysql;
-	private String database = "YOUR_DATABASE"; // Edit this
-	private String db_username = "YOUR_USERNAME"; // Edit this
-	private String db_password = "YOUR_PASSWORD"; // Edit this
+	private String database = "cryptofile_test"; // Edit this
+	private String db_username = "root"; // Edit this
+	private String db_password = "mffmff11"; // Edit this
 	private String ipAddress = "127.0.0.1"; // localhost
 	private String port = "3306"; // Usual port for mysql
 
@@ -30,7 +30,7 @@ public class Registration {
 			if(!usernameExists()) {
 				if(isValidEmailAddress()) {
 					if(!emailExists()){
-						mysql.insert("projektarbete_testning", new String[] {"username","password","email"},new String[] {username,encryptPassword(),email});
+						mysql.insert("users", new String[] {"username","password","email"},new String[] {username,hashPassword(),email});
 					}
 					else {
 						System.out.println("Email already exists");
@@ -51,20 +51,20 @@ public class Registration {
 		return true;
 	}
 	private boolean usernameExists() {
-		String usernames = mysql.select("projektarbete_testning", new String[] {"username"}, "1").trim();
+		String usernames = mysql.select("users", new String[] {"username"}, "1").trim();
 		for(String s : usernames.split("\n")) {
 			if(s.toUpperCase().equals(username.toUpperCase())) return true;
 		}
 		return false;
 	}
 	private boolean emailExists() {
-		String emails = mysql.select("projektarbete_testning", new String[] {"email"}, "1").trim();
+		String emails = mysql.select("users", new String[] {"email"}, "1").trim();
 		for(String s : emails.split("\n")) {
 			if(s.toUpperCase().equals(email.toUpperCase())) return true;
 		}
 		return false;
 	}
-	private String encryptPassword() {
+	private String hashPassword() {
 		return BCrypt.hashpw(password, BCrypt.gensalt(12)); 
 	}
 	private boolean isValidEmailAddress() {
