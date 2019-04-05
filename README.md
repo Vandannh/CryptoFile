@@ -16,7 +16,7 @@ Each point will be explain in it's seperate paragraph.
 In order to run this version of the application you need to have localhost installed on your computer (A good chice is XAMPP, https://www.apachefriends.org/index.html). View https://www.youtube.com/watch?v=xdvVKywGlc0&t=243s for a tutorial for installing XAMPP. After installing a localhost you need to start the MySQL server on port 3306. 
 
 ## Create database
-Go to https://localhost:XXXX/phpmyadmin (XXXX is the port of your localhost, if you use XAMPP this is visable when you start Apache). 
+Go to http://localhost:XXXX/phpmyadmin (XXXX is the port of your localhost, if you use XAMPP this is visable when you start Apache). 
 
 Below is SQL-code to create a database. Change "database_name" to a database name of your choice.
 
