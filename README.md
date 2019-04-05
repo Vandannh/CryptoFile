@@ -16,11 +16,11 @@ Each point will be explain in it's seperate paragraph.
 In order to run this version of the application you need to have localhost installed on your computer (A good chice is XAMPP, https://www.apachefriends.org/index.html). View https://www.youtube.com/watch?v=xdvVKywGlc0&t=243s for a tutorial for installing XAMPP. After installing a localhost you need to start the MySQL server on port 3306. 
 
 ## Create database
-Go to https://localhost:XXXX/phpmyadmin (XXXX is the port of your localhost, if you use XAMPP this is visable when you start Apache). 
+Go to http://localhost:XXXX/phpmyadmin (XXXX is the port of your localhost, if you use XAMPP this is visable when you start Apache). 
 
 Below is SQL-code to create a database. Change "database_name" to a database name of your choice.
 
-`CREATE IF NOT EXISTS DATABASE database_name;`
+`CREATE DATABASE IF NOT EXISTS database_name;`
 
 ## Create table
 Below is SQL-code to create a table. Change "table_name" to a table name of your choice and "database_name" to the name of the database just created.
@@ -29,9 +29,10 @@ Below is SQL-code to create a table. Change "table_name" to a table name of your
 USE database_name;
 
 CREATE TABLE table_name (
-    id int(11) PRIMARY KEY
+    id INT(11) NOT NULL AUTO_INCREMENT,
     username varchar(250),
-    email varchar(250),
+    password varchar(250),
+    email varchar(250)
 );
 ```
 
