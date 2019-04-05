@@ -15,7 +15,6 @@ import controller.Authentication;
 import java.awt.Font;
 
 public class UI {
-
 	private JFrame frame;
 	private JTextField usernameField;
 	private JPasswordField passwordField;
@@ -26,7 +25,6 @@ public class UI {
 	private JButton btnRegister;
 	private JLabel lblCryptofile;
 	private Authentication auth = new Authentication();
-	private Authentication auth;
 
 	/**
 	 * Launch the application.
