@@ -29,8 +29,9 @@ Below is SQL-code to create a table. Change "table_name" to a table name of your
 USE database_name;
 
 CREATE TABLE table_name (
-    id int(11) PRIMARY KEY,
+    id INT(11) NOT NULL AUTO_INCREMENT,
     username varchar(250),
+    password varchar(250),
     email varchar(250)
 );
 ```
