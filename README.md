@@ -20,7 +20,7 @@ Go to http://localhost:XXXX/phpmyadmin (XXXX is the port of your localhost, if y
 
 Below is SQL-code to create a database. Change "database_name" to a database name of your choice.
 
-`CREATE IF NOT EXISTS DATABASE database_name;`
+`CREATE DATABASE IF NOT EXISTS database_name;`
 
 ## Create table
 Below is SQL-code to create a table. Change "table_name" to a table name of your choice and "database_name" to the name of the database just created.
