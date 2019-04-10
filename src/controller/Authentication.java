@@ -5,14 +5,14 @@ import mssql.MSSQL;
 
 public class Authentication {
 	private MSSQL mssql;
-	private String database = "Testing"; // Edit this
-	private String username = "Mattias@cryptofiletesting"; // Edit this
-	private String password = "Hejsan123"; // Edit this
-	private String ipAddress = "cryptofiletesting.database.windows.net"; //Edit this
+	private String database = "YOUR_DATABASE"; // Edit this
+	private String username = "YOUR_USERNAME"; // Edit this
+	private String password = "YOUR_PASSWORD"; // Edit this
+	private String hostname = "YOUR_HOSTNAME"; //Edit this
 	private String port = "1433"; // Usual port for SQL Server
 	
 	public Authentication() {
-		mssql = new MSSQL(database,username,password,ipAddress,port);
+		mssql = new MSSQL(database,username,password,hostname,port);
 	}
 	
 	public boolean getAuthentication(String username, String password) {

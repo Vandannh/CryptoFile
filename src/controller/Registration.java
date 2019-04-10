@@ -9,10 +9,10 @@ import mssql.MSSQL;
 public class Registration {
 	private String username,password,email;
 	private MSSQL mssql;
-	private String database = "Testing"; // Edit this
-	private String db_username = "Mattias@cryptofiletesting"; // Edit this
-	private String db_password = "Hejsan123"; // Edit this
-	private String hostname = "cryptofiletesting.database.windows.net"; //Edit this
+	private String database = "YOUR_DATABASE"; // Edit this
+	private String db_username = "YOUR_USERNAME"; // Edit this
+	private String db_password = "YOUR_PASSWORD"; // Edit this
+	private String hostname = "YOUR_HOSTNAME"; //Edit this
 	private String port = "1433"; // Usual port for SQL Server
 
 	public Registration(String username, String password,String email) throws NoSuchAlgorithmException {
