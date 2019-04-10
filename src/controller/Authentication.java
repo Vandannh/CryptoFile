@@ -20,7 +20,7 @@ public class Authentication {
 	}
 
 	private String getPassword(String username) {
-		return mssql.select("test", new String[] {"password"}, "name='"+username+"'").trim();
+		return mssql.select("test", new String[] {"password"}, "username='"+username+"'").trim();
 	}
 	
 }

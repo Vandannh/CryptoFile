@@ -16,14 +16,13 @@ public class Registration {
 	private String port = "1433"; // Usual port for SQL Server
 
 	public Registration(String username, String password,String email) throws NoSuchAlgorithmException {
-		System.out.println("test");
 		mssql = new MSSQL(database,db_username,db_password,hostname,port);
 		this.username=username;
 		this.password=password;
 		this.email=email;
 	}
 	public static void main(String[] args) throws NoSuchAlgorithmException {
-		Registration r = new Registration("Username","password","email@emails.se");
+		Registration r = new Registration("user1","password","email@emails.se");
 		System.out.println(r.register());
 	}
 	public boolean register() {
@@ -31,7 +30,7 @@ public class Registration {
 			if(!usernameExists()) {
 				if(isValidEmailAddress()) {
 					if(!emailExists()){
-						mssql.insert("test", new String[] {"name","password","email"},new String[] {username,encryptPassword(),email});
+						mssql.insert("Users", new String[] {"username","password","email"},new String[] {username,encryptPassword(),email});
 					}
 					else {
 						System.out.println("Email already exists");
@@ -52,14 +51,14 @@ public class Registration {
 		return true;
 	}
 	private boolean usernameExists() {
-		String usernames = mssql.select("test", new String[] {"username"}, "1").trim();
+		String usernames = mssql.select("Users", new String[] {"username"}, "1=1").trim();
 		for(String s : usernames.split("\n")) {
 			if(s.toUpperCase().equals(username.toUpperCase())) return true;
 		}
 		return false;
 	}
 	private boolean emailExists() {
-		String emails = mssql.select("test", new String[] {"email"}, "1").trim();
+		String emails = mssql.select("Users", new String[] {"email"}, "1=1").trim();
 		for(String s : emails.split("\n")) {
 			if(s.toUpperCase().equals(email.toUpperCase())) return true;
 		}
