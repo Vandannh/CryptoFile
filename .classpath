@@ -6,5 +6,8 @@
 	<classpathentry kind="lib" path="jar_files/jBCrypt.jar"/>
 	<classpathentry kind="lib" path="jar_files/MySQL.jar"/>
 	<classpathentry kind="lib" path="jar_files/mysql-connector.jar"/>
+	<classpathentry kind="lib" path="jar_files/SQL.jar"/>
+	<classpathentry kind="lib" path="jar_files/mssql-jdbc-7.2.1.jre11.jar"/>
+	<classpathentry kind="lib" path="jar_files/mssql-jdbc-7.2.1.jre8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

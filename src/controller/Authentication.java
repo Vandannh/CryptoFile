@@ -1,18 +1,18 @@
 package controller;
 
 import org.mindrot.jbcrypt.BCrypt;
-import database.MySQL;
+import mssql.MSSQL;
 
 public class Authentication {
-	private MySQL mysql;
-	private String database = "YOUR_DATABASE"; // Edit this
-	private String username = "YOUR_USERNAME"; // Edit this
-	private String password = "YOUR_PASSWORD"; // Edit this
-	private String ipAddress = "127.0.0.1"; // localhost
-	private String port = "3306"; // Usual port for mysql
+	private MSSQL mssql;
+	private String database = "Testing"; // Edit this
+	private String username = "Mattias@cryptofiletesting"; // Edit this
+	private String password = "Hejsan123"; // Edit this
+	private String ipAddress = "cryptofiletesting.database.windows.net"; //Edit this
+	private String port = "1433"; // Usual port for SQL Server
 	
 	public Authentication() {
-		mysql = new MySQL(database,username,password,ipAddress,port);
+		mssql = new MSSQL(database,username,password,ipAddress,port);
 	}
 	
 	public boolean getAuthentication(String username, String password) {
@@ -20,7 +20,7 @@ public class Authentication {
 	}
 
 	private String getPassword(String username) {
-		return mysql.select("projektarbete_testning", new String[] {"password"}, "username='"+username+"'").trim();
+		return mssql.select("test", new String[] {"password"}, "username='"+username+"'").trim();
 	}
 	
 }
