@@ -31,7 +31,7 @@ public class Registration {
 			if(!usernameExists()) {
 				if(isValidEmailAddress()) {
 					if(!emailExists()){
-						mssql.insert("test", new String[] {"username","password","email"},new String[] {username,encryptPassword(),email});
+						mssql.insert("test", new String[] {"name","password","email"},new String[] {username,encryptPassword(),email});
 					}
 					else {
 						System.out.println("Email already exists");
