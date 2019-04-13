@@ -1,26 +1,52 @@
 package controller;
 
 import org.mindrot.jbcrypt.BCrypt;
-import database.MySQL;
+import mssql.MSSQL;
 
+/**
+ * The class is used to authenticate the user
+ * 
+ * @version 1.0
+ * @since 2019-04-13
+ * @author Mattias Jönsson
+ *
+ */
 public class Authentication {
-	private MySQL mysql;
-	private String database = "YOUR_DATABASE"; // Edit this
-	private String username = "YOUR_USERNAME"; // Edit this
-	private String password = "YOUR_PASSWORD"; // Edit this
-	private String ipAddress = "127.0.0.1"; // localhost
-	private String port = "3306"; // Usual port for mysql
+	private MSSQL mssql;
+	private String database = "YOUR_DATABASE"; 	// Edit this
+	private String username = "YOUR_USERNAME"; 	// Edit this
+	private String password = "YOUR_PASSWORD"; 	// Edit this
+	private String hostname = "YOUR_HOSTNAME"; 	// Edit this
+	private String port 	= "YOUR_PORT";		// Edit this
 	
+	/**
+	 * Sets up a connection to the database.
+	 */
 	public Authentication() {
-		mysql = new MySQL(database,username,password,ipAddress,port);
+		mssql = new MSSQL(database,username,password,hostname,port);
 	}
 	
+	/**
+	 * Check if the password the user is tying to login in with matches to the users password 
+	 * in the database. 
+	 * 
+	 * @param username the username of the user trying to login.
+	 * @param password the password the user tying to login with
+	 * @return if the user is authenticated
+	 */
 	public boolean getAuthentication(String username, String password) {
-		return BCrypt.checkpw(password, getPassword(username));
+		String hashedPassword = getPassword(username);
+		if(hashedPassword.isEmpty()) return false;
+		return BCrypt.checkpw(password, hashedPassword);
 	}
 
+	/**
+	 * Gets the users password from the database.
+	 * 
+	 * @param username the username of the user trying to login
+	 * @return the password of the user
+	 */
 	private String getPassword(String username) {
-		return mysql.select("projektarbete_testning", new String[] {"password"}, "username='"+username+"'").trim();
+		return mssql.select("test", new String[] {"password"}, "name='"+username+"'").trim();
 	}
-	
 }
