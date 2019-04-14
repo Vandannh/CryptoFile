@@ -5,7 +5,7 @@ import database.MySQL;
 
 public class Authentication {
 	private MySQL mysql;
-	private String database = "YOUR_DATABASE"; // Edit this
+	private String database = "Testing"; // Edit this
 	private String username = "YOUR_USERNAME"; // Edit this
 	private String password = "YOUR_PASSWORD"; // Edit this
 	private String ipAddress = "127.0.0.1"; // localhost
