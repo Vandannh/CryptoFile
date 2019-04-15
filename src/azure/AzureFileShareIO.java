@@ -11,6 +11,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 
 import javax.swing.JFileChooser;
@@ -113,14 +116,22 @@ public class AzureFileShareIO {
 			CloudFile file = sampleDir.getFileReference(filename); //Get a reference to the file you want to download
 			System.out.println(file.getName());
 			System.out.println(rootDir.toString());
-			String resource = "files/" + filename;
+			String resource = "files/";
+			mkdir(resource);
 			System.out.println(resource);
-			file.download(new FileOutputStream(new File("files/" + filename))); 
+			file.download(new FileOutputStream(new File(resource + filename))); 
 			return true;
-			
+
 		} catch (StorageException | URISyntaxException | IOException e) {
 			e.printStackTrace();
 			return false;
+		}
+	}
+
+	public void mkdir(String directoryName) throws IOException {
+		Path path = Paths.get(directoryName);
+		if (!Files.exists(path)) {
+			Files.createDirectory(path);
 		}
 	}
 
