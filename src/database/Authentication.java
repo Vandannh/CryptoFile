@@ -1,4 +1,4 @@
-package controller;
+package database;
 
 import org.mindrot.jbcrypt.BCrypt;
 import mssql.MSSQL;
@@ -13,11 +13,11 @@ import mssql.MSSQL;
  */
 public class Authentication {
 	private MSSQL mssql;
-	private String database = "YOUR_DATABASE"; 	// Edit this
-	private String username = "YOUR_USERNAME"; 	// Edit this
-	private String password = "YOUR_PASSWORD"; 	// Edit this
-	private String hostname = "YOUR_HOSTNAME"; 	// Edit this
-	private String port 	= "YOUR_PORT";		// Edit this
+	private String database 	= "Testing"; 	// Edit this
+	private String username 	= "Mattias";	// Edit this
+	private String password 	= "Hejsan123"; 	// Edit this
+	private String hostname 	= "cryptofiletesting.database.windows.net"; 	// Edit this
+	private String port 		= "1433";		// Edit this
 	/**
 	 * Sets up a connection to the database.
 	 */
@@ -46,6 +46,6 @@ public class Authentication {
 	 * @return the password of the user
 	 */
 	private String getPassword(String username) {
-		return mssql.select("Users", new String[] {"password"}, "name='"+username+"'").trim();
+		return mssql.select("Users", new String[] {"password"}, "username='"+username+"'").replace("\t\t", "");
 	}
 }

@@ -1,4 +1,4 @@
-package controller;
+package database;
 
 import java.util.ArrayList;
 
@@ -18,11 +18,11 @@ import mssql.MSSQL;
 public class Registration {
 	private String username,password,email;
 	private MSSQL mssql;
-	private String database 	= "YOUR_DATABASE"; 	// Edit this
-	private String db_username 	= "YOUR_USERNAME";	// Edit this
-	private String db_password 	= "YOUR_PASSWORD"; 	// Edit this
-	private String hostname 	= "YOUR_HOSTNAME"; 	// Edit this
-	private String port 		= "YOUR_PORT";		// Edit this
+	private String database 	= "Testing"; 	// Edit this
+	private String db_username 	= "Mattias";	// Edit this
+	private String db_password 	= "Hejsan123"; 	// Edit this
+	private String hostname 	= "cryptofiletesting.database.windows.net"; 	// Edit this
+	private String port 		= "1433";		// Edit this
 
 	/**
 	 * Constructs a Registration-object containing the username, email-address and password
@@ -45,7 +45,7 @@ public class Registration {
 	 * array is null 
 	 */
 	public ArrayList<String> register() {
-		 ArrayList<String> messages = new  ArrayList<String>();
+		ArrayList<String> messages = new  ArrayList<String>();
 		Object[][] validation = {validate(username, 1),validate(email, 2),validate(password, 3)};
 		int errorCount = (int)validation[0][0]+(int)validation[1][0]+(int)validation[2][0];
 		if(errorCount>0) {
@@ -54,8 +54,12 @@ public class Registration {
 			messages.add((String)validation[2][1]);
 		}
 		else {
+			System.out.println("user");
 			mssql.insert("Users", new String[] {"username","password","email"},new String[] {username,hashPassword(password),email});
-			messages.add("New user registered");
+			String id = mssql.select("Users", new String[] {"id"}, "username='"+username+"'").replace("\t\t", "");
+			mssql.insert("Directory", new String[] {"name","user_id"}, new String[] {id,id});
+			System.out.println(id);
+			messages.add(id);
 		}
 		return messages;
 	}
@@ -181,9 +185,9 @@ public class Registration {
 		int numCount=0;
 		for (int i=0;i<input.length();i++) {
 			char ch = input.charAt(i);
-			if (is_Numeric(ch)) 
+			if (isNumeric(ch)) 
 				numCount++;
-			else if (is_Letter(ch)) 
+			else if (isLetter(ch)) 
 				charCount++;
 			else 
 				return false;
@@ -196,7 +200,7 @@ public class Registration {
 	 * @param ch the character
 	 * @return if the character is a letter or not
 	 */
-	private boolean is_Letter(char ch) {
+	private boolean isLetter(char ch) {
 		ch = Character.toUpperCase(ch);
 		return ch>='A'&&ch<='Z';
 	}
@@ -206,7 +210,7 @@ public class Registration {
 	 * @param ch the character
 	 * @return if the character is a number or not
 	 */
-	private boolean is_Numeric(char ch) {
+	private boolean isNumeric(char ch) {
 		return ch>='0'&&ch<='9';
 	}
 }

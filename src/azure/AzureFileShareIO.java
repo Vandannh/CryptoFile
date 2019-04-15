@@ -1,4 +1,4 @@
-package azureBridge;
+package azure;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -25,7 +25,7 @@ import com.microsoft.azure.storage.file.*;
  * This class mainly has 3 functions, with theese you can 1. connect, 2. upload, 3. download to/from Azure file share
  * @author Broceps
  */
-public class AzureFileshareIO {
+public class AzureFileShareIO {
 	CloudStorageAccount storageAccount;
 	CloudFileClient fileClient;
 	CloudFileShare share;
@@ -78,30 +78,17 @@ public class AzureFileshareIO {
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
 			file = chooser.getSelectedFile();
 		}
-
-
 		try {
 			CloudFileDirectory rootDir = share.getRootDirectoryReference(); //Get a reference to the root directory for the share.
-
 			System.out.println(file.toString());
 			final String filePath = file.toString(); // Define the path to a local file.
-
-			//______The code for upploading:____________________________
 			CloudFile cloudFile = rootDir.getFileReference(file.getName());
 			cloudFile.uploadFromFile(filePath);
-			//__________________________________________________________
-
-		} catch (StorageException e) {
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (StorageException | URISyntaxException | IOException e) {
 			e.printStackTrace();
 		}
-
-
 	}
-	
+
 	/**
 	 * Get the file extension
 	 * @param file
@@ -115,27 +102,29 @@ public class AzureFileshareIO {
 	 * Downloading an file from the selected file share, by default we download from the root directory,
 	 * if you wish to change from which directory to download, change the parameter of the "sampleDir" 
 	 * ( currently using parameter "rootDir.getName() ).
+	 * @param filename2 
 	 * @param name of the file to download
 	 */
-	public void download(String filename) {
+	public void download(String userDirectory, String filename) {
 
 		try {
 			CloudFileDirectory rootDir = share.getRootDirectoryReference(); //Get a reference to the root directory for the share.
-			CloudFileDirectory sampleDir = rootDir.getDirectoryReference("test1"); //Get a reference to the directory that contains the file
+			CloudFileDirectory sampleDir = rootDir.getDirectoryReference(userDirectory); //Get a reference to the directory that contains the file
 			CloudFile file = sampleDir.getFileReference(filename); //Get a reference to the file you want to download
 			System.out.println(file.getName());
-
 			System.out.println(rootDir.toString());
-			//DO SOMETHING WITH THE FILE
 			file.download(new FileOutputStream(new File("files/" + filename + "." + getExtension(file)))); 
+		} catch (StorageException | URISyntaxException | IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-			
-			
-		} catch (StorageException e) {
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+	public void createDirectory(String directoryName) {
+		try {
+			CloudFileDirectory rootDir = share.getRootDirectoryReference();
+			CloudFileDirectory sampleDir = rootDir.getDirectoryReference(directoryName);
+			sampleDir.createIfNotExists();
+		} catch (StorageException | URISyntaxException e) {
 			e.printStackTrace();
 		}
 	}
