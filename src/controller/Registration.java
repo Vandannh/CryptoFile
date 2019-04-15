@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.ArrayList;
+
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import org.mindrot.jbcrypt.BCrypt;
@@ -9,7 +11,7 @@ import mssql.MSSQL;
  * This class is used to register a user in the database.
  * 
  * @version 1.0
- * @since 2019-04-13
+ * @since 2019-04-14
  * @author Mattias Jönsson
  *
  */
@@ -20,7 +22,7 @@ public class Registration {
 	private String db_username 	= "YOUR_USERNAME";	// Edit this
 	private String db_password 	= "YOUR_PASSWORD"; 	// Edit this
 	private String hostname 	= "YOUR_HOSTNAME"; 	// Edit this
-	private String port 		= "YOUR_PORT";
+	private String port 		= "YOUR_PORT";		// Edit this
 
 	/**
 	 * Constructs a Registration-object containing the username, email-address and password
@@ -42,18 +44,18 @@ public class Registration {
 	 * @return An array of strings with error messages if there is any error messages otherwise the 
 	 * array is null 
 	 */
-	public String[] register() {
-		String[] messages = new String[3];
+	public ArrayList<String> register() {
+		 ArrayList<String> messages = new  ArrayList<String>();
 		Object[][] validation = {validate(username, 1),validate(email, 2),validate(password, 3)};
 		int errorCount = (int)validation[0][0]+(int)validation[1][0]+(int)validation[2][0];
 		if(errorCount>0) {
-			messages[0]=(String)validation[0][1];
-			messages[1]=(String)validation[1][1];
-			messages[2]=(String)validation[2][1];
+			messages.add((String)validation[0][1]);
+			messages.add((String)validation[1][1]);
+			messages.add((String)validation[2][1]);
 		}
 		else {
-			mssql.insert("test", new String[] {"name","password","email"},new String[] {username,hashPassword(password),email});
-			messages[0]="New user registered";
+			mssql.insert("Users", new String[] {"username","password","email"},new String[] {username,hashPassword(password),email});
+			messages.add("New user registered");
 		}
 		return messages;
 	}
@@ -74,49 +76,33 @@ public class Registration {
 		String inputError = "";
 		switch(type) {
 		case 1: 
-			if(input.isEmpty()) {
+			if(input.isEmpty())
 				inputError = "Username is required";
-				errorCount++;
-			}
 			else {
-				if(!isValidUsername(input)) {
+				if(!isValidUsername(input))
 					inputError = "Username is not valid";
-					errorCount++;
-				}
-				else if(usernameExists(input)) {
+				else if(usernameExists(input))
 					inputError = "Username already exists";
-					errorCount++;
-				}
 			}
 			break;
 		case 2:
-			if(input.isEmpty()) {
+			if(input.isEmpty())
 				inputError = "Email address is required";
-				errorCount++;
-			}
 			else {
-				if(!isValidEmailAddress(input)) {
+				if(!isValidEmailAddress(input))
 					inputError = "Email address is not valid";
-					errorCount++;
-				}
-				else if(emailExists(input)) {
+				else if(emailExists(input))
 					inputError = "Email address already exists";
-					errorCount++;
-				}
 			}
 			break;
 		case 3:
-			if(input.isEmpty()) {
+			if(input.isEmpty())
 				inputError = "Password address is required";
-				errorCount++;
-			}
-			else {
-				if(!isValidPassword(input)) {
+			else 
+				if(!isValidPassword(input))
 					inputError = "Password is not valid";
-					errorCount++;
-				}
-			}	
 		}
+		if(!inputError.isEmpty()) errorCount++;
 		return new Object[]{errorCount,inputError};
 	}
 	/**
@@ -126,7 +112,7 @@ public class Registration {
 	 * @return if the username exists in the database or not
 	 */
 	private boolean usernameExists(String input) {
-		String usernames = mssql.select("test", new String[] {"name"}).replace("\t\t", "");
+		String usernames = mssql.select("Users", new String[] {"username"}).replace("\t\t", "");
 		for(String s : usernames.split("\n")) 
 			if(s.toUpperCase().equals(input.toUpperCase())) 
 				return true;
@@ -139,7 +125,7 @@ public class Registration {
 	 * @return if the email address exists in the database or not
 	 */
 	private boolean emailExists(String input) {
-		String emails = mssql.select("test", new String[] {"email"}).trim();
+		String emails = mssql.select("Users", new String[] {"username"}).replace("\t\t", "");
 		for(String s : emails.split("\n"))
 			if(s.toUpperCase().equals(input.toUpperCase())) 
 				return true;
@@ -191,9 +177,9 @@ public class Registration {
 	 */
 	private boolean isValidPassword(String input) {
 		if(input.length()<8) return false;
-		int charCount = 0;
-		int numCount = 0;
-		for (int i = 0; i < input.length(); i++) {
+		int charCount=0;
+		int numCount=0;
+		for (int i=0;i<input.length();i++) {
 			char ch = input.charAt(i);
 			if (is_Numeric(ch)) 
 				numCount++;
@@ -202,7 +188,7 @@ public class Registration {
 			else 
 				return false;
 		}
-		return (charCount>0&&numCount>0);
+		return charCount>0&&numCount>0;
 	}
 	/**
 	 * Checks if the character is a letter
@@ -212,7 +198,7 @@ public class Registration {
 	 */
 	private boolean is_Letter(char ch) {
 		ch = Character.toUpperCase(ch);
-		return (ch >= 'A' && ch <= 'Z');
+		return ch>='A'&&ch<='Z';
 	}
 	/**
 	 * Checks if the character is a number
@@ -221,6 +207,6 @@ public class Registration {
 	 * @return if the character is a number or not
 	 */
 	private boolean is_Numeric(char ch) {
-		return (ch >= '0' && ch <= '9');
+		return ch>='0'&&ch<='9';
 	}
 }

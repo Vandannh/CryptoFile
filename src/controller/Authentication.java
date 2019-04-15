@@ -47,6 +47,6 @@ public class Authentication {
 	 * @return the password of the user
 	 */
 	private String getPassword(String username) {
-		return mssql.select("test", new String[] {"password"}, "name='"+username+"'").trim();
+		return mssql.select("Users", new String[] {"password"}, "name='"+username+"'").trim();
 	}
 }
