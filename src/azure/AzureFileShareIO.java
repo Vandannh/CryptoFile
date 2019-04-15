@@ -69,8 +69,9 @@ public class AzureFileShareIO {
 
 	/**
 	 * Uploading an file to the share in Azure storage
+	 * @param userDirectory 
 	 */
-	public void upload() {
+	public void upload(String userDirectory) {
 		//To choose a file:
 		System.out.println("im about to open the JFileChooser");
 		JFileChooser chooser = new JFileChooser();
@@ -80,9 +81,11 @@ public class AzureFileShareIO {
 		}
 		try {
 			CloudFileDirectory rootDir = share.getRootDirectoryReference(); //Get a reference to the root directory for the share.
+			CloudFileDirectory sampleDir = rootDir.getDirectoryReference(userDirectory);
 			System.out.println(file.toString());
+			System.out.println(userDirectory);
 			final String filePath = file.toString(); // Define the path to a local file.
-			CloudFile cloudFile = rootDir.getFileReference(file.getName());
+			CloudFile cloudFile = sampleDir.getFileReference(file.getName());
 			cloudFile.uploadFromFile(filePath);
 		} catch (StorageException | URISyntaxException | IOException e) {
 			e.printStackTrace();
@@ -106,7 +109,8 @@ public class AzureFileShareIO {
 	 * @param name of the file to download
 	 */
 	public void download(String userDirectory, String filename) {
-
+		System.out.println(userDirectory);
+		System.out.println(filename);
 		try {
 			CloudFileDirectory rootDir = share.getRootDirectoryReference(); //Get a reference to the root directory for the share.
 			CloudFileDirectory sampleDir = rootDir.getDirectoryReference(userDirectory); //Get a reference to the directory that contains the file

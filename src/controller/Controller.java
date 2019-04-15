@@ -21,7 +21,7 @@ public class Controller {
 	public boolean login(String username, String password) {
 		if(authentication.getAuthentication(username, password)) {
 			azureFileShareIO.connect();
-			userid=mssql.select("Users", new String[] {"*"}, "username='"+username+"'").replace("\t\t", "");
+			userid=mssql.select("Users", new String[] {"id"}, "username='"+username+"'").replace("\t\t", "").trim();
 			return true;
 		}
 		else
@@ -30,7 +30,6 @@ public class Controller {
 	public ArrayList<String> register(String username, String email, String password) {
 		Registration registration = new Registration(username, email, password);
 		ArrayList<String> messages = registration.register();
-		System.out.println(messages.get(0));
 		if(isNumeric(messages.get(0).toCharArray()[0])) {
 			azureFileShareIO.connect();
 			azureFileShareIO.createDirectory(messages.get(0));
@@ -42,7 +41,7 @@ public class Controller {
 			return messages;
 	}
 	public void uploadFile() {
-		azureFileShareIO.upload();
+		azureFileShareIO.upload(userid);
 	}
 	public void downloadFile(){
 		String filename = JOptionPane.showInputDialog("Write file to download");

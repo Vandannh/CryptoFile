@@ -1,6 +1,5 @@
 package design;
 
-import java.awt.Color;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.ImageIcon;
@@ -25,7 +24,7 @@ public class UI {
 	private JPanel homePanel;
 	private JPanel registerPanel;
 	private JButton btnUpload;
-	private JButton btnDowload;
+	private JButton btnDownload;
 	private JButton btnRegister;
 	private JLabel lblCryptofile;
 	private Controller controller = new Controller();
@@ -95,7 +94,10 @@ public class UI {
 				String username = usernameField.getText();
 				String password="";
 				for(char c : passwordField.getPassword()) password+=c+"";
-				
+				if(controller.login(username, password)) {
+					loginPanel.setVisible(false);
+					homePage(true);
+				}
 			}
 		});
 		btnRegister.addActionListener(new ActionListener() {
@@ -136,7 +138,7 @@ public class UI {
 		JLabel lblResult = new JLabel("");
 		lblResult.setHorizontalAlignment(SwingConstants.CENTER);
 		lblResult.setBounds(47, 158, 330, 16);
-		loginPanel.add(lblResult);
+		registerPanel.add(lblResult);
 		
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -160,11 +162,21 @@ public class UI {
 		
 		btnUpload = new JButton("Upload file");
 		btnUpload.setBounds(155, 114, 121, 25);
+		btnUpload.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controller.uploadFile();
+			}
+		});
 		homePanel.add(btnUpload);
 		
-		btnDowload = new JButton("Download file");
-		btnDowload.setBounds(155, 158, 122, 25);
-		homePanel.add(btnDowload);
+		btnDownload = new JButton("Download file");
+		btnDownload.setBounds(155, 158, 122, 25);
+		btnDownload.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controller.downloadFile();
+			}
+		});
+		homePanel.add(btnDownload);
 	}
 	
 	private void initialize() {

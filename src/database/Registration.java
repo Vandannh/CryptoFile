@@ -54,11 +54,9 @@ public class Registration {
 			messages.add((String)validation[2][1]);
 		}
 		else {
-			System.out.println("user");
 			mssql.insert("Users", new String[] {"username","password","email"},new String[] {username,hashPassword(password),email});
-			String id = mssql.select("Users", new String[] {"id"}, "username='"+username+"'").replace("\t\t", "");
-			mssql.insert("Directory", new String[] {"name","user_id"}, new String[] {id,id});
-			System.out.println(id);
+			String id = mssql.select("Users", new String[] {"id"}, "username='"+username+"'").replace("\t\t", "").trim();
+			mssql.insert("Directory", new String[] {"name","user_id"}, new Object[] {id,Integer.parseInt(id)});
 			messages.add(id);
 		}
 		return messages;
