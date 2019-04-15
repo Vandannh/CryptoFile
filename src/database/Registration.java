@@ -56,7 +56,7 @@ public class Registration {
 		else {
 			mssql.insert("Users", new String[] {"username","password","email"},new String[] {username,hashPassword(password),email});
 			String id = mssql.select("Users", new String[] {"id"}, "username='"+username+"'").replace("\t\t", "").trim();
-			mssql.insert("Directory", new String[] {"name","user_id"}, new Object[] {id,Integer.parseInt(id)});
+			mssql.insert("Directory", new String[] {"name","user_id","type"}, new Object[] {id,Integer.parseInt(id),"Directory"});
 			messages.add(id);
 		}
 		return messages;

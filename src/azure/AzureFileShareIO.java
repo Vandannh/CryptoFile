@@ -23,7 +23,7 @@ import com.microsoft.azure.storage.file.*;
  * This class will function as a bridge between Azure storage and local files. 
  * By connecting to an Azure storage account and store/get files from the storage. 
  * This class mainly has 3 functions, with theese you can 1. connect, 2. upload, 3. download to/from Azure file share
- * @author Broceps
+ * @author Robin Andersson
  */
 public class AzureFileShareIO {
 	CloudStorageAccount storageAccount;
@@ -70,15 +70,10 @@ public class AzureFileShareIO {
 	/**
 	 * Uploading an file to the share in Azure storage
 	 * @param userDirectory 
+	 * @param file 
 	 */
-	public void upload(String userDirectory) {
-		//To choose a file:
+	public void upload(String userDirectory, File file) {
 		System.out.println("im about to open the JFileChooser");
-		JFileChooser chooser = new JFileChooser();
-		int returnVal = chooser.showOpenDialog(null);
-		if(returnVal == JFileChooser.APPROVE_OPTION) {
-			file = chooser.getSelectedFile();
-		}
 		try {
 			CloudFileDirectory rootDir = share.getRootDirectoryReference(); //Get a reference to the root directory for the share.
 			CloudFileDirectory sampleDir = rootDir.getDirectoryReference(userDirectory);
@@ -107,8 +102,9 @@ public class AzureFileShareIO {
 	 * ( currently using parameter "rootDir.getName() ).
 	 * @param filename2 
 	 * @param name of the file to download
+	 * @return if the download was successfull
 	 */
-	public void download(String userDirectory, String filename) {
+	public boolean download(String userDirectory, String filename) {
 		System.out.println(userDirectory);
 		System.out.println(filename);
 		try {
@@ -117,9 +113,14 @@ public class AzureFileShareIO {
 			CloudFile file = sampleDir.getFileReference(filename); //Get a reference to the file you want to download
 			System.out.println(file.getName());
 			System.out.println(rootDir.toString());
-			file.download(new FileOutputStream(new File("files/" + filename + "." + getExtension(file)))); 
+			String resource = "files/" + filename;
+			System.out.println(resource);
+			file.download(new FileOutputStream(new File("files/" + filename))); 
+			return true;
+			
 		} catch (StorageException | URISyntaxException | IOException e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 

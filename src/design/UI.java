@@ -1,5 +1,6 @@
 package design;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.ImageIcon;
@@ -65,11 +66,19 @@ public class UI {
 		loginPanel.setLayout(null);
 		loginPanel.setVisible(show);
 		
+		JLabel lblUsername = new JLabel("Username:");
+		lblUsername.setBounds(80,13,80,22);
+		loginPanel.add(lblUsername);
+		
 		usernameField = new JTextField();
 		usernameField.setBounds(144, 13, 116, 22);
 		loginPanel.add(usernameField);
 		usernameField.setColumns(10);
 		
+		
+		JLabel lblPassword = new JLabel("Password:");
+		lblPassword.setBounds(80,47,80,22);
+		loginPanel.add(lblPassword);
 		passwordField = new JPasswordField();
 		passwordField.setBounds(144, 47, 116, 22);
 		loginPanel.add(passwordField);
@@ -111,33 +120,47 @@ public class UI {
 	private void registerPage(boolean show) {
 		System.out.println("test");
 		registerPanel = new JPanel();
-		registerPanel.setBounds(0, 92, 432, 161);
+		registerPanel.setBounds(0, 92, 450, 350);
 		frame.getContentPane().add(registerPanel);
 		registerPanel.setLayout(null);
 		registerPanel.setVisible(show);
+		
+		JLabel lblUsername = new JLabel("Username:");
+		lblUsername.setBounds(80,13,80,22);
+		registerPanel.add(lblUsername);
 		
 		usernameField = new JTextField();
 		usernameField.setBounds(144, 13, 116, 22);
 		registerPanel.add(usernameField);
 		usernameField.setColumns(10);
 		
+		JLabel lblPassword = new JLabel("Password:");
+		lblPassword.setBounds(80,47,80,22);
+		registerPanel.add(lblPassword);
+		
 		JTextField passwordField = new JTextField();
 		passwordField.setBounds(144, 47, 116, 22);
 		registerPanel.add(passwordField);
+		
+		JLabel lblEmail = new JLabel("Email:");
+		lblEmail.setBounds(80,82,80,22);
+		registerPanel.add(lblEmail);
 		
 		emailField = new JTextField();
 		emailField.setBounds(144, 82, 116, 22);
 		registerPanel.add(emailField);
 		
-		
-		
 		btnRegister = new JButton("Register");
-		btnRegister.setBounds(144, 120, 116, 25);
+		btnRegister.setBounds(144, 110, 116, 25);
 		registerPanel.add(btnRegister);
+		
+		JButton btnBack = new JButton("Back to login");
+		btnBack.setBounds(144, 140, 116, 25);
+		registerPanel.add(btnBack);
 		
 		JLabel lblResult = new JLabel("");
 		lblResult.setHorizontalAlignment(SwingConstants.CENTER);
-		lblResult.setBounds(47, 158, 330, 16);
+		lblResult.setBounds(47, 170, 330, 16);
 		registerPanel.add(lblResult);
 		
 		btnRegister.addActionListener(new ActionListener() {
@@ -148,7 +171,14 @@ public class UI {
 				ArrayList<String> message = controller.register(username, email, password);
 				for(String s : message) {
 					System.out.println(s);
+					lblResult.setText(lblResult.getText()+"\n"+s);
 				}
+			}
+		});
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				registerPanel.setVisible(false);
+				loginPage(true);
 			}
 		});
 	}
@@ -160,11 +190,16 @@ public class UI {
 		homePanel.setLayout(null);
 		homePanel.setVisible(show);
 		
+		JLabel lblResult = new JLabel("");
+		lblResult.setHorizontalAlignment(SwingConstants.CENTER);
+		lblResult.setBounds(47, 200, 330, 16);
+		homePanel.add(lblResult); 
+		
 		btnUpload = new JButton("Upload file");
 		btnUpload.setBounds(155, 114, 121, 25);
 		btnUpload.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				controller.uploadFile();
+				lblResult.setText(controller.uploadFile());
 			}
 		});
 		homePanel.add(btnUpload);
@@ -173,7 +208,7 @@ public class UI {
 		btnDownload.setBounds(155, 158, 122, 25);
 		btnDownload.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				controller.downloadFile();
+				lblResult.setText(controller.downloadFile());
 			}
 		});
 		homePanel.add(btnDownload);
@@ -181,7 +216,7 @@ public class UI {
 	
 	private void initialize() {
 		frame = new JFrame("CryptoFile");
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 450, 350);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		lblCryptofile = new JLabel();

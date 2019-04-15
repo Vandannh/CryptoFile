@@ -2,6 +2,8 @@ package controller;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import azure.AzureFileShareIO;
 import database.*;
@@ -13,15 +15,16 @@ public class Controller {
 	private Registration registration;
 	private String userid;
 	private MSSQL mssql;
+	private File file;
 	private final String connectionString = "jdbc:sqlserver://cryptofiletesting.database.windows.net:1433;database=Testing;user=Mattias@cryptofiletesting;password=Hejsan123;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
-	
+
 	public Controller() {
 		mssql = new MSSQL(connectionString);
 	}
 	public boolean login(String username, String password) {
 		if(authentication.getAuthentication(username, password)) {
 			azureFileShareIO.connect();
-			userid=mssql.select("Users", new String[] {"id"}, "username='"+username+"'").replace("\t\t", "").trim();
+			userid=mssql.select("users", new String[] {"id"}, "username='"+username+"'").replace("\t\t", "").trim();
 			return true;
 		}
 		else
@@ -40,14 +43,25 @@ public class Controller {
 		else
 			return messages;
 	}
-	public void uploadFile() {
-		azureFileShareIO.upload(userid);
+	public String uploadFile() {
+		JFileChooser chooser = new JFileChooser();
+		int returnVal = chooser.showOpenDialog(null);
+		if(returnVal == JFileChooser.APPROVE_OPTION)
+			file = chooser.getSelectedFile();
+		if(file!=null) {
+			azureFileShareIO.upload(userid,file);
+			mssql.insert("directory", new String[] {"name","type","user_id","parent_id"}, new String[] {file.getName(),"file",userid,userid});
+			return file.getName()+" has been uploaded";
+		}
+		return "";
 	}
-	public void downloadFile(){
-		String filename = JOptionPane.showInputDialog("Write file to download");
-		azureFileShareIO.download(userid,filename);
+	public String downloadFile(){
+		String filename = JOptionPane.showInputDialog("Write file to download.(Including the file extension)");
+		if(azureFileShareIO.download(userid,filename))
+			return filename+" has been downloaded";
+		return "An error occured. Download failed";
 	}
-	
+
 	/**
 	 * Checks if the character is a number
 	 * 
@@ -57,5 +71,5 @@ public class Controller {
 	private boolean isNumeric(char ch) {
 		return ch>='0'&&ch<='9';
 	}
-	
+
 }
