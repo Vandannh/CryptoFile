@@ -101,6 +101,15 @@ public class AzureFileshareIO {
 
 
 	}
+	
+	/**
+	 * Get the file extension
+	 * @param file
+	 * @return extension as a String
+	 */
+	public String getExtension(CloudFile file) {
+		return(file.getName().substring(file.getName().indexOf('.')+1));
+	}
 
 	/**
 	 * Downloading an file from the selected file share, by default we download from the root directory,
@@ -112,14 +121,13 @@ public class AzureFileshareIO {
 
 		try {
 			CloudFileDirectory rootDir = share.getRootDirectoryReference(); //Get a reference to the root directory for the share.
-			CloudFileDirectory sampleDir = rootDir.getDirectoryReference(rootDir.toString()); //Get a reference to the directory that contains the file
+			CloudFileDirectory sampleDir = rootDir.getDirectoryReference("test1"); //Get a reference to the directory that contains the file
 			CloudFile file = sampleDir.getFileReference(filename); //Get a reference to the file you want to download
 			System.out.println(file.getName());
 
+			System.out.println(rootDir.toString());
 			//DO SOMETHING WITH THE FILE
-			file.download(new FileOutputStream(new File("/../files/hej.txt"))); //MARK: Denna delen behövs lösas, får det ej att fungera med att
-			//skriva ned filen lokalt, allt fungerar bra fram tills hit, 
-			
+			file.download(new FileOutputStream(new File("files/" + filename + "." + getExtension(file)))); 
 
 			
 			
