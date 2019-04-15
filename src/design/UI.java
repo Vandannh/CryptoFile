@@ -2,6 +2,7 @@ package design;
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
@@ -13,13 +14,15 @@ import javax.swing.SwingConstants;
 import controller.Authentication;
 import controller.Authentication;
 import java.awt.Font;
+import java.awt.Image;
 
 public class UI {
 	private JFrame frame;
-	private JTextField usernameField;
+	private JTextField usernameField,emailField;
 	private JPasswordField passwordField;
 	private JPanel loginPanel;
 	private JPanel homePanel;
+	private JPanel registerPanel;
 	private JButton btnUpload;
 	private JButton btnDowload;
 	private JButton btnRegister;
@@ -91,16 +94,48 @@ public class UI {
 				String username = usernameField.getText();
 				String password="";
 				for(char c : passwordField.getPassword()) password+=c+"";
-				if(auth.getAuthentication(username, password)) {
-					lblResult.setText("You successfully logged in");
-					loginPanel.setVisible(false);
-					homePage(true);
-				}
-				else {
-					lblResult.setText("Wrong password/username");
-				}
+				
 			}
 		});
+		btnRegister.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
+	}
+	
+	private void registerPage(boolean show) {
+		
+		registerPanel = new JPanel();
+		registerPanel.setBounds(0, 92, 432, 161);
+		frame.getContentPane().add(registerPanel);
+		registerPanel.setLayout(null);
+		registerPanel.setVisible(show);
+		
+		usernameField = new JTextField();
+		usernameField.setBounds(144, 13, 116, 22);
+		loginPanel.add(usernameField);
+		usernameField.setColumns(10);
+		
+		passwordField = new JPasswordField();
+		passwordField.setBounds(144, 47, 116, 22);
+		registerPanel.add(passwordField);
+		
+		emailField = new JPasswordField();
+		emailField.setBounds(144, 82, 116, 25);
+		registerPanel.add(emailField);
+		
+		
+		
+		btnRegister = new JButton("Register");
+		btnRegister.setBounds(144, 120, 116, 25);
+		loginPanel.add(btnRegister);
+		
+		JLabel lblResult = new JLabel("");
+		lblResult.setHorizontalAlignment(SwingConstants.CENTER);
+		lblResult.setBounds(47, 158, 330, 16);
+		loginPanel.add(lblResult);
+		
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -129,12 +164,21 @@ public class UI {
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		lblCryptofile = new JLabel("CryptoFile");
+		lblCryptofile = new JLabel();
+		lblCryptofile.setBounds(0, 13, 200, 80);
+		lblCryptofile.setIcon(resizeImage("files/logga.png", lblCryptofile));
 		lblCryptofile.setFont(new Font("Tahoma", Font.PLAIN, 43));
 		lblCryptofile.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCryptofile.setBounds(93, 13, 230, 54);
 		frame.getContentPane().add(lblCryptofile);
 		loginPage(true);
 		homePage(false);
+	}
+	
+	private ImageIcon resizeImage(String ImagePath, JLabel lbl){
+		ImageIcon MyImage = new ImageIcon(ImagePath);
+		Image img = MyImage.getImage();
+		Image newImg = img.getScaledInstance(lbl.getHeight(), lbl.getHeight(), Image.SCALE_SMOOTH);
+		ImageIcon image = new ImageIcon(newImg);
+		return image;
 	}
 }
