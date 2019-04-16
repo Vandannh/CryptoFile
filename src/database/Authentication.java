@@ -13,11 +13,11 @@ import mssql.MSSQL;
  */
 public class Authentication {
 	private MSSQL mssql;
-	private String database 	= "Testing"; 	// Edit this
-	private String username 	= "Mattias";	// Edit this
-	private String password 	= "Hejsan123"; 	// Edit this
-	private String hostname 	= "cryptofiletesting.database.windows.net"; 	// Edit this
-	private String port 		= "1433";		// Edit this
+	private String database 	= "YOUR_DATABASE"; 	// Edit this
+	private String username 	= "YOUR_USERNAME";	// Edit this
+	private String password 	= "YOUR_PASSWORD"; 	// Edit this
+	private String hostname 	= "YOUR_HOSTNAME"; 	// Edit this
+	private String port 		= "YOUR_PORT";		// Edit this
 	/**
 	 * Sets up a connection to the database.
 	 */
