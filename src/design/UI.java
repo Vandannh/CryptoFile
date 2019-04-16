@@ -75,10 +75,10 @@ public class UI {
 		loginPanel.add(usernameField);
 		usernameField.setColumns(10);
 		
-		
 		JLabel lblPassword = new JLabel("Password:");
 		lblPassword.setBounds(80,47,80,22);
 		loginPanel.add(lblPassword);
+		
 		passwordField = new JPasswordField();
 		passwordField.setBounds(144, 47, 116, 22);
 		loginPanel.add(passwordField);
@@ -87,15 +87,13 @@ public class UI {
 		btnLogin.setBounds(144, 82, 116, 25);
 		loginPanel.add(btnLogin);
 		
-		
-		
 		btnRegister = new JButton("Register");
 		btnRegister.setBounds(144, 120, 116, 25);
 		loginPanel.add(btnRegister);
 		
 		JLabel lblResult = new JLabel("");
 		lblResult.setHorizontalAlignment(SwingConstants.CENTER);
-		lblResult.setBounds(47, 158, 330, 16);
+		lblResult.setBounds(0, 145, 350, 16);
 		loginPanel.add(lblResult);
 		
 		btnLogin.addActionListener(new ActionListener() {
@@ -107,6 +105,8 @@ public class UI {
 					loginPanel.setVisible(false);
 					homePage(true);
 				}
+				else
+					lblResult.setText("Worng username/password");
 			}
 		});
 		btnRegister.addActionListener(new ActionListener() {
@@ -192,7 +192,7 @@ public class UI {
 		
 		JLabel lblResult = new JLabel("");
 		lblResult.setHorizontalAlignment(SwingConstants.CENTER);
-		lblResult.setBounds(47, 200, 330, 16);
+		lblResult.setBounds(0, 200, 350, 16);
 		homePanel.add(lblResult); 
 		
 		btnUpload = new JButton("Upload file");
@@ -220,7 +220,7 @@ public class UI {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		lblCryptofile = new JLabel();
-		lblCryptofile.setBounds(0, 13, 200, 80);
+		lblCryptofile.setBounds(50, 0, 350, 80);
 		lblCryptofile.setIcon(resizeImage("files/logga.png", lblCryptofile));
 		lblCryptofile.setFont(new Font("Tahoma", Font.PLAIN, 43));
 		lblCryptofile.setHorizontalAlignment(SwingConstants.CENTER);
@@ -231,7 +231,7 @@ public class UI {
 	private ImageIcon resizeImage(String ImagePath, JLabel lbl){
 		ImageIcon MyImage = new ImageIcon(ImagePath);
 		Image img = MyImage.getImage();
-		Image newImg = img.getScaledInstance(lbl.getHeight(), lbl.getHeight(), Image.SCALE_SMOOTH);
+		Image newImg = img.getScaledInstance(lbl.getWidth(), lbl.getHeight(), Image.SCALE_SMOOTH);
 		ImageIcon image = new ImageIcon(newImg);
 		return image;
 	}
