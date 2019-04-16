@@ -100,12 +100,11 @@ public class AzureFileShareIO {
 	}
 
 	/**
-	 * Downloading an file from the selected file share, by default we download from the root directory,
-	 * if you wish to change from which directory to download, change the parameter of the "sampleDir" 
-	 * ( currently using parameter "rootDir.getName() ).
-	 * @param filename2 
-	 * @param name of the file to download
-	 * @return if the download was successfull
+	 * Downloading an file from the selected file share.
+	 * 
+	 * @param userDirectory the name of the directory the file is being downloaded from
+	 * @param filename the name of the file to download
+	 * @return if the download was successful
 	 */
 	public boolean download(String userDirectory, String filename) {
 		System.out.println(userDirectory);
@@ -116,7 +115,7 @@ public class AzureFileShareIO {
 			CloudFile file = sampleDir.getFileReference(filename); //Get a reference to the file you want to download
 			System.out.println(file.getName());
 			System.out.println(rootDir.toString());
-			String resource = "files/";
+			String resource = "downloads/";
 			mkdir(resource);
 			System.out.println(resource);
 			file.download(new FileOutputStream(new File(resource + filename))); 
@@ -128,6 +127,12 @@ public class AzureFileShareIO {
 		}
 	}
 
+	/**
+	 * Creates a directory if it doesn't exists
+	 * 
+	 * @param directoryName the name of the directory being created
+	 * @throws IOException 
+	 */
 	public void mkdir(String directoryName) throws IOException {
 		Path path = Paths.get(directoryName);
 		if (!Files.exists(path)) {
