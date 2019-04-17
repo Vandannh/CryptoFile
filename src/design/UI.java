@@ -7,6 +7,12 @@ import java.util.*;
 import java.awt.*;
 import controller.Controller;
 
+/**
+ * A simple UI for the application
+ * 
+ * @author Mattias Jönsson
+ *
+ */
 public class UI {
 	private JFrame frame;
 	private JTextField usernameField,emailField;
@@ -44,10 +50,9 @@ public class UI {
 	}
 
 	/**
-	 * Initialize the contents of the frame.
-	 * @param show 
+	 * The contents of the login page.
+	 * @param show if the page should be shown or not
 	 */
-	
 	private void loginPage(boolean show) {
 		
 		loginPanel = new JPanel();
@@ -107,6 +112,11 @@ public class UI {
 		});
 	}
 	
+	/**
+	 * The contents of the login page.
+	 * 
+	 * @param show if the page should be shown or not
+	 */
 	private void registerPage(boolean show) {
 		System.out.println("test");
 		registerPanel = new JPanel();
@@ -173,6 +183,11 @@ public class UI {
 		});
 	}
 	
+	/**
+	 * The contents of the home page.
+	 * 
+	 * @param show if the page should be shown or not
+	 */
 	public void homePage(boolean show) {
 		homePanel = new JPanel();
 		homePanel.setBounds(0, 0, 432, 253);
@@ -204,6 +219,9 @@ public class UI {
 		homePanel.add(btnDownload);
 	}
 	
+	/**
+	 * Initalize the contents of the application
+	 */
 	private void initialize() {
 		frame = new JFrame("CryptoFile");
 		frame.setBounds(100, 100, 450, 350);
@@ -218,10 +236,17 @@ public class UI {
 		loginPage(true);
 	}
 	
-	private ImageIcon resizeImage(String ImagePath, JLabel lbl){
+	/**
+	 * Resizes a given image of the size of a given JContent-object
+	 * 
+	 * @param ImagePath the path of the image
+	 * @param jc the JContent the image should resize to
+	 * @return the resized image
+	 */
+	private ImageIcon resizeImage(String ImagePath, JComponent jc){
 		ImageIcon MyImage = new ImageIcon(ImagePath);
 		Image img = MyImage.getImage();
-		Image newImg = img.getScaledInstance(lbl.getWidth(), lbl.getHeight(), Image.SCALE_SMOOTH);
+		Image newImg = img.getScaledInstance(jc.getWidth(), jc.getHeight(), Image.SCALE_SMOOTH);
 		ImageIcon image = new ImageIcon(newImg);
 		return image;
 	}

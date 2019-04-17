@@ -15,6 +15,9 @@ import com.microsoft.azure.storage.file.*;
  * This class will function as a bridge between Azure storage and local files. 
  * By connecting to an Azure storage account and store/get files from the storage. 
  * This class mainly has 3 functions, with theese you can 1. connect, 2. upload, 3. download to/from Azure file share
+ * 
+ * @version 1.0
+ * @since 2019-04-15
  * @author Robin Andersson
  */
 public class AzureFileShareIO {
@@ -114,7 +117,7 @@ public class AzureFileShareIO {
 	}
 
 	/**
-	 * Creates a directory if it doesn't exists
+	 * Creates a directory on local computer if it doesn't exists
 	 * 
 	 * @param directoryName the name of the directory being created
 	 * @throws IOException 
@@ -126,6 +129,11 @@ public class AzureFileShareIO {
 		}
 	}
 
+	/**
+	 * Creates a directory in Azure File Share if it doesn't exists
+	 * 
+	 * @param directoryName the name of the directory being created
+	 */
 	public void createDirectory(String directoryName) {
 		try {
 			CloudFileDirectory rootDir = share.getRootDirectoryReference();
