@@ -2,9 +2,7 @@ package controller;
 
 import java.io.File;
 import java.util.ArrayList;
-
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import azure.AzureFileShareIO;
 import database.*;
 import mssql.MSSQL;
@@ -12,11 +10,10 @@ import mssql.MSSQL;
 public class Controller {
 	private AzureFileShareIO azureFileShareIO = new AzureFileShareIO();
 	private Authentication authentication = new Authentication();
-	private Registration registration;
 	private String userid;
 	private MSSQL mssql;
 	private File file;
-	private final String connectionString = "jdbc:sqlserver://cryptofiletesting.database.windows.net:1433;database=Testing;user=Mattias@cryptofiletesting;password=Hejsan123;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
+	private final String connectionString = "YOUR_CONNECTION_STRING";
 
 	public Controller() {
 		mssql = new MSSQL(connectionString);
@@ -35,7 +32,7 @@ public class Controller {
 		ArrayList<String> messages = registration.register();
 		if(isNumeric(messages.get(0).toCharArray()[0])) {
 			azureFileShareIO.connect();
-			azureFileShareIO.createDirectory(messages.get(0));
+			azureFileShareIO.createDirectory(messages.get(0)+"_test");
 			ArrayList<String> message = new ArrayList<String>();
 			message.add("User created");
 			return message;
@@ -49,7 +46,7 @@ public class Controller {
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 			file = chooser.getSelectedFile();
 		if(file!=null) {
-			azureFileShareIO.upload(userid,file);
+			azureFileShareIO.upload(userid+"_test",file);
 			mssql.insert("directory", new String[] {"name","type","user_id","parent_id"}, new String[] {file.getName(),"file",userid,userid});
 			return file.getName()+" has been uploaded";
 		}

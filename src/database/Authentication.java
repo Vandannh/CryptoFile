@@ -13,16 +13,12 @@ import mssql.MSSQL;
  */
 public class Authentication {
 	private MSSQL mssql;
-	private String database 	= "YOUR_DATABASE"; 	// Edit this
-	private String username 	= "YOUR_USERNAME";	// Edit this
-	private String password 	= "YOUR_PASSWORD"; 	// Edit this
-	private String hostname 	= "YOUR_HOSTNAME"; 	// Edit this
-	private String port 		= "YOUR_PORT";		// Edit this
+	private final String connectionString = "YOUR_CONNECTION_STRING"; // Edit this
 	/**
 	 * Sets up a connection to the database.
 	 */
 	public Authentication() {
-		mssql = new MSSQL(database,username,password,hostname,port);
+		mssql = new MSSQL(connectionString);
 	}
 	
 	/**
@@ -35,7 +31,8 @@ public class Authentication {
 	 */
 	public boolean getAuthentication(String username, String password) {
 		String hashedPassword = getPassword(username);
-		if(hashedPassword.isEmpty()) return false;
+		if(hashedPassword.isEmpty()) 
+			return false;
 		return BCrypt.checkpw(password, hashedPassword);
 	}
 

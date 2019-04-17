@@ -1,20 +1,10 @@
 package design;
 
-import java.awt.Color;
 import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JTextField;
-import javax.swing.JPasswordField;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.awt.event.ActionEvent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import java.awt.Font;
-import java.awt.Image;
+import javax.swing.*;
+import java.awt.event.*;
+import java.util.*;
+import java.awt.*;
 import controller.Controller;
 
 public class UI {
@@ -192,7 +182,7 @@ public class UI {
 		
 		JLabel lblResult = new JLabel("");
 		lblResult.setHorizontalAlignment(SwingConstants.CENTER);
-		lblResult.setBounds(0, 200, 350, 16);
+		lblResult.setBounds(0, 200, 500, 16);
 		homePanel.add(lblResult); 
 		
 		btnUpload = new JButton("Upload file");

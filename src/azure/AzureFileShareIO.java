@@ -1,24 +1,13 @@
 package azure;
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
+
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.InvalidKeyException;
-
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import com.microsoft.azure.storage.*;
 import com.microsoft.azure.storage.file.*;
 
@@ -38,10 +27,7 @@ public class AzureFileShareIO {
 	 * The Connection string used to connect to Azure storage account
 	 * Change this string if you want to change which storage to work from
 	 */
-	public static final String storageConnectionString =
-			"DefaultEndpointsProtocol=https;AccountName=cryptofile1;"
-					+ "AccountKey=e93IzFOe+Z5okcXlk4WpAZ9ozaHPifAd8l8rLvGFlNORKtoBASySgx8clTwukGRqsL/1UyET7Y5HRO8KceTlqQ==;"
-					+ "EndpointSuffix=core.windows.net";
+	public static final String storageConnectionString = "YOUR_CONNECTION_STRING";
 
 
 	/**

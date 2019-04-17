@@ -1,9 +1,7 @@
 package database;
 
 import java.util.ArrayList;
-
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
+import javax.mail.internet.*;
 import org.mindrot.jbcrypt.BCrypt;
 import mssql.MSSQL;
 
@@ -18,11 +16,7 @@ import mssql.MSSQL;
 public class Registration {
 	private String username,password,email;
 	private MSSQL mssql;
-	private String database 	= "YOUR_DATABASE"; 	// Edit this
-	private String db_username 	= "YOUR_USERNAME";	// Edit this
-	private String db_password 	= "YOUR_PASSWORD"; 	// Edit this
-	private String hostname 	= "YOUR_HOSTNAME"; 	// Edit this
-	private String port 		= "YOUR_PORT";		// Edit this
+	private final String connectionString = "YOUR_CONNECTION_STRING"; // Edit this
 
 	/**
 	 * Constructs a Registration-object containing the username, email-address and password
@@ -33,7 +27,7 @@ public class Registration {
 	 * @param password the password of the user
 	 */
 	public Registration(String username,String email, String password) {
-		mssql = new MSSQL(database,db_username,db_password,hostname,port);
+		mssql = new MSSQL(connectionString);
 		this.username=username;
 		this.password=password;
 		this.email=email;
@@ -104,7 +98,8 @@ public class Registration {
 				if(!isValidPassword(input))
 					inputError = "Password is not valid";
 		}
-		if(!inputError.isEmpty()) errorCount++;
+		if(!inputError.isEmpty()) 
+			errorCount++;
 		return new Object[]{errorCount,inputError};
 	}
 	/**
@@ -160,14 +155,13 @@ public class Registration {
 		return result;
 	}
 	/**
-	 * Checks if the username only contains a-z, A-Z, 0-9 or _ and the length of the username is greater 
-	 * than 6 characters.
+	 * Checks if the username only contains a-z, A-Z, 0-9 
 	 * 
 	 * @param input the username
 	 * @return if the username is valid or not
 	 */
 	private boolean isValidUsername(String input) {
-		String regex = "[a-zA-Z0-9_]+";
+		String regex = "[a-zA-Z0-9]+";
 		return input.matches(regex);
 	}
 	/**
@@ -178,7 +172,8 @@ public class Registration {
 	 * @return if the password is valid or not
 	 */
 	private boolean isValidPassword(String input) {
-		if(input.length()<8) return false;
+		if(input.length()<8) 
+			return false;
 		int charCount=0;
 		int numCount=0;
 		for (int i=0;i<input.length();i++) {
@@ -187,8 +182,6 @@ public class Registration {
 				numCount++;
 			else if (isLetter(ch)) 
 				charCount++;
-			else 
-				return false;
 		}
 		return charCount>0&&numCount>0;
 	}
