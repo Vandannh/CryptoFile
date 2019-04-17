@@ -2,7 +2,7 @@
 An application to store files on a secure and smooth way.
 
 ## Run application
-You run the application by starting the jar-file called CryptoFile.jar. 
+You run the application by starting the jar-file called CryptoFile.jar in the folder Sprint 2. 
 
 ### Register a new user
 To register a new user you need to click on "Register".
