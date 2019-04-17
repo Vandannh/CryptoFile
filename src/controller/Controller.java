@@ -22,7 +22,7 @@ public class Controller {
 	private String userid;
 	private MSSQL mssql;
 	private File file;
-	private final String connectionString = "YOUR_CONNECTION_STRING";
+	private final String connectionString = "YOUR_CONNECTION_STRING"; // Edit this
 
 	/**
 	 * Connects to a MS SQL (SQL Server) database
@@ -79,7 +79,7 @@ public class Controller {
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 			file = chooser.getSelectedFile();
 		if(file!=null) {
-			azureFileShareIO.upload(userid+"_test",file);
+			azureFileShareIO.upload(userid,file);
 			mssql.insert("directory", new String[] {"name","type","user_id","parent_id"}, new String[] {file.getName(),"file",userid,userid});
 			return file.getName()+" has been uploaded";
 		}

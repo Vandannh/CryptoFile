@@ -30,7 +30,7 @@ public class AzureFileShareIO {
 	 * The Connection string used to connect to Azure storage account
 	 * Change this string if you want to change which storage to work from
 	 */
-	public static final String storageConnectionString = "YOUR_CONNECTION_STRING";
+	public static final String storageConnectionString = "YOUR_CONNECTION_STRING"; // Edit this
 
 
 	/**
