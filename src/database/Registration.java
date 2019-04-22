@@ -208,7 +208,13 @@ public class Registration {
 		return ch>='0'&&ch<='9';
 	}
 	
+	/**
+	 * Generate a code for the user
+	 * 
+	 * @return a hashed number
+	 */
 	private String generateUserCode() {
 		return BCrypt.hashpw(Integer.toString(new Random().nextInt(1000000000)), BCrypt.gensalt(12));
 	}
+	
 }
