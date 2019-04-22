@@ -38,6 +38,8 @@ public class Controller {
 	 * @return if the user can log in or not
 	 */
 	public boolean login(String username, String password) {
+		username = stripSlashes(escapeCharacters(username)).trim();
+		password = stripSlashes(escapeCharacters(password)).trim();
 		if(authentication.getAuthentication(username, password)) {
 			azureFileShareIO.connect();
 			userid=mssql.select("users", new String[] {"id"}, "username='"+username+"'").replace("\t\t", "").trim();
@@ -56,6 +58,9 @@ public class Controller {
 	 * a message telling the user it was created
 	 */
 	public ArrayList<String> register(String username, String email, String password) {
+		username = stripSlashes(escapeCharacters(username)).trim();
+		password = stripSlashes(escapeCharacters(password)).trim();
+		email = stripSlashes(escapeCharacters(email)).trim();
 		registration = new Registration(username, email, password);
 		ArrayList<String> messages = registration.register();
 		if(isNumeric(messages.get(0).toCharArray()[0])) {
@@ -105,6 +110,29 @@ public class Controller {
 	 */
 	private boolean isNumeric(char ch) {
 		return ch>='0'&&ch<='9';
+	}
+	
+	public String escapeCharacters(String input) {
+		StringBuilder sb = new StringBuilder();
+		for(char c : input.toCharArray()) {
+			switch(c){
+			case '<': sb.append("&lt;"); break;
+			case '>': sb.append("&gt;"); break;
+			case '\"': sb.append("&quot;"); break;
+			case '&': sb.append("&amp;"); break;
+			case '\'': sb.append("&apos;"); break;
+			default:
+				if(c>0x7e) {
+					sb.append("&#"+((int)c)+";");
+				}else
+					sb.append(c);
+			}
+		}
+		return sb.toString();
+	}
+	
+	public String stripSlashes(String input) {
+		return input.replace("\\", "");
 	}
 
 }
