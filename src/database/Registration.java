@@ -1,6 +1,8 @@
 package database;
 
 import java.util.ArrayList;
+import java.util.Random;
+
 import javax.mail.internet.*;
 import org.mindrot.jbcrypt.BCrypt;
 import mssql.MSSQL;
@@ -48,8 +50,9 @@ public class Registration {
 			messages.add((String)validation[2][1]);
 		}
 		else {
-			mssql.insert("Users", new String[] {"username","password","email"},new String[] {username,hashPassword(password),email});
-			String id = mssql.select("Users", new String[] {"id"}, "username='"+username+"'").replace("\t\t", "").trim();
+			String code = generateUserCode();
+			mssql.insert("Users", new String[] {"username","password","email","code"},new String[] {username,hashPassword(password),email,code});
+			String id = mssql.select("Users", new String[] {"id"}, "username='"+username+"' AND code ='"+code+"'").replace("\t\t", "").trim();
 			mssql.insert("Directory", new String[] {"name","user_id","type"}, new Object[] {id,Integer.parseInt(id),"Directory"});
 			messages.add(id);
 		}
@@ -203,5 +206,9 @@ public class Registration {
 	 */
 	private boolean isNumeric(char ch) {
 		return ch>='0'&&ch<='9';
+	}
+	
+	private String generateUserCode() {
+		return BCrypt.hashpw(Integer.toString(new Random().nextInt(1000000000)), BCrypt.gensalt(12));
 	}
 }
