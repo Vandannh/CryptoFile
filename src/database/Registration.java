@@ -209,7 +209,7 @@ public class Registration {
 	}
 	
 	/**
-	 * Generate a code for the user
+	 * Generate a code for the user 
 	 * 
 	 * @return a hashed number
 	 */
