@@ -2,6 +2,8 @@ package controller;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import javax.swing.*;
 import azure.AzureFileShareIO;
 import database.*;
@@ -65,7 +67,9 @@ public class Controller {
 		ArrayList<String> messages = registration.register();
 		if(isNumeric(messages.get(0).toCharArray()[0])) {
 			azureFileShareIO.connect();
-			azureFileShareIO.createDirectory(messages.get(0)+"_test");
+			azureFileShareIO.createDirectory(messages.get(0));
+			azureFileShareIO.createDirectoryInsideDirectory(messages.get(0), "public");
+			azureFileShareIO.createDirectoryInsideDirectory(messages.get(0), "private");
 			ArrayList<String> message = new ArrayList<String>();
 			message.add("User created");
 			return message;
@@ -84,7 +88,7 @@ public class Controller {
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 			file = chooser.getSelectedFile();
 		if(file!=null) {
-			azureFileShareIO.upload(userid,file);
+			azureFileShareIO.upload(userid,	chooseDirectory().toLowerCase(),file);
 			mssql.insert("directory", new String[] {"name","type","user_id","parent_id"}, new String[] {file.getName(),"file",userid,userid});
 			return file.getName()+" has been uploaded";
 		}
@@ -96,8 +100,9 @@ public class Controller {
 	 * @return a String telling the user of the success of the download
 	 */
 	public String downloadFile(){
+		String directory = chooseDirectory().toLowerCase();
 		String filename = JOptionPane.showInputDialog("Write file to download.(Including the file extension)");
-		if(azureFileShareIO.download(userid,filename))
+		if(azureFileShareIO.download(userid,directory,filename))
 			return filename+" has been downloaded";
 		return "An error occured. Download failed";
 	}
@@ -110,6 +115,12 @@ public class Controller {
 	 */
 	private boolean isNumeric(char ch) {
 		return ch>='0'&&ch<='9';
+	}
+	
+	private String chooseDirectory() {
+		JList<String> list = new JList<String>(new String[] {"Private", "Public"});
+		JOptionPane.showMessageDialog(null, list, "Choose directory", JOptionPane.PLAIN_MESSAGE);
+		return list.getSelectedValue();
 	}
 	
 	public String escapeCharacters(String input) {

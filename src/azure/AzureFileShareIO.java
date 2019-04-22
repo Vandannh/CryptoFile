@@ -64,15 +64,17 @@ public class AzureFileShareIO {
 	 * @param userDirectory 
 	 * @param file 
 	 */
-	public void upload(String userDirectory, File file) {
+	public void upload(String userDirectory, String directory, File file) {
 		System.out.println("im about to open the JFileChooser");
 		try {
 			CloudFileDirectory rootDir = share.getRootDirectoryReference(); //Get a reference to the root directory for the share.
 			CloudFileDirectory sampleDir = rootDir.getDirectoryReference(userDirectory);
+			CloudFileDirectory sampleDir1 = sampleDir.getDirectoryReference(directory);
 			System.out.println(file.toString());
 			System.out.println(userDirectory);
+			System.out.println(directory);
 			final String filePath = file.toString(); // Define the path to a local file.
-			CloudFile cloudFile = sampleDir.getFileReference(file.getName());
+			CloudFile cloudFile = sampleDir1.getFileReference(file.getName());
 			cloudFile.uploadFromFile(filePath);
 		} catch (StorageException | URISyntaxException | IOException e) {
 			e.printStackTrace();
@@ -95,13 +97,14 @@ public class AzureFileShareIO {
 	 * @param filename the name of the file to download
 	 * @return if the download was successful
 	 */
-	public boolean download(String userDirectory, String filename) {
+	public boolean download(String userDirectory, String directory, String filename) {
 		System.out.println(userDirectory);
 		System.out.println(filename);
 		try {
 			CloudFileDirectory rootDir = share.getRootDirectoryReference(); //Get a reference to the root directory for the share.
 			CloudFileDirectory sampleDir = rootDir.getDirectoryReference(userDirectory); //Get a reference to the directory that contains the file
-			CloudFile file = sampleDir.getFileReference(filename); //Get a reference to the file you want to download
+			CloudFileDirectory sampleDir1 = sampleDir.getDirectoryReference(directory); //Get a reference to the directory that contains the file			
+			CloudFile file = sampleDir1.getFileReference(filename); //Get a reference to the file you want to download
 			System.out.println(file.getName());
 			System.out.println(rootDir.toString());
 			String resource = "downloads/";
@@ -109,7 +112,6 @@ public class AzureFileShareIO {
 			System.out.println(resource);
 			file.download(new FileOutputStream(new File(resource + filename))); 
 			return true;
-
 		} catch (StorageException | URISyntaxException | IOException e) {
 			e.printStackTrace();
 			return false;
@@ -139,6 +141,22 @@ public class AzureFileShareIO {
 			CloudFileDirectory rootDir = share.getRootDirectoryReference();
 			CloudFileDirectory sampleDir = rootDir.getDirectoryReference(directoryName);
 			sampleDir.createIfNotExists();
+		} catch (StorageException | URISyntaxException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Creates a directory inside another directory
+	 * 
+	 * @param directoryName
+	 */
+	public void createDirectoryInsideDirectory(String directoryName, String innerDirectoryName) {
+		try {
+			CloudFileDirectory rootDir = share.getRootDirectoryReference();
+			CloudFileDirectory sampleDir = rootDir.getDirectoryReference(directoryName);
+			CloudFileDirectory innerSampleDir = sampleDir.getDirectoryReference(innerDirectoryName);
+			innerSampleDir.createIfNotExists();
 		} catch (StorageException | URISyntaxException e) {
 			e.printStackTrace();
 		}
