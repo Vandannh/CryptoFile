@@ -10,7 +10,7 @@ import controller.Controller;
 /**
  * A simple UI for the application
  * 
- * @author Mattias Jönsson
+ * @author Mattias Jï¿½nsson
  *
  */
 public class UI {
@@ -22,6 +22,7 @@ public class UI {
 	private JPanel registerPanel;
 	private JButton btnUpload;
 	private JButton btnDownload;
+	private JButton btnDelete;
 	private JButton btnRegister;
 	private JLabel lblCryptofile;
 	private Controller controller = new Controller();
@@ -197,7 +198,7 @@ public class UI {
 		
 		JLabel lblResult = new JLabel("");
 		lblResult.setHorizontalAlignment(SwingConstants.CENTER);
-		lblResult.setBounds(0, 200, 500, 16);
+		lblResult.setBounds(0, 220, 500, 16);
 		homePanel.add(lblResult); 
 		
 		btnUpload = new JButton("Upload file");
@@ -217,6 +218,15 @@ public class UI {
 			}
 		});
 		homePanel.add(btnDownload);
+		
+		btnDelete = new JButton("Delete file");
+		btnDelete.setBounds(155, 200, 122, 25);
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent agr0) {
+				lblResult.setText(controller.deleteFile());
+			}
+		});
+		homePanel.add(btnDelete);
 	}
 	
 	/**

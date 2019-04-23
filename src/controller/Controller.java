@@ -14,7 +14,7 @@ import mssql.MSSQL;
  * 
  * @version 1.0
  * @since 2019-04-17
- * @author Mattias Jönsson & Robin Andersson
+ * @author Mattias Jï¿½nsson & Robin Andersson
  *
  */
 public class Controller {
@@ -107,6 +107,14 @@ public class Controller {
 		if(azureFileShareIO.download(userid,directory,filename))
 			return filename+" has been downloaded";
 		return "An error occured. Download failed";
+	}
+	
+	public String deleteFile() {
+		String directory = chooseDirectory().toLowerCase();
+		String filename = JOptionPane.showInputDialog("Write file to Delete.(Including the file extension)");
+		if(azureFileShareIO.deleteFile(userid,directory,filename))
+			return filename+" has been deleted";
+		return "An error occured. Delete failed";
 	}
 
 	/**

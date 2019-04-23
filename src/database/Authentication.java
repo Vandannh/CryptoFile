@@ -8,7 +8,7 @@ import mssql.MSSQL;
  * 
  * @version 1.0
  * @since 2019-04-13
- * @author Mattias Jönsson
+ * @author Mattias Jï¿½nsson
  *
  */
 public class Authentication {

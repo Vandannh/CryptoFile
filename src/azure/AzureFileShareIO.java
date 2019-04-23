@@ -85,6 +85,31 @@ public class AzureFileShareIO {
 			return false;
 		}
 	}
+	
+	/**
+	 * Deleting a file from the fileshare
+	 * @param userDirectory the name of the directory the file is being downloaded from
+	 * @param directory within the users directory
+	 * @param name of file to be deleted
+	 * @return if the download was successful
+	 */
+	public boolean deleteFile(String userDirectory, String directory, String filename) {
+		try {
+			CloudFileDirectory rootDir = share.getRootDirectoryReference();
+			CloudFileDirectory userDir = rootDir.getDirectoryReference(userDirectory);
+			CloudFileDirectory userInnerDir = userDir.getDirectoryReference(directory);		
+			CloudFile file = userInnerDir.getFileReference(filename);
+			
+			if(file.deleteIfExists()) {
+				System.out.println("file: " + file.getName().toString() + " has been deleted!");
+				return true;
+			}else
+				return false;
+		} catch (StorageException | URISyntaxException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	/**
 	 * Creates a directory on local computer if it doesn't exists
