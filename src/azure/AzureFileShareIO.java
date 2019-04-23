@@ -21,11 +21,10 @@ import com.microsoft.azure.storage.file.*;
  * @author Robin Andersson
  */
 public class AzureFileShareIO {
-	CloudStorageAccount storageAccount;
-	CloudFileClient fileClient;
-	CloudFileShare share;
-	File file;
-
+	private CloudStorageAccount storageAccount;
+	private CloudFileClient fileClient;
+	private CloudFileShare share;
+	
 	/*
 	 * The Connection string used to connect to Azure storage account
 	 * Change this string if you want to change which storage to work from
@@ -39,24 +38,12 @@ public class AzureFileShareIO {
 	 */
 	public void connect()  {
 		try {
-			//retrieving storage account
 			storageAccount = CloudStorageAccount.parse(storageConnectionString);
-
-			// Create the Azure Files client.
 			fileClient = storageAccount.createCloudFileClient();
-
-			// Get a reference to the file share
-			share = fileClient.getShareReference("test"); //test = name of the share in cryptofile1
-
-			System.out.println("Connected!");
-
-		} catch (InvalidKeyException invalidKey) {
-			invalidKey.printStackTrace();
-		} catch (URISyntaxException e) {
+			share = fileClient.getShareReference("test");
+		} catch (InvalidKeyException | URISyntaxException | StorageException e) {
 			e.printStackTrace();
-		} catch (StorageException e) {
-			e.printStackTrace();
-		} 
+		}
 	}
 
 	/**
@@ -65,31 +52,17 @@ public class AzureFileShareIO {
 	 * @param file 
 	 */
 	public void upload(String userDirectory, String directory, File file) {
-		System.out.println("im about to open the JFileChooser");
 		try {
-			CloudFileDirectory rootDir = share.getRootDirectoryReference(); //Get a reference to the root directory for the share.
-			CloudFileDirectory sampleDir = rootDir.getDirectoryReference(userDirectory);
-			CloudFileDirectory sampleDir1 = sampleDir.getDirectoryReference(directory);
-			System.out.println(file.toString());
-			System.out.println(userDirectory);
-			System.out.println(directory);
-			final String filePath = file.toString(); // Define the path to a local file.
-			CloudFile cloudFile = sampleDir1.getFileReference(file.getName());
-			cloudFile.uploadFromFile(filePath);
+			CloudFileDirectory rootDir = share.getRootDirectoryReference();
+			CloudFileDirectory userDir = rootDir.getDirectoryReference(userDirectory);
+			CloudFileDirectory innerUserDir = userDir.getDirectoryReference(directory);
+			CloudFile cloudFile = innerUserDir.getFileReference(file.getName());
+			cloudFile.uploadFromFile(file.toString());
 		} catch (StorageException | URISyntaxException | IOException e) {
 			e.printStackTrace();
 		}
 	}
-
-	/**
-	 * Get the file extension
-	 * @param file
-	 * @return extension as a String
-	 */
-	public String getExtension(CloudFile file) {
-		return(file.getName().substring(file.getName().indexOf('.')+1));
-	}
-
+	
 	/**
 	 * Downloading an file from the selected file share.
 	 * 
@@ -98,18 +71,13 @@ public class AzureFileShareIO {
 	 * @return if the download was successful
 	 */
 	public boolean download(String userDirectory, String directory, String filename) {
-		System.out.println(userDirectory);
-		System.out.println(filename);
 		try {
-			CloudFileDirectory rootDir = share.getRootDirectoryReference(); //Get a reference to the root directory for the share.
-			CloudFileDirectory sampleDir = rootDir.getDirectoryReference(userDirectory); //Get a reference to the directory that contains the file
-			CloudFileDirectory sampleDir1 = sampleDir.getDirectoryReference(directory); //Get a reference to the directory that contains the file			
-			CloudFile file = sampleDir1.getFileReference(filename); //Get a reference to the file you want to download
-			System.out.println(file.getName());
-			System.out.println(rootDir.toString());
+			CloudFileDirectory rootDir = share.getRootDirectoryReference();
+			CloudFileDirectory userDir = rootDir.getDirectoryReference(userDirectory);
+			CloudFileDirectory userInnerDir = userDir.getDirectoryReference(directory);		
+			CloudFile file = userInnerDir.getFileReference(filename);
 			String resource = "downloads/";
-			mkdir(resource);
-			System.out.println(resource);
+			createDirectoryLocally(resource);
 			file.download(new FileOutputStream(new File(resource + filename))); 
 			return true;
 		} catch (StorageException | URISyntaxException | IOException e) {
@@ -124,7 +92,7 @@ public class AzureFileShareIO {
 	 * @param directoryName the name of the directory being created
 	 * @throws IOException 
 	 */
-	public void mkdir(String directoryName) throws IOException {
+	public void createDirectoryLocally(String directoryName) throws IOException {
 		Path path = Paths.get(directoryName);
 		if (!Files.exists(path)) {
 			Files.createDirectory(path);
@@ -136,11 +104,11 @@ public class AzureFileShareIO {
 	 * 
 	 * @param directoryName the name of the directory being created
 	 */
-	public void createDirectory(String directoryName) {
+	public void createDirectoryInAzure(String directoryName) {
 		try {
 			CloudFileDirectory rootDir = share.getRootDirectoryReference();
-			CloudFileDirectory sampleDir = rootDir.getDirectoryReference(directoryName);
-			sampleDir.createIfNotExists();
+			CloudFileDirectory dirToCreate = rootDir.getDirectoryReference(directoryName);
+			dirToCreate.createIfNotExists();
 		} catch (StorageException | URISyntaxException e) {
 			e.printStackTrace();
 		}
@@ -151,12 +119,12 @@ public class AzureFileShareIO {
 	 * 
 	 * @param directoryName
 	 */
-	public void createDirectoryInsideDirectory(String directoryName, String innerDirectoryName) {
+	public void createDirectoryInsideDirectoryInAzure(String directoryName, String innerDirectoryName) {
 		try {
 			CloudFileDirectory rootDir = share.getRootDirectoryReference();
-			CloudFileDirectory sampleDir = rootDir.getDirectoryReference(directoryName);
-			CloudFileDirectory innerSampleDir = sampleDir.getDirectoryReference(innerDirectoryName);
-			innerSampleDir.createIfNotExists();
+			CloudFileDirectory userDir = rootDir.getDirectoryReference(directoryName);
+			CloudFileDirectory userInnerDir = userDir.getDirectoryReference(innerDirectoryName);
+			userInnerDir.createIfNotExists();
 		} catch (StorageException | URISyntaxException e) {
 			e.printStackTrace();
 		}

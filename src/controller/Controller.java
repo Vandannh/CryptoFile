@@ -67,9 +67,9 @@ public class Controller {
 		ArrayList<String> messages = registration.register();
 		if(isNumeric(messages.get(0).toCharArray()[0])) {
 			azureFileShareIO.connect();
-			azureFileShareIO.createDirectory(messages.get(0));
-			azureFileShareIO.createDirectoryInsideDirectory(messages.get(0), "public");
-			azureFileShareIO.createDirectoryInsideDirectory(messages.get(0), "private");
+			azureFileShareIO.createDirectoryInAzure(messages.get(0));
+			azureFileShareIO.createDirectoryInsideDirectoryInAzure(messages.get(0), "public");
+			azureFileShareIO.createDirectoryInsideDirectoryInAzure(messages.get(0), "private");
 			ArrayList<String> message = new ArrayList<String>();
 			message.add("User created");
 			return message;
@@ -88,8 +88,10 @@ public class Controller {
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 			file = chooser.getSelectedFile();
 		if(file!=null) {
-			azureFileShareIO.upload(userid,	chooseDirectory().toLowerCase(),file);
-			mssql.insert("directory", new String[] {"name","type","user_id","parent_id"}, new String[] {file.getName(),"file",userid,userid});
+			String choosenDirectory = chooseDirectory().toLowerCase();
+			String directoryId = mssql.select("directory", new String[] {"id"}, "name='"+choosenDirectory+"'");
+			azureFileShareIO.upload(userid,choosenDirectory	,file);
+			mssql.insert("directory", new String[] {"name","type","user_id","parent_id"}, new String[] {file.getName(),"file",userid,directoryId});
 			return file.getName()+" has been uploaded";
 		}
 		return "";
