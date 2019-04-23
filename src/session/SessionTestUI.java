@@ -1,4 +1,4 @@
-package Session;
+package session;
 
 import java.awt.Dimension;
 import java.awt.EventQueue;
