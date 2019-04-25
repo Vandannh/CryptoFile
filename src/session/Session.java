@@ -32,8 +32,7 @@ public class Session {
 	 * Generates an ID for the session
 	 */
 	public void generateSessionID() {
-		BCrypt bcrypt = new BCrypt();
-		this.sessionID = bcrypt.hashpw(userID, bcrypt.gensalt(8));
+		this.sessionID = BCrypt.hashpw(userID, BCrypt.gensalt(8));
 	}
 
 	/**
@@ -94,7 +93,6 @@ public class Session {
 
 	public static void main(String[] args) {
 		Session s = new Session("test");
-
 	}
 
 

@@ -14,7 +14,7 @@ import mssql.MSSQL;
  * 
  * @version 1.0
  * @since 2019-04-17
- * @author Mattias Jï¿½nsson & Robin Andersson
+ * @author Mattias Jönsson & Robin Andersson
  *
  */
 public class Controller {
