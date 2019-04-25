@@ -1,12 +1,13 @@
-package controller;
+package main.java.controller;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.swing.*;
-import azure.AzureFileShareIO;
-import database.*;
+
+import main.java.azure.AzureFileShareIO;
+import main.java.database.*;
 import mssql.MSSQL;
 
 /**

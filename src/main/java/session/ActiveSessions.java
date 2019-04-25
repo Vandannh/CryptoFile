@@ -1,4 +1,4 @@
-package session;
+package main.java.session;
 
 import java.util.ArrayList;
 

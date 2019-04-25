@@ -1,11 +1,13 @@
-package design;
+package main.java.design;
 
 import java.awt.EventQueue;
 import javax.swing.*;
+
+import main.java.controller.Controller;
+
 import java.awt.event.*;
 import java.util.*;
 import java.awt.*;
-import controller.Controller;
 
 /**
  * A simple UI for the application

@@ -1,4 +1,4 @@
-package database;
+package main.java.database;
 
 import java.util.ArrayList;
 import java.util.Random;

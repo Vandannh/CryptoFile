@@ -1,4 +1,4 @@
-package azure;
+package main.java.azure;
 
 import java.io.File;
 import java.io.FileOutputStream;
