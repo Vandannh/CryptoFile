@@ -12,7 +12,7 @@ import java.awt.*;
 /**
  * A simple UI for the application
  * 
- * @author Mattias Jï¿½nsson
+ * @author Mattias Jönsson
  *
  */
 public class UI {
@@ -241,7 +241,7 @@ public class UI {
 		frame.getContentPane().setLayout(null);
 		lblCryptofile = new JLabel();
 		lblCryptofile.setBounds(50, 0, 350, 80);
-		lblCryptofile.setIcon(resizeImage("files/logga.png", lblCryptofile));
+		lblCryptofile.setIcon(resizeImage("src/main/resources/images/logga.png", lblCryptofile));
 		lblCryptofile.setFont(new Font("Tahoma", Font.PLAIN, 43));
 		lblCryptofile.setHorizontalAlignment(SwingConstants.CENTER);
 		frame.getContentPane().add(lblCryptofile);

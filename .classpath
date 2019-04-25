@@ -2,12 +2,12 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="jar_files/javax.mail.jar"/>
-	<classpathentry kind="lib" path="jar_files/jBCrypt.jar"/>
-	<classpathentry kind="lib" path="jar_files/SQL.jar"/>
-	<classpathentry kind="lib" path="jar_files/mysql-connector.jar"/>
-	<classpathentry kind="lib" path="jar_files/mssql-jdbc-7.2.1.jre8.jar"/>
-	<classpathentry kind="lib" path="jar_files/azure-storage-8.2.0.jar"/>
-	<classpathentry kind="lib" path="jar_files/jackson-core-2.9.8.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/jar_files/azure-storage-8.2.0.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/jar_files/jackson-core-2.9.8.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/jar_files/javax.mail.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/jar_files/jBCrypt.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/jar_files/mssql-jdbc-7.2.1.jre8.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/jar_files/SQL.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/jar_files/mysql-connector.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
