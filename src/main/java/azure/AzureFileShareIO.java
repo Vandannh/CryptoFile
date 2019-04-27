@@ -154,5 +154,19 @@ public class AzureFileShareIO {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * Deletes a directory
+	 * 
+	 * @param directoryName the name of the directory being deleted
+	 */
+	public void deleteDirectory(String directoryName) {
+		try {
+			CloudFileDirectory rootDir = share.getRootDirectoryReference();
+			CloudFileDirectory containerDir = rootDir.getDirectoryReference(directoryName);
+			containerDir.deleteIfExists();
+		} catch (StorageException | URISyntaxException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

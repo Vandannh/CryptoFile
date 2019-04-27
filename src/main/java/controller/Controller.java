@@ -162,6 +162,12 @@ public class Controller {
 	public String stripSlashes(String input) {
 		return input.replace("\\", "");
 	}
+	public void unregisterUser() {
+		mssql.delete("users", "id="+userid);
+		mssql.delete("directory", "id="+userid);
+		azureFileShareIO.deleteDirectory(userid);
+		logout();
+	}
 	/**
 	 * Logs out the user
 	 */
