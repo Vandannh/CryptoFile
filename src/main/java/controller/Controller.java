@@ -2,10 +2,7 @@ package main.java.controller;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-
 import javax.swing.*;
-
 import main.java.azure.AzureFileShareIO;
 import main.java.database.*;
 import mssql.MSSQL;
@@ -96,8 +93,9 @@ public class Controller {
 			file = chooser.getSelectedFile();
 		if(file!=null) {
 			String choosenDirectory = chooseDirectory().toLowerCase();
-			String directoryId = mssql.select("directory", new String[] {"id"}, "name='"+choosenDirectory+"' AND user_id='"+userid+"'");
+			String directoryId = mssql.select("directory", new String[] {"id"}, "name='"+choosenDirectory+"' AND user_id='"+userid+"'").replace("\t\t\n", "");
 			azureFileShareIO.upload(userid,choosenDirectory	,file);
+			System.out.println(directoryId);
 			mssql.insert("directory", new String[] {"name","type","user_id","parent_id"}, new Object[] {file.getName(),"file",userid,directoryId});
 			return file.getName()+" has been uploaded";
 		}
@@ -118,9 +116,10 @@ public class Controller {
 	}
 	
 	public String deleteFile() {
-		String directory = chooseDirectory().toLowerCase();
+		String choosenDirectory = chooseDirectory().toLowerCase();
 		String filename = JOptionPane.showInputDialog("Write file to Delete.(Including the file extension)");
-		if(azureFileShareIO.deleteFile(userid,directory,filename))
+		mssql.delete("Directory", "name='"+filename+"' AND parent_id='"+mssql.select("directory", new String[] {"id"}, "name='"+choosenDirectory+"' AND user_id='"+userid+"'").replace("\t\t\n", "")+"'");
+		if(azureFileShareIO.deleteFile(userid,choosenDirectory,filename))
 			return filename+" has been deleted";
 		return "An error occured. Delete failed";
 	}
