@@ -19,7 +19,7 @@ public class Session {
 	private Timer timer;
 	private TimerTask task;
 	private int secondsPassed = 0;
-	public final int sessionMaxTime = 10;// 15*60*1000; //15 minutes written in miliseconds
+	public final int sessionMaxTime = 15*60*1000; //15 minutes written in miliseconds
 
 
 	public Session(String userID) {
