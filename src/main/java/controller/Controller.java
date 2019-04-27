@@ -96,13 +96,14 @@ public class Controller {
 			file = chooser.getSelectedFile();
 		if(file!=null) {
 			String choosenDirectory = chooseDirectory().toLowerCase();
-			String directoryId = mssql.select("directory", new String[] {"id"}, "name='"+choosenDirectory+"'");
+			String directoryId = mssql.select("directory", new String[] {"id"}, "name='"+choosenDirectory+"' AND user_id='"+userid+"'");
 			azureFileShareIO.upload(userid,choosenDirectory	,file);
-			mssql.insert("directory", new String[] {"name","type","user_id","parent_id"}, new String[] {file.getName(),"file",userid,directoryId});
+			mssql.insert("directory", new String[] {"name","type","user_id","parent_id"}, new Object[] {file.getName(),"file",userid,directoryId});
 			return file.getName()+" has been uploaded";
 		}
 		return "";
 	}
+
 	/**
 	 * Tries to download a file from Azure File Share
 	 * 
