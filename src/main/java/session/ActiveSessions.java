@@ -22,7 +22,7 @@ public class ActiveSessions {
 		return null;
 	}
 	
-	public void removeSession(String sessionID) {
-		sessions.remove(getSession(sessionID));
+	public void removeSession(Session session) {
+		sessions.remove(session);
 	}
 }

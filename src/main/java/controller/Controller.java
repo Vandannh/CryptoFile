@@ -9,6 +9,7 @@ import javax.swing.*;
 import main.java.azure.AzureFileShareIO;
 import main.java.database.*;
 import mssql.MSSQL;
+import main.java.session.*;
 
 /**
  * Is used to control the events in the application 
@@ -21,10 +22,12 @@ import mssql.MSSQL;
 public class Controller {
 	private AzureFileShareIO azureFileShareIO = new AzureFileShareIO();
 	private Authentication authentication = new Authentication();
+	private ActiveSessions activeSession = new ActiveSessions();
 	private Registration registration;
 	private String userid;
 	private MSSQL mssql;
 	private File file;
+	private Session session;
 	private final String connectionString = "YOUR_CONNECTION_STRING"; // Edit this
 
 	/**
@@ -46,6 +49,9 @@ public class Controller {
 		if(authentication.getAuthentication(username, password)) {
 			azureFileShareIO.connect();
 			userid=mssql.select("users", new String[] {"id"}, "username='"+username+"'").replace("\t\t", "").trim();
+			session = new Session(userid);
+			activeSession.addSession(session);
+			new AutomaticLogout().start();
 			return true;
 		}
 		else
@@ -156,5 +162,19 @@ public class Controller {
 	public String stripSlashes(String input) {
 		return input.replace("\\", "");
 	}
-
+	/**
+	 * Logs out the user
+	 */
+	public void logout() {
+		activeSession.removeSession(session);
+	}
+	private class AutomaticLogout extends Thread{
+		public void run(){
+			while(!Thread.interrupted())
+				if(session.getSecondsPassed()==session.sessionMaxTime) {
+					logout();
+					interrupt();
+				}
+		}
+	}
 }

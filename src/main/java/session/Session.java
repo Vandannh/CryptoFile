@@ -19,7 +19,7 @@ public class Session {
 	private Timer timer;
 	private TimerTask task;
 	private int secondsPassed = 0;
-	private int sessionMaxTime = 15*60*1000; //15 minutes written in miliseconds
+	public final int sessionMaxTime = 10;// 15*60*1000; //15 minutes written in miliseconds
 
 
 	public Session(String userID) {
@@ -64,7 +64,6 @@ public class Session {
 					changeTime(1);
 				else
 					timer.cancel();
-				System.out.println("Seconds passed: " + secondsPassed);
 			}
 		};
 		timer.scheduleAtFixedRate(task, 0, 1000);
@@ -89,11 +88,4 @@ public class Session {
 	public String getSessionID() {
 		return this.sessionID;
 	}
-
-
-	public static void main(String[] args) {
-		Session s = new Session("test");
-	}
-
-
 }
