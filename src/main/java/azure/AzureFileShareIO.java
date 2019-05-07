@@ -172,6 +172,20 @@ public class AzureFileShareIO {
 		}
 		return 0;
 	}
+	/**
+	 * Deletes a directory
+	 * 
+	 * @param directoryName the name of the directory being deleted
+	 */
+	public void deleteDirectory(String directoryName) {
+		try {
+			CloudFileDirectory rootDir = share.getRootDirectoryReference();
+			CloudFileDirectory containerDir = rootDir.getDirectoryReference(directoryName);
+			containerDir.deleteIfExists();
+		} catch (StorageException | URISyntaxException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Displays used memory in contrast to sharequota, ie how much space have been used in percentage 
