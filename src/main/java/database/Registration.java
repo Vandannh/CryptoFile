@@ -41,13 +41,14 @@ public class Registration {
 	 * array is null 
 	 */
 	public ArrayList<String> register() {
-		ArrayList<String> messages = new  ArrayList<String>();
+		ArrayList<String> messages = new ArrayList<String>();
 		Object[][] validation = {validate(username, 1),validate(email, 2),validate(password, 3)};
 		int errorCount = (int)validation[0][0]+(int)validation[1][0]+(int)validation[2][0];
 		if(errorCount>0) {
 			messages.add((String)validation[0][1]);
 			messages.add((String)validation[1][1]);
 			messages.add((String)validation[2][1]);
+			deleteEmptyElement(messages);
 		}
 		else {
 			String code = generateUserCode();
@@ -60,6 +61,7 @@ public class Registration {
 		}
 		return messages;
 	}
+	
 	/**
 	 * Validates the users input.
 	 * 
@@ -219,4 +221,18 @@ public class Registration {
 		return BCrypt.hashpw(Integer.toString(new Random().nextInt(1000000000)), BCrypt.gensalt(12));
 	}
 	
+	/**
+	 * Deletes all empty elements from a ArrayList
+	 * 
+	 * @param messages the ArrayList in which the elements will be deleted from
+	 */
+	private void deleteEmptyElement(ArrayList<String> messages) {
+		ArrayList<String> toRemove = new ArrayList<String>();
+		for (String str : messages) {
+		    if (str.isEmpty()) {
+		        toRemove.add(str);
+		    }
+		}
+		messages.removeAll(toRemove);
+	}
 }
