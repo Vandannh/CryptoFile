@@ -48,6 +48,7 @@
     </display>  
   </class>  
   <association id="6">    
+<<<<<<< HEAD
     <end type="SOURCE" refId="1" navigable="false">      
       <attribute id="7" name="authentication">        
         <position height="0" width="0" x="0" y="0"/>      
@@ -60,7 +61,24 @@
     <display labels="false" multiplicity="true"/>  
   </association>  
   <association id="9">    
+=======
+>>>>>>> refs/heads/feature/SQLInjections
     <end type="SOURCE" refId="1" navigable="false">      
+<<<<<<< HEAD
+=======
+      <attribute id="7" name="azureFileShareIO">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="8" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <association id="9">    
+    <end type="SOURCE" refId="1" navigable="false">      
+>>>>>>> refs/heads/feature/SQLInjections
       <attribute id="10" name="registration">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
@@ -72,6 +90,7 @@
     <display labels="false" multiplicity="true"/>  
   </association>  
   <association id="12">    
+<<<<<<< HEAD
     <end type="SOURCE" refId="3" navigable="false">      
       <attribute id="13" name="controller">        
         <position height="0" width="0" x="0" y="0"/>      
@@ -84,15 +103,36 @@
     <display labels="false" multiplicity="true"/>  
   </association>  
   <association id="15">    
+=======
+>>>>>>> refs/heads/feature/SQLInjections
     <end type="SOURCE" refId="1" navigable="false">      
+<<<<<<< HEAD
       <attribute id="16" name="azureFileShareIO">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="17" minimum="0" maximum="1">        
+=======
+      <attribute id="13" name="authentication">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="14" minimum="0" maximum="1">        
+>>>>>>> refs/heads/feature/SQLInjections
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <association id="15">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="16" name="controller">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
       <multiplicity id="17" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
+    <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="false" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 

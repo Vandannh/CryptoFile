@@ -7,7 +7,12 @@
 	<classpathentry kind="lib" path="src/main/resources/jar_files/javax.mail.jar"/>
 	<classpathentry kind="lib" path="src/main/resources/jar_files/jBCrypt.jar"/>
 	<classpathentry kind="lib" path="src/main/resources/jar_files/mssql-jdbc-7.2.1.jre8.jar"/>
+<<<<<<< HEAD
 	<classpathentry kind="lib" path="src/main/resources/jar_files/SQL.jar"/>
 	<classpathentry kind="lib" path="src/main/resources/jar_files/mysql-connector.jar"/>
+=======
+	<classpathentry kind="lib" path="src/main/resources/jar_files/mysql-connector.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/jar_files/SQL.jar"/>
+>>>>>>> refs/heads/feature/SQLInjections
 	<classpathentry kind="output" path="bin"/>
 </classpath>
