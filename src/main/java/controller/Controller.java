@@ -15,7 +15,7 @@ import mssql.MSSQL;
  * 
  * @version 1.0
  * @since 2019-04-17
- * @author Mattias Jönsson & Robin Andersson
+ * @author Mattias Jï¿½nsson & Robin Andersson
  *
  */
 public class Controller {
@@ -44,8 +44,8 @@ public class Controller {
 		username = stripSlashes(escapeCharacters(username)).trim();
 		password = stripSlashes(escapeCharacters(password)).trim();
 		if(authentication.getAuthentication(username, password)) {
-			azureFileShareIO.connect();
 			userid=mssql.select("users", new String[] {"id"}, "username='"+username+"'").replace("\t\t", "").trim();
+			azureFileShareIO.connect("user"+userid);
 			return true;
 		}
 		else
@@ -67,10 +67,9 @@ public class Controller {
 		registration = new Registration(username, email, password);
 		ArrayList<String> messages = registration.register();
 		if(isNumeric(messages.get(0).toCharArray()[0])) {
-			azureFileShareIO.connect();
-			azureFileShareIO.createDirectoryInAzure(messages.get(0));
-			azureFileShareIO.createDirectoryInsideDirectoryInAzure(messages.get(0), "public");
-			azureFileShareIO.createDirectoryInsideDirectoryInAzure(messages.get(0), "private");
+			azureFileShareIO.connect("user"+messages.get(0));
+			azureFileShareIO.createDirectoryInAzure("public");
+			azureFileShareIO.createDirectoryInAzure("private");
 			ArrayList<String> message = new ArrayList<String>();
 			message.add("User created");
 			return message;
@@ -91,7 +90,7 @@ public class Controller {
 		if(file!=null) {
 			String choosenDirectory = chooseDirectory().toLowerCase();
 			String directoryId = mssql.select("directory", new String[] {"id"}, "name='"+choosenDirectory+"'");
-			azureFileShareIO.upload(userid,choosenDirectory	,file);
+			azureFileShareIO.upload(choosenDirectory,file);
 			mssql.insert("directory", new String[] {"name","type","user_id","parent_id"}, new String[] {file.getName(),"file",userid,directoryId});
 			return file.getName()+" has been uploaded";
 		}
@@ -105,7 +104,7 @@ public class Controller {
 	public String downloadFile(){
 		String directory = chooseDirectory().toLowerCase();
 		String filename = JOptionPane.showInputDialog("Write file to download.(Including the file extension)");
-		if(azureFileShareIO.download(userid,directory,filename))
+		if(azureFileShareIO.download(directory,filename))
 			return filename+" has been downloaded";
 		return "An error occured. Download failed";
 	}
