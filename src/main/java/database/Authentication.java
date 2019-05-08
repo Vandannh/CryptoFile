@@ -11,7 +11,7 @@ import mssql.MSSQL;
 <<<<<<< HEAD
  * @author Mattias Jï¿½nsson
 =======
- * @author Mattias Jönsson
+ * @author Mattias Jï¿½nsson
 >>>>>>> refs/heads/feature/SQLInjections
  *
  */
