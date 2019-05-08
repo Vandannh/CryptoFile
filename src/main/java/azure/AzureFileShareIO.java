@@ -55,7 +55,7 @@ public class AzureFileShareIO {
 				properties.setShareQuota(5); //set the limit of storage to 5GB
 				share.uploadProperties();
 			}
-			System.out.println(usedMemoryPercentage());
+			System.out.println(usedMemoryPercentage()); 
 		} catch (InvalidKeyException | URISyntaxException | StorageException e) {
 			e.printStackTrace();
 		}
@@ -196,4 +196,28 @@ public class AzureFileShareIO {
 		FileShareProperties properties = share.getProperties();
 		return checkAvailableSpace()/(properties.getShareQuota()*1000);
 	}
+
+	/**
+	 * Retrieve the name of all files in a specified directory in a users fileshare
+	 * @param directoryName - name of the directory to retrieve filenames from
+	 * @return ArrayList with the filenames
+	 */
+	public ArrayList<String> getFileNamesInDirectory(String directoryName) {
+		ArrayList<String> filenames = new ArrayList<String>();
+		try {
+			CloudFileDirectory rootDir = share.getRootDirectoryReference();
+			CloudFileDirectory directory = rootDir.getDirectoryReference(directoryName);
+			Iterable<ListFileItem> items = directory.listFilesAndDirectories();
+			for(ListFileItem file: items) {
+				String filename = file.getUri().toString().substring(file.getUri().toString().lastIndexOf('/')+1).replaceAll("%20", " "); //retrieves the filename in a clean format
+				filenames.add(filename);
+			}
+		}catch(StorageException | URISyntaxException e) {
+			e.printStackTrace();
+		}
+		return filenames;
+	}
+
+	
+
 }
