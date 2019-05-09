@@ -109,12 +109,12 @@ public class AzureFileShareIO {
 	 * @param name of file to be deleted
 	 * @return if the download was successful
 	 */
-	public boolean deleteFile(String userDirectory, String directory, String filename) {
+	public boolean deleteFile(String directory, String filename) {
 		try {
 			CloudFileDirectory rootDir = share.getRootDirectoryReference();
-			CloudFileDirectory userDir = rootDir.getDirectoryReference(userDirectory);
-			CloudFileDirectory userInnerDir = userDir.getDirectoryReference(directory);		
-			CloudFile file = userInnerDir.getFileReference(filename);
+			CloudFileDirectory userDir = rootDir.getDirectoryReference(directory);	
+			System.out.println(userDir.getName());
+			CloudFile file = userDir.getFileReference(filename);
 			if(file.deleteIfExists()) {
 				System.out.println("file: " + file.getName().toString() + " has been deleted!");
 				return true;
@@ -183,6 +183,14 @@ public class AzureFileShareIO {
 			CloudFileDirectory containerDir = rootDir.getDirectoryReference(directoryName);
 			containerDir.deleteIfExists();
 		} catch (StorageException | URISyntaxException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteShare(String shareName) {
+		try {
+			share.deleteIfExists();
+		} catch (StorageException e) {
 			e.printStackTrace();
 		}
 	}

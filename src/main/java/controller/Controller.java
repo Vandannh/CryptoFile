@@ -94,8 +94,10 @@ public class Controller {
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 			file = chooser.getSelectedFile();
 		if(file!=null) {
+			if(file.length()>1048576*5)
+				return "File is too big";
 			String choosenDirectory = chooseDirectory().toLowerCase();
-			String directoryId = mssql.select("directory", new String[] {"id"}, "name='"+choosenDirectory+"'");
+			String directoryId = mssql.select("directory", new String[] {"id"}, "name='"+choosenDirectory+"' AND user_id='"+userid+"'").replace("\t\t", "").trim();
 			azureFileShareIO.upload(choosenDirectory,file);
 			mssql.insert("directory", new String[] {"name","type","user_id","parent_id"}, new String[] {file.getName(),"file",userid,directoryId});
 			return file.getName()+" has been uploaded";
@@ -118,8 +120,10 @@ public class Controller {
 	public String deleteFile() {
 		String directory = chooseDirectory().toLowerCase();
 		String filename = JOptionPane.showInputDialog("Write file to Delete.(Including the file extension)");
-		if(azureFileShareIO.deleteFile(userid,directory,filename))
+		if(azureFileShareIO.deleteFile(directory,filename)) {
+			mssql.delete("directory", "filename='"+filename+"';");
 			return filename+" has been deleted";
+		}
 		return "An error occured. Delete failed";
 	}
 
@@ -139,17 +143,18 @@ public class Controller {
 		return list.getSelectedValue();
 	}
 
-	public void unregisterUser() {
+	public boolean unregisterUser() {
 		mssql.delete("users", "id="+userid);
-		mssql.delete("directory", "id="+userid);
-		azureFileShareIO.deleteDirectory(userid);
-		logout();
+		mssql.delete("directory", "user_id="+userid);
+		azureFileShareIO.deleteShare("user"+userid);
+		return logout();
 	}
 	/**
 	 * Logs out the user
 	 */
-	public void logout() {
+	public boolean logout() {
 		activeSession.removeSession(session);
+		return true;
 	}
 	private class AutomaticLogout extends Thread{
 		public void run(){

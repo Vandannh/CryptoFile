@@ -8,11 +8,7 @@ import mssql.MSSQL;
  * 
  * @version 1.0
  * @since 2019-04-13
-<<<<<<< HEAD
  * @author Mattias J�nsson
-=======
- * @author Mattias J�nsson
->>>>>>> refs/heads/feature/SQLInjections
  *
  */
 public class Authentication {

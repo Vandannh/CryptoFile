@@ -12,7 +12,6 @@ import mssql.MSSQL;
  * 
  * @version 1.0
  * @since 2019-04-14
-<<<<<<< HEAD
  * @author Mattias J�nsson
  *
  */
@@ -53,8 +52,8 @@ public class Registration {
 		}
 		else {
 			String code = generateUserCode();
-			mssql.insert("Users", new String[] {"username","password","email","code"},new String[] {username,hashPassword(password),email,code});
-			String id = mssql.select("Users", new String[] {"id"}, "username='"+username+"' AND code ='"+code+"'").replace("\t\t", "").trim();
+			mssql.insert("Users", new String[] {"username","password","email","user_code"},new String[] {username,hashPassword(password),email,code});
+			String id = mssql.select("Users", new String[] {"id"}, "username='"+username+"' AND user_code ='"+code+"'").replace("\t\t", "").trim();
 			mssql.insert("Directory", new String[] {"name","user_id","type"}, new Object[] {id,Integer.parseInt(id),"Directory"});
 			mssql.insert("Directory", new String[] {"name","user_id","type"}, new Object[] {"private",Integer.parseInt(id),"Directory"});
 			mssql.insert("Directory", new String[] {"name","user_id","type"}, new Object[] {"public",Integer.parseInt(id),"Directory"});
@@ -83,7 +82,9 @@ public class Registration {
 			if(input.isEmpty())
 				inputError = "Username is required";
 			else {
-				if(!isValidUsername(input))
+				if (input.length()>25)
+					inputError = "Username is to long. Maximum of 25 characters.";
+				else if(!isValidUsername(input))
 					inputError = "Username is not valid";
 				else if(usernameExists(input))
 					inputError = "Username already exists";
@@ -101,7 +102,7 @@ public class Registration {
 			break;
 		case 3:
 			if(input.isEmpty())
-				inputError = "Password address is required";
+				inputError = "Password is required";
 			else 
 				if(!isValidPassword(input))
 					inputError = "Password is not valid";
