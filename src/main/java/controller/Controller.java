@@ -2,12 +2,18 @@ package main.java.controller;
 
 import java.io.File;
 import java.util.ArrayList;
-import javax.swing.*;
+
+import javax.mail.Session;
+import javax.swing.JFileChooser;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+
 import main.java.azure.AzureFileShareIO;
-import main.java.database.*;
+import main.java.database.Authentication;
+import main.java.database.Registration;
+import main.java.session.ActiveSessions;
+import main.java.text.SafeString;
 import mssql.MSSQL;
-import main.java.session.*;
-import main.java.text.*; 
 
 /**
  * Is used to control the events in the application 
