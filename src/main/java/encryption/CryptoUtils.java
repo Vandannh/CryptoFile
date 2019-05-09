@@ -6,8 +6,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.Key;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
- 
+import java.security.PrivateKey;
+import java.security.PublicKey;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -23,18 +27,15 @@ public class CryptoUtils {
     private static final String ALGORITHM = "AES";
     private static final String TRANSFORMATION = "AES";
  
-    public static void encrypt(String key, File inputFile, File outputFile)
-            throws CryptoException {
+    public static void encrypt(String key, File inputFile, File outputFile) throws CryptoException {
         doCrypto(Cipher.ENCRYPT_MODE, key, inputFile, outputFile);
     }
  
-    public static void decrypt(String key, File inputFile, File outputFile)
-            throws CryptoException {
+    public static void decrypt(String key, File inputFile, File outputFile) throws CryptoException {
         doCrypto(Cipher.DECRYPT_MODE, key, inputFile, outputFile);
     }
  
-    private static void doCrypto(int cipherMode, String key, File inputFile,
-            File outputFile) throws CryptoException {
+    private static void doCrypto(int cipherMode, String key, File inputFile, File outputFile) throws CryptoException {
         try {
             Key secretKey = new SecretKeySpec(key.getBytes(), ALGORITHM);
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
@@ -55,7 +56,7 @@ public class CryptoUtils {
         } catch (NoSuchPaddingException | NoSuchAlgorithmException
                 | InvalidKeyException | BadPaddingException
                 | IllegalBlockSizeException | IOException ex) {
-            throw new CryptoException("Error encrypting/decrypting file"+cipherMode, ex);
+            throw new CryptoException("Error encrypting/decrypting file. "+cipherMode, ex);
         }
     }
 }

@@ -111,10 +111,10 @@ public class Encrypt {
 			byte[] b = cipher.doFinal(skey.getEncoded());
 			out.write(b);
 			out.flush();
-			System.err.println("AES Key Length: " + b.length);
+//			System.err.println("AES Key Length: " + b.length);
 			out.write(iv);
 			out.flush();
-			System.err.println("IV Length: " + iv.length);
+//			System.err.println("IV Length: " + iv.length);
 
 			Cipher ci = Cipher.getInstance("AES/CBC/PKCS5Padding");
 			ci.init(Cipher.ENCRYPT_MODE, skey, ivspec);
@@ -133,6 +133,11 @@ public class Encrypt {
 			cipher.init(Cipher.DECRYPT_MODE, publicKey);
 			byte[] b = new byte[256];
 			in.read(b);
+			
+			for(byte b1 : b){
+				System.out.println(b1);
+			}
+			
 			byte[] keyb = cipher.doFinal(b);
 			
 			SecretKeySpec secretkey = new SecretKeySpec(keyb, "AES");
@@ -157,6 +162,7 @@ public class Encrypt {
 			byte[] ibuf = new byte[1024];
 			int len;
 			while ((len = in.read(ibuf)) != -1) {
+				System.out.println(len);
 				byte[] obuf = ci.update(ibuf, 0, len);
 				if ( obuf != null ) out.write(obuf);
 			}
