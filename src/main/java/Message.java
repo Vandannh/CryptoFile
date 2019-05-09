@@ -14,7 +14,7 @@ public class Message implements Serializable {
 		this.type=type;
 		this.username=username;
 		this.email=email;
-		this.password=password;
+		this.password=password; 
 	}
 	
 	public Message(int type, String username, String password) {
