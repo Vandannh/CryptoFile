@@ -6,6 +6,7 @@ import java.util.Random;
 import javax.mail.internet.*;
 import org.mindrot.jbcrypt.BCrypt;
 import mssql.MSSQL;
+import test2.ConnectionStrings;
 
 /**
  * This class is used to register a user in the database.
@@ -18,7 +19,7 @@ import mssql.MSSQL;
 public class Registration {
 	private String username,password,email;
 	private MSSQL mssql;
-	private final String connectionString = "YOUR_CONNECTION_STRING"; // Edit this
+	private final String connectionString = ConnectionStrings.connectionString;
 
 	/**
 	 * Constructs a Registration-object containing the username, email-address and password

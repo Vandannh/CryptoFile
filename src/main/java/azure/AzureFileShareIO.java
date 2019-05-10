@@ -17,6 +17,8 @@ import java.util.Map;
 import com.microsoft.azure.storage.*;
 import com.microsoft.azure.storage.file.*;
 
+import test2.ConnectionStrings;
+
 /**
  * This class will function as a bridge between Azure storage and local files. 
  * By connecting to an Azure storage account and store/get files from the storage. 
@@ -35,7 +37,7 @@ public class AzureFileShareIO {
 	 * The Connection string used to connect to Azure storage account
 	 * Change this string if you want to change which storage to work from
 	 */
-	public static final String storageConnectionString = "YOUR_CONNECTION_STRING"; // Edit this
+	public static final String storageConnectionString = ConnectionStrings.storageConnectionString;
 
 
 	/**

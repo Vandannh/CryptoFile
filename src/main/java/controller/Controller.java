@@ -9,6 +9,7 @@ import main.java.azure.*;
 import main.java.database.*;
 import main.java.encryption.*;
 import mssql.MSSQL;
+import test2.ConnectionStrings;
 import main.java.session.*;
 import main.java.text.*; 
 
@@ -31,7 +32,7 @@ public class Controller {
 	private Session session;
 	private final String privateKey="temp/rsa.key", publicKey="temp/rsa.pub";
 
-	private final String connectionString = "YOUR_CONNECTION_STRING"; // Edit this
+	private final String connectionString = ConnectionStrings.connectionString;
 
 	/**
 	 * Connects to a MS SQL (SQL Server) database
