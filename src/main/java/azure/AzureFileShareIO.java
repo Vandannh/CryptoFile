@@ -19,6 +19,8 @@ import java.util.Map;
 import com.microsoft.azure.storage.*;
 import com.microsoft.azure.storage.file.*;
 
+import test2.ConnectionStrings;
+
 /**
  * This class will function as a bridge between Azure storage and local files. 
  * By connecting to an Azure storage account and store/get files from the storage. 
@@ -37,9 +39,7 @@ public class AzureFileShareIO {
 	 * The Connection string used to connect to Azure storage account
 	 * Change this string if you want to change which storage to work from
 	 */
-	public static final String storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=cryptofile;"
-	        + "AccountKey=SOdWWB7NRjNO0RJynpseanSoLBpxkCopw/QF6ZE96vT2IUf73/JiJ1tZpHw+FkAiCMUePNEkv/0OwAkkDaaP4A==;"
-		+ "EndpointSuffix=core.windows.net"; // Edit this
+	public static final String storageConnectionString = ConnectionStrings.storageConnectionString;
 
 
 	/**
@@ -91,11 +91,16 @@ public class AzureFileShareIO {
 	 * @param filename the name of the file to download
 	 * @return if the download was successful
 	 */
-	public byte[] download(String directory, String filename) {
+//<<<<<<< HEAD
+	public byte[] download(String directory, String filename, String resource) {
+//=======
+//	public boolean download(String directory, String filename, String resource) {
+//>>>>>>> branch 'develop' of https://github.com/Vandannh/CryptoFile.git
 		try {
 			CloudFileDirectory rootDir = share.getRootDirectoryReference();
 			CloudFileDirectory userDir = rootDir.getDirectoryReference(directory);	
 			CloudFile file = userDir.getFileReference(filename);
+//<<<<<<< HEAD
 //			String resource = "downloads/";
 //			createDirectoryLocally(resource);
 //			file.download(new FileOutputStream(new File(resource + filename))); 
@@ -106,6 +111,14 @@ public class AzureFileShareIO {
 			
 			return buffer;
 		} catch (StorageException | URISyntaxException e) {
+//=======
+//			createDirectoryLocally(resource);
+//			try(FileOutputStream fos = new  FileOutputStream(new File(resource + filename))){
+//				file.download(fos);
+//			}
+//			return true;
+//		} catch (StorageException | URISyntaxException | IOException e) {
+//>>>>>>> branch 'develop' of https://github.com/Vandannh/CryptoFile.git
 			e.printStackTrace();
 			return null;
 		}
@@ -118,12 +131,12 @@ public class AzureFileShareIO {
 	 * @param name of file to be deleted
 	 * @return if the download was successful
 	 */
-	public boolean deleteFile(String userDirectory, String directory, String filename) {
+	public boolean deleteFile(String directory, String filename) {
 		try {
 			CloudFileDirectory rootDir = share.getRootDirectoryReference();
-			CloudFileDirectory userDir = rootDir.getDirectoryReference(userDirectory);
-			CloudFileDirectory userInnerDir = userDir.getDirectoryReference(directory);		
-			CloudFile file = userInnerDir.getFileReference(filename);
+			CloudFileDirectory userDir = rootDir.getDirectoryReference(directory);	
+			System.out.println(userDir.getName());
+			CloudFile file = userDir.getFileReference(filename);
 			if(file.deleteIfExists()) {
 				System.out.println("file: " + file.getName().toString() + " has been deleted!");
 				return true;
@@ -192,6 +205,14 @@ public class AzureFileShareIO {
 			CloudFileDirectory containerDir = rootDir.getDirectoryReference(directoryName);
 			containerDir.deleteIfExists();
 		} catch (StorageException | URISyntaxException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteShare(String shareName) {
+		try {
+			share.deleteIfExists();
+		} catch (StorageException e) {
 			e.printStackTrace();
 		}
 	}

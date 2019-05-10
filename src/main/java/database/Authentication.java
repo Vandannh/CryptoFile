@@ -2,6 +2,7 @@ package main.java.database;
 
 import org.mindrot.jbcrypt.BCrypt;
 import mssql.MSSQL;
+import test2.ConnectionStrings;
 
 /**
  * The class is used to authenticate the user
@@ -13,9 +14,9 @@ import mssql.MSSQL;
  */
 public class Authentication {
 	private MSSQL mssql;
-	private final String connectionString = "jdbc:sqlserver://cryptofileserver.database.windows.net:1433;"
-			  + "database=cryptofile;user=db_writer_reader@cryptofileserver;password=CryptoFileHasACoolPassword1;"
-			  + "encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;"; // Edit this
+	
+	private final String connectionString = ConnectionStrings.connectionString;
+
 	/**
 	 * Sets up a connection to the database.
 	 */

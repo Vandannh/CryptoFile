@@ -6,6 +6,7 @@ import java.util.Random;
 import javax.mail.internet.*;
 import org.mindrot.jbcrypt.BCrypt;
 import mssql.MSSQL;
+import test2.ConnectionStrings;
 
 /**
  * This class is used to register a user in the database.
@@ -18,9 +19,8 @@ import mssql.MSSQL;
 public class Registration {
 	private String username,password,email;
 	private MSSQL mssql;
-	private final String connectionString = "jdbc:sqlserver://cryptofileserver.database.windows.net:1433;"
-			  + "database=cryptofile;user=db_writer_reader@cryptofileserver;password=CryptoFileHasACoolPassword1;"
-			  + "encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;"; // Edit this
+	
+	private final String connectionString = ConnectionStrings.connectionString;
 
 	/**
 	 * Constructs a Registration-object containing the username, email-address and password
@@ -84,7 +84,9 @@ public class Registration {
 			if(input.isEmpty())
 				inputError = "Username is required";
 			else {
-				if(!isValidUsername(input))
+				if (input.length()>25)
+					inputError = "Username is to long. Maximum of 25 characters.";
+				else if(!isValidUsername(input))
 					inputError = "Username is not valid";
 				else if(usernameExists(input))
 					inputError = "Username already exists";
@@ -102,7 +104,7 @@ public class Registration {
 			break;
 		case 3:
 			if(input.isEmpty())
-				inputError = "Password address is required";
+				inputError = "Password is required";
 			else 
 				if(!isValidPassword(input))
 					inputError = "Password is not valid";

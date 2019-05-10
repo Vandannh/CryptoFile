@@ -2,6 +2,8 @@ package main.java.server;
 
 import java.io.*;
 import java.net.*;
+import java.security.NoSuchAlgorithmException;
+
 import main.java.Message;
 import main.java.controller.*;
 
@@ -54,9 +56,9 @@ public class Server {
 					}
 					oos.writeObject(operation(msg));
 				}
-			} catch (IOException | ClassNotFoundException e) {}
+			} catch (IOException | ClassNotFoundException | NoSuchAlgorithmException e) {}
 		}
-		private Object operation(Message msg) {
+		private Object operation(Message msg) throws NoSuchAlgorithmException, IOException {
 			switch(msg.getType()) {
 			case Message.LOGIN:		
 				if(controller.login(msg.getUsername(), msg.getPassword())) return "Logged in";
