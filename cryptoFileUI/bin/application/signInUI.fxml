@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+
+<AnchorPane fx:id="signInRoot" prefHeight="580.0" prefWidth="450.0" style="-fx-background-color: rgb(255,255,255);" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
+   <children>
+      <TextField fx:id="username" layoutX="50.0" layoutY="225.0" prefHeight="55.0" prefWidth="350.0" promptText="Username" />
+      <PasswordField fx:id="password" layoutX="50.0" layoutY="325.0" prefHeight="55.0" prefWidth="350.0" promptText="Password" />
+      <Button fx:id="signIn" layoutX="50.0" layoutY="435.0" mnemonicParsing="false" onAction="#signInButton" prefHeight="50.0" prefWidth="350.0" style="-fx-background-color: rgb(90, 51, 103);" text="Sign in" textFill="WHITE">
+         <font>
+            <Font name="Helvetica Neue Bold" size="16.0" />
+         </font>
+      </Button>
+      <Button fx:id="signUpNow" layoutX="109.0" layoutY="500.0" mnemonicParsing="false" onAction="#signUpNowButton" style="-fx-background-color: rgb(255,255,255);" text="Don't have an account? Sign up" textFill="#1a74a8">
+         <font>
+            <Font name="Helvetica Neue Bold" size="14.0" />
+         </font>
+      </Button>
+      <Label fx:id="incorrectSignIn" layoutX="50.0" layoutY="385.0" prefHeight="18.0" prefWidth="350.0" text="Username, emal or password is incorrect. Try again!" textFill="#cd0f0f">
+         <font>
+            <Font name="Helvetica Neue Bold" size="14.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="90.0" fitWidth="350.0" layoutX="51.0" layoutY="90.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../Desktop/Skärmavbild%202019-05-07%20kl.%2012.13.14.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
