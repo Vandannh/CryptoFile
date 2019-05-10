@@ -6,6 +6,8 @@ import javax.swing.*;
 import main.java.controller.Controller;
 
 import java.awt.event.*;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.awt.*;
 
@@ -175,7 +177,12 @@ public class UI {
 				String username = usernameField.getText();
 				String email = emailField.getText();
 				String password=passwordField.getText();
-				ArrayList<String> message = controller.register(username, email, password);
+				ArrayList<String> message = null;
+				try {
+					message = controller.register(username, email, password);
+				} catch (NoSuchAlgorithmException | IOException e) {
+					e.printStackTrace();
+				}
 				for(String s : message) {
 					System.out.println(s);
 					lblResult.setText(lblResult.getText()+"\n"+s);

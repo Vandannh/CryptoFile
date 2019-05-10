@@ -87,14 +87,15 @@ public class AzureFileShareIO {
 	 * @param filename the name of the file to download
 	 * @return if the download was successful
 	 */
-	public boolean download(String directory, String filename) {
+	public boolean download(String directory, String filename, String resource) {
 		try {
 			CloudFileDirectory rootDir = share.getRootDirectoryReference();
 			CloudFileDirectory userDir = rootDir.getDirectoryReference(directory);	
 			CloudFile file = userDir.getFileReference(filename);
-			String resource = "downloads/";
 			createDirectoryLocally(resource);
-			file.download(new FileOutputStream(new File(resource + filename))); 
+			try(FileOutputStream fos = new  FileOutputStream(new File(resource + filename))){
+				file.download(fos);
+			}
 			return true;
 		} catch (StorageException | URISyntaxException | IOException e) {
 			e.printStackTrace();

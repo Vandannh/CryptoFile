@@ -1,10 +1,13 @@
 package main.java.controller;
 
-import java.io.File;
-import java.util.ArrayList;
+import java.io.*;
+import java.nio.file.*;
+import java.security.*;
+import java.util.*;
 import javax.swing.*;
-import main.java.azure.AzureFileShareIO;
+import main.java.azure.*;
 import main.java.database.*;
+import main.java.encryption.*;
 import mssql.MSSQL;
 import main.java.session.*;
 import main.java.text.*; 
@@ -24,9 +27,9 @@ public class Controller {
 	private Registration registration;
 	private String userid;
 	private MSSQL mssql;
-	private File file;
 	private SafeString safeString = new SafeString();
 	private Session session;
+	private final String privateKey="temp/rsa.key", publicKey="temp/rsa.pub";
 
 	private final String connectionString = "YOUR_CONNECTION_STRING"; // Edit this
 
@@ -51,11 +54,23 @@ public class Controller {
 			azureFileShareIO.connect("user"+userid);
 			session = new Session(userid);
 			activeSession.addSession(session);
+			getKeyPair();
 			new AutomaticLogout().start();
 			return true;
 		}
 		else
 			return false;
+	}
+	private void getKeyPair() {
+		AzureFileShareIO temp = new AzureFileShareIO();
+		temp.connect("keys");
+		try {
+			createDirectoryLocally("temp");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		temp.download(userid, "rsa.key", "temp/");
+		temp.download(userid, "rsa.pub", "temp/");
 	}
 	/**
 	 * Tries to register the user
@@ -65,8 +80,10 @@ public class Controller {
 	 * @param password the password the user is trying to register
 	 * @return an ArrayList of the error messages if the user fail to register of 
 	 * a message telling the user it was created
+	 * @throws IOException 
+	 * @throws NoSuchAlgorithmException 
 	 */
-	public ArrayList<String> register(String username, String email, String password) {
+	public ArrayList<String> register(String username, String email, String password) throws NoSuchAlgorithmException, IOException {
 		username = safeString.completeSafeString(username);
 		password = safeString.completeSafeString(password);
 		email = safeString.completeSafeString(email);
@@ -77,6 +94,14 @@ public class Controller {
 			azureFileShareIO.createDirectoryInAzure("public");
 			azureFileShareIO.createDirectoryInAzure("private");
 			ArrayList<String> message = new ArrayList<String>();
+			AzureFileShareIO temp = new AzureFileShareIO();
+			temp.connect("keys");
+			temp.createDirectoryInAzure(messages.get(0));
+			Encryption.doGenkey();
+			temp.upload(messages.get(0), new File(privateKey));
+			temp.upload(messages.get(0), new File(publicKey));
+			deleteFile(privateKey);
+			deleteFile(publicKey);
 			message.add("User created");
 			return message;
 		}
@@ -89,6 +114,7 @@ public class Controller {
 	 * @return a String telling the user of the success of the upload 
 	 */
 	public String uploadFile() {
+		File file = null;
 		JFileChooser chooser = new JFileChooser();
 		int returnVal = chooser.showOpenDialog(null);
 		if(returnVal == JFileChooser.APPROVE_OPTION)
@@ -98,6 +124,11 @@ public class Controller {
 				return "File is too big";
 			String choosenDirectory = chooseDirectory().toLowerCase();
 			String directoryId = mssql.select("directory", new String[] {"id"}, "name='"+choosenDirectory+"' AND user_id='"+userid+"'").replace("\t\t", "").trim();
+			try {
+				file = Encryption.encrypt(file, privateKey);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			azureFileShareIO.upload(choosenDirectory,file);
 			mssql.insert("directory", new String[] {"name","type","user_id","parent_id"}, new String[] {file.getName(),"file",userid,directoryId});
 			return file.getName()+" has been uploaded";
@@ -112,8 +143,15 @@ public class Controller {
 	public String downloadFile(){
 		String directory = chooseDirectory().toLowerCase();
 		String filename = JOptionPane.showInputDialog("Write file to download.(Including the file extension)");
-		if(azureFileShareIO.download(directory,filename))
+		if(azureFileShareIO.download(directory,filename, "downloads/")) {
+			try {
+				Encryption.decrypt(new File("downloads/"+filename), publicKey);
+				deleteFile("downloads/"+filename);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			return filename+" has been downloaded";
+		}
 		return "An error occured. Download failed";
 	}
 
@@ -149,13 +187,35 @@ public class Controller {
 		azureFileShareIO.deleteShare("user"+userid);
 		return logout();
 	}
+	
+	private static void deleteFile(String filename) {
+		File file = new File(filename);
+		file.delete();
+	}
 	/**
 	 * Logs out the user
 	 */
 	public boolean logout() {
+		deleteFile(privateKey);
+		deleteFile(publicKey);
+		deleteFile("temp");
 		activeSession.removeSession(session);
 		return true;
 	}
+	
+	/**
+	 * Creates a directory on local computer if it doesn't exists
+	 * 
+	 * @param directoryName the name of the directory being created
+	 * @throws IOException 
+	 */
+	public void createDirectoryLocally(String directoryName) throws IOException {
+		Path path = Paths.get(directoryName);
+		if (!Files.exists(path)) {
+			Files.createDirectory(path);
+		}
+	}
+	
 	private class AutomaticLogout extends Thread{
 		public void run(){
 			while(!Thread.interrupted())
@@ -165,4 +225,6 @@ public class Controller {
 				}
 		}
 	}
+	
+
 }
