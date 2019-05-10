@@ -138,6 +138,9 @@ public class TestEncrypt
 		X509EncodedKeySpec ks = new X509EncodedKeySpec(bytes);
 		KeyFactory kf = KeyFactory.getInstance("RSA");
 		PublicKey pub = kf.generatePublic(ks);
+		
+		String path = inputFile.getPath();
+		path.replaceFirst(".enc", "");
 
 		try (FileInputStream in = new FileInputStream(inputFile)) {
 			SecretKeySpec skey = null;
@@ -157,16 +160,22 @@ public class TestEncrypt
 			Cipher ci = Cipher.getInstance("AES/CBC/PKCS5Padding");
 			ci.init(Cipher.DECRYPT_MODE, skey, ivspec);
 
-			try (FileOutputStream out = new FileOutputStream(inputFile+".ver")){
+			try (FileOutputStream out = new FileOutputStream(path)){
 				processFile(ci, in, out);
 			}
 		}
-		File decrypted = new File(inputFile+".ver");
+		inputFile.delete(); 
+		File decrypted = new File(path);
 		return(decrypted);
 	}
-	public static void main(String[] args) throws InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeySpecException, NoSuchPaddingException, BadPaddingException, IllegalBlockSizeException, IOException {
+	
+	public static void main(String[] args) {
+		try {
 		doGenkey();
-		File f1 = doEncryptRSAWithAES(new File("files/document.txt"), "files/rsa.key");
-		File f2 = doDecryptRSAWithAES(f1, "files/rsa.pub");
+		File encrypted = doEncryptRSAWithAES(new File("files/document.txt"), "files/rsa.key");
+//		doDecryptRSAWithAES(encrypted, "files/rsa.pub");
+		} catch(Exception e) {
+			System.out.println("error");
+		}
 	}
 }
