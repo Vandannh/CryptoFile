@@ -17,6 +17,8 @@ import java.util.Map;
 import com.microsoft.azure.storage.*;
 import com.microsoft.azure.storage.file.*;
 
+import test2.ConnectionStrings;
+
 /**
  * This class will function as a bridge between Azure storage and local files. 
  * By connecting to an Azure storage account and store/get files from the storage. 
@@ -35,7 +37,7 @@ public class AzureFileShareIO {
 	 * The Connection string used to connect to Azure storage account
 	 * Change this string if you want to change which storage to work from
 	 */
-	public static final String storageConnectionString = "YOUR_CONNECTION_STRING"; // Edit this
+	public static final String storageConnectionString = ConnectionStrings.storageConnectionString;
 
 
 	/**
@@ -87,14 +89,15 @@ public class AzureFileShareIO {
 	 * @param filename the name of the file to download
 	 * @return if the download was successful
 	 */
-	public boolean download(String directory, String filename) {
+	public boolean download(String directory, String filename, String resource) {
 		try {
 			CloudFileDirectory rootDir = share.getRootDirectoryReference();
 			CloudFileDirectory userDir = rootDir.getDirectoryReference(directory);	
 			CloudFile file = userDir.getFileReference(filename);
-			String resource = "downloads/";
 			createDirectoryLocally(resource);
-			file.download(new FileOutputStream(new File(resource + filename))); 
+			try(FileOutputStream fos = new  FileOutputStream(new File(resource + filename))){
+				file.download(fos);
+			}
 			return true;
 		} catch (StorageException | URISyntaxException | IOException e) {
 			e.printStackTrace();

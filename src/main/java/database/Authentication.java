@@ -2,6 +2,7 @@ package main.java.database;
 
 import org.mindrot.jbcrypt.BCrypt;
 import mssql.MSSQL;
+import test2.ConnectionStrings;
 
 /**
  * The class is used to authenticate the user
@@ -13,7 +14,7 @@ import mssql.MSSQL;
  */
 public class Authentication {
 	private MSSQL mssql;
-	private final String connectionString = "YOUR_CONNECTION_STRING"; // Edit this
+	private final String connectionString = ConnectionStrings.connectionString;
 	/**
 	 * Sets up a connection to the database.
 	 */

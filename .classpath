@@ -8,6 +8,10 @@
 	<classpathentry kind="lib" path="src/main/resources/jar_files/mssql-jdbc-7.2.1.jre8.jar"/>
 	<classpathentry kind="lib" path="src/main/resources/jar_files/SQL.jar"/>
 	<classpathentry kind="lib" path="src/main/resources/jar_files/mysql-connector.jar"/>
+<<<<<<< HEAD
+	<classpathentry kind="lib" path="src/main/resources/jar_files/ConnectionStrings.jar"/>
+=======
 	<classpathentry kind="lib" path="src/main/resources/jar_files/javax.mail.jar"/>
+>>>>>>> refs/heads/develop
 	<classpathentry kind="output" path="bin"/>
 </classpath>
