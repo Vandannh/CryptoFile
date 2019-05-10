@@ -7,44 +7,79 @@ import java.io.*;
 import java.net.*;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import main.java.Message;
+import main.java.design.UI;
 
 public class Client extends JPanel implements ActionListener{
 	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
+	private String nameOfDownloadedFile;
 	private JButton btnSend = new JButton("Send");
+	private UI ui;
 
 	public static void main(String argv[]) throws Exception {
 		JFrame frame = new JFrame( "Client" );
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.add( new Client() );
+		frame.add( new Client(null) );
 		frame.pack();
 		frame.setVisible(true);
 	}
 
-	public Client() throws IOException {
-		Socket clientSocket = new Socket("localhost", 6789);
-		oos = new ObjectOutputStream(clientSocket.getOutputStream());
-		ois = new ObjectInputStream(clientSocket.getInputStream());
-		setLayout(new GridLayout(1,2));
-		add(btnSend);
-		btnSend.addActionListener(this);
+	public Client(UI ui){
+		this.ui=ui;
+		try {
+			Socket clientSocket = new Socket("localhost", 6789);
+			oos = new ObjectOutputStream(clientSocket.getOutputStream());
+			ois = new ObjectInputStream(clientSocket.getInputStream());
+//			setLayout(new GridLayout(1,2));
+//			add(btnSend);
+//			btnSend.addActionListener(this);
+			new ListenFromServer().start();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-	public void sendMessage() throws IOException {
-		Message msg = new Message(1,"Mattias","Hejsan1");
-		System.out.println(msg.getType());
-		oos.writeObject(msg);
-		new ListenFromServer().start();
+	public void sendMessage(Message message) throws IOException {
+		//		Message msg = new Message(1,"test1", "Password1");
+		oos.writeObject(message);
+		//		nameOfDownloadedFile="Bad Gastien 1.PNG";
+		//		msg = new Message(5,"private", "Bad Gastien 1.PNG");
+		//		oos.writeObject(msg);
+	}
+
+	private void upload() throws IOException {
+		JFileChooser chooser = new JFileChooser();
+		int returnVal = chooser.showOpenDialog(null);
+		File file = null;
+		if(returnVal == JFileChooser.APPROVE_OPTION)
+			file = chooser.getSelectedFile();
+		if(file!=null) {
+			String choosenDirectory = chooseDirectory().toLowerCase();	
+
+			Message msg = new Message(4,choosenDirectory, file);
+			oos.writeObject(msg);
+		}
+	}
+
+	private String chooseDirectory() {
+		JList<String> list = new JList<String>(new String[] {"Private", "Public"});
+		JOptionPane.showMessageDialog(null, list, "Choose directory", JOptionPane.PLAIN_MESSAGE);
+		return list.getSelectedValue();
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==btnSend) {
 			try {
-				sendMessage();
+				Message msg = new Message(1,"test1", "Password1");
+				sendMessage(msg);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
@@ -52,25 +87,23 @@ public class Client extends JPanel implements ActionListener{
 	}
 	private class ListenFromServer extends Thread {
 		public synchronized void run() {
-			while(true) {
+			boolean running=true;
+			while(running) {
 				try {
 					Object obj = ois.readObject();
+					if(obj instanceof byte[]) {
+						System.out.println("File downloaded");
+						OutputStream os = new FileOutputStream("downloads/"+nameOfDownloadedFile); 
+						os.write((byte[])obj);
+					}
 					String str = obj.toString();
-					System.out.println(str);
+					ui.setTextMessage(str);
+//					ui.confirm(true);
 				} catch (ClassNotFoundException | IOException e) {
 					e.printStackTrace();
+					running=false;
 				}
 			}
-		}
-		private String operation(Message msg) {
-			switch(msg.getType()) {
-			case Message.LOGIN:		return "You are logging in";
-			case Message.LOGOUT: 	return "You are logging out";
-			case Message.REGISTER: 	return "You are registering";
-			case Message.UPLOAD: 	return "You are uploading";
-			case Message.DOWNLOAD: 	return "You are downloading";
-			}
-			return null;
 		}
 	}
 }

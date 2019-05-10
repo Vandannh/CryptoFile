@@ -3,15 +3,21 @@ package main.java.server;
 import java.io.*;
 import java.net.*;
 import main.java.Message;
+import main.java.controller.*;
 
 public class Server {
 	private boolean running;
+	private static Controller controller;
 
+	public Server() {
+		controller = new Controller();
+	}
+	
 	public static void main(String argv[]) throws Exception {
 		Server server = new Server();
 		server.start();
 	}
-
+	
 	public void start() throws IOException, ClassNotFoundException {
 		System.out.println("Server started");
 		ServerSocket serverSocket = new ServerSocket(6789);
@@ -27,16 +33,6 @@ public class Server {
 		running=false;
 	}
 
-	private static String operation(Message msg) {
-		switch(msg.getType()) {
-		case Message.LOGIN:		return "You are logging in";
-		case Message.LOGOUT: 	return "You are logging out";
-		case Message.REGISTER: 	return "You are registering";
-		case Message.UPLOAD: 	return "You are uploading";
-		case Message.DOWNLOAD: 	return "You are downloading";
-		}
-		return null;
-	}
 	private class ClientHandler extends Thread{
 		Socket socket;
 		ObjectInputStream ois;
@@ -56,10 +52,28 @@ public class Server {
 					if(obj instanceof Message) {
 						msg = (Message)obj;
 					}
-					System.out.println(operation(msg));
-					oos.writeObject(operation(msg).toUpperCase());
+					oos.writeObject(operation(msg));
 				}
 			} catch (IOException | ClassNotFoundException e) {}
+		}
+		private Object operation(Message msg) {
+			switch(msg.getType()) {
+			case Message.LOGIN:		
+				if(controller.login(msg.getUsername(), msg.getPassword())) return "Logged in";
+				else return "Not logged in";
+			case Message.LOGOUT: 	
+				return "You are logging out";
+			case Message.REGISTER: 	
+				String text="";
+				for(String s : controller.register(msg.getUsername(), msg.getEmail(), msg.getPassword()))
+					text+=s+"\n";
+				return text;
+			case Message.UPLOAD: 	
+				return controller.uploadFile(msg.getFile(), msg.getDirectory(), "1");
+			case Message.DOWNLOAD: 	
+				return controller.downloadFile(msg.getFilename(),msg.getDirectory());
+			}
+			return null;
 		}
 
 	}

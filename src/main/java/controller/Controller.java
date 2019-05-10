@@ -1,6 +1,9 @@
 package main.java.controller;
 
 import java.io.File;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 import java.util.ArrayList;
 import javax.swing.*;
 import main.java.azure.AzureFileShareIO;
@@ -28,7 +31,9 @@ public class Controller {
 	private SafeString safeString = new SafeString();
 	private Session session;
 
-	private final String connectionString = "YOUR_CONNECTION_STRING"; // Edit this
+	private final String connectionString = "jdbc:sqlserver://cryptofileserver.database.windows.net:1433;"
+			  + "database=cryptofile;user=db_writer_reader@cryptofileserver;password=CryptoFileHasACoolPassword1;"
+			  + "encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;"; // Edit this
 
 	/**
 	 * Connects to a MS SQL (SQL Server) database
@@ -85,17 +90,18 @@ public class Controller {
 	}
 	/**
 	 * Gets a file and tries to upload it
+	 * @param userid 
 	 * 
 	 * @return a String telling the user of the success of the upload 
 	 */
-	public String uploadFile() {
-		JFileChooser chooser = new JFileChooser();
-		int returnVal = chooser.showOpenDialog(null);
-		if(returnVal == JFileChooser.APPROVE_OPTION)
-			file = chooser.getSelectedFile();
+	public String uploadFile(File file, String choosenDirectory, String userid) {
+//		JFileChooser chooser = new JFileChooser();
+//		int returnVal = chooser.showOpenDialog(null);
+//		if(returnVal == JFileChooser.APPROVE_OPTION)
+//			file = chooser.getSelectedFile();
 		if(file!=null) {
-			String choosenDirectory = chooseDirectory().toLowerCase();
-			String directoryId = mssql.select("directory", new String[] {"id"}, "name='"+choosenDirectory+"'");
+//			String choosenDirectory = chooseDirectory().toLowerCase();
+			String directoryId = mssql.select("directory", new String[] {"id"}, "name='"+choosenDirectory+"' AND user_id='"+userid+"'");
 			azureFileShareIO.upload(choosenDirectory,file);
 			mssql.insert("directory", new String[] {"name","type","user_id","parent_id"}, new String[] {file.getName(),"file",userid,directoryId});
 			return file.getName()+" has been uploaded";
@@ -107,12 +113,13 @@ public class Controller {
 	 * 
 	 * @return a String telling the user of the success of the download
 	 */
-	public String downloadFile(){
-		String directory = chooseDirectory().toLowerCase();
-		String filename = JOptionPane.showInputDialog("Write file to download.(Including the file extension)");
-		if(azureFileShareIO.download(directory,filename))
-			return filename+" has been downloaded";
-		return "An error occured. Download failed";
+	public byte[] downloadFile(String filename, String directory){
+//		String directory = chooseDirectory().toLowerCase();
+//		String filename = JOptionPane.showInputDialog("Write file to download.(Including the file extension)");
+//		if(azureFileShareIO.download(directory,filename)!=null)
+//			return filename+" has been downloaded";
+//		return "An error occured. Download failed";
+		return azureFileShareIO.download(directory,filename);
 	}
 
 	public String deleteFile() {

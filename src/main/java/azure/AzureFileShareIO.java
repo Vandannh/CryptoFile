@@ -4,6 +4,8 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,7 +37,9 @@ public class AzureFileShareIO {
 	 * The Connection string used to connect to Azure storage account
 	 * Change this string if you want to change which storage to work from
 	 */
-	public static final String storageConnectionString = "YOUR_CONNECTION_STRING"; // Edit this
+	public static final String storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=cryptofile;"
+	        + "AccountKey=SOdWWB7NRjNO0RJynpseanSoLBpxkCopw/QF6ZE96vT2IUf73/JiJ1tZpHw+FkAiCMUePNEkv/0OwAkkDaaP4A==;"
+		+ "EndpointSuffix=core.windows.net"; // Edit this
 
 
 	/**
@@ -87,18 +91,23 @@ public class AzureFileShareIO {
 	 * @param filename the name of the file to download
 	 * @return if the download was successful
 	 */
-	public boolean download(String directory, String filename) {
+	public byte[] download(String directory, String filename) {
 		try {
 			CloudFileDirectory rootDir = share.getRootDirectoryReference();
 			CloudFileDirectory userDir = rootDir.getDirectoryReference(directory);	
 			CloudFile file = userDir.getFileReference(filename);
-			String resource = "downloads/";
-			createDirectoryLocally(resource);
-			file.download(new FileOutputStream(new File(resource + filename))); 
-			return true;
-		} catch (StorageException | URISyntaxException | IOException e) {
+//			String resource = "downloads/";
+//			createDirectoryLocally(resource);
+//			file.download(new FileOutputStream(new File(resource + filename))); 
+			
+			byte[] buffer = new byte[file.getStreamWriteSizeInBytes()];
+			
+			file.downloadToByteArray(buffer, 0);
+			
+			return buffer;
+		} catch (StorageException | URISyntaxException e) {
 			e.printStackTrace();
-			return false;
+			return null;
 		}
 	}
 

@@ -8,16 +8,14 @@ import mssql.MSSQL;
  * 
  * @version 1.0
  * @since 2019-04-13
-<<<<<<< HEAD
  * @author Mattias J�nsson
-=======
- * @author Mattias J�nsson
->>>>>>> refs/heads/feature/SQLInjections
  *
  */
 public class Authentication {
 	private MSSQL mssql;
-	private final String connectionString = "YOUR_CONNECTION_STRING"; // Edit this
+	private final String connectionString = "jdbc:sqlserver://cryptofileserver.database.windows.net:1433;"
+			  + "database=cryptofile;user=db_writer_reader@cryptofileserver;password=CryptoFileHasACoolPassword1;"
+			  + "encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;"; // Edit this
 	/**
 	 * Sets up a connection to the database.
 	 */

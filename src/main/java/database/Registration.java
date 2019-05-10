@@ -12,14 +12,15 @@ import mssql.MSSQL;
  * 
  * @version 1.0
  * @since 2019-04-14
-<<<<<<< HEAD
  * @author Mattias J�nsson
  *
  */
 public class Registration {
 	private String username,password,email;
 	private MSSQL mssql;
-	private final String connectionString = "YOUR_CONNECTION_STRING"; // Edit this
+	private final String connectionString = "jdbc:sqlserver://cryptofileserver.database.windows.net:1433;"
+			  + "database=cryptofile;user=db_writer_reader@cryptofileserver;password=CryptoFileHasACoolPassword1;"
+			  + "encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;"; // Edit this
 
 	/**
 	 * Constructs a Registration-object containing the username, email-address and password
@@ -53,8 +54,8 @@ public class Registration {
 		}
 		else {
 			String code = generateUserCode();
-			mssql.insert("Users", new String[] {"username","password","email","code"},new String[] {username,hashPassword(password),email,code});
-			String id = mssql.select("Users", new String[] {"id"}, "username='"+username+"' AND code ='"+code+"'").replace("\t\t", "").trim();
+			mssql.insert("Users", new String[] {"username","password","email","user_code"},new String[] {username,hashPassword(password),email,code});
+			String id = mssql.select("Users", new String[] {"id"}, "username='"+username+"' AND user_code ='"+code+"'").replace("\t\t", "").trim();
 			mssql.insert("Directory", new String[] {"name","user_id","type"}, new Object[] {id,Integer.parseInt(id),"Directory"});
 			mssql.insert("Directory", new String[] {"name","user_id","type"}, new Object[] {"private",Integer.parseInt(id),"Directory"});
 			mssql.insert("Directory", new String[] {"name","user_id","type"}, new Object[] {"public",Integer.parseInt(id),"Directory"});

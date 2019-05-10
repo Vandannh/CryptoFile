@@ -7,7 +7,7 @@ public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final int LOGIN = 1, LOGOUT = 2, REGISTER = 3, UPLOAD = 4, DOWNLOAD = 5;
 	private int type;
-	private String username, email, password, directory;
+	private String username, email, password, directory, filename;
 	private File file;
 
 	public Message(int type, String username, String email, String password) {
@@ -17,10 +17,22 @@ public class Message implements Serializable {
 		this.password=password; 
 	}
 	
-	public Message(int type, String username, String password) {
+	public Message(int type, String input1, String input2) {
 		this.type=type;
-		this.username=username;
-		this.password=password;
+		if(type==1) {
+			this.username=input1;
+			this.password=input2;
+		}
+		else if(type==5) {
+			this.directory=input1;
+			this.filename=input2;
+		}
+	}
+	
+	public Message(int type, String directory, File file) {
+		this.type=type;
+		this.directory=directory;
+		this.file=file;
 	}
 
 	public int getType() {
@@ -45,5 +57,9 @@ public class Message implements Serializable {
 
 	public File getFile() {
 		return file;
+	}
+	
+	public String getFilename() {
+		return filename;
 	}
 }
