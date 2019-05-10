@@ -3,37 +3,45 @@ package main.java.encryption;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Base64;
 import java.util.Arrays;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.crypto.spec.IvParameterSpec;
 
 public class TestEncrypt
 {
-	static private Base64.Encoder encoder = Base64.getEncoder();
 	static SecureRandom srandom = new SecureRandom();
 
 	static private void processFile(Cipher ci,InputStream in,OutputStream out)
-			throws javax.crypto.IllegalBlockSizeException,
-			javax.crypto.BadPaddingException,
-			java.io.IOException
-	{
+			throws IllegalBlockSizeException,
+			BadPaddingException,
+			IOException {
 		byte[] ibuf = new byte[1024];
 		int len;
 		while ((len = in.read(ibuf)) != -1) {
@@ -45,117 +53,42 @@ public class TestEncrypt
 	}
 
 	static private void processFile(Cipher ci,String inFile,String outFile)
-			throws javax.crypto.IllegalBlockSizeException,
-			javax.crypto.BadPaddingException,
-			java.io.IOException
-	{
+			throws IllegalBlockSizeException,
+			BadPaddingException,
+			IOException {
 		try (FileInputStream in = new FileInputStream(inFile);
 				FileOutputStream out = new FileOutputStream(outFile)) {
 			processFile(ci, in, out);
 		}
 	}
 
-	static private void doGenkey(String[] args)
-			throws java.security.NoSuchAlgorithmException,
-			java.io.IOException
-	{
-		if ( args.length == 0 ) {
-			System.err.println("genkey -- need fileBase");
-			return;
-		}
+	static private void doGenkey()
+			throws NoSuchAlgorithmException,
+			IOException {
 
-		int index = 0;
-		String fileBase = args[index++];
 		KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
 		kpg.initialize(2048);
 		KeyPair kp = kpg.generateKeyPair();
-		try (FileOutputStream out = new FileOutputStream(fileBase + ".key")) {
+		try (FileOutputStream out = new FileOutputStream("files/rsa.key")) {
 			out.write(kp.getPrivate().getEncoded());
 		}
 
-		try (FileOutputStream out = new FileOutputStream(fileBase + ".pub")) {
+		try (FileOutputStream out = new FileOutputStream("files/rsa.pub")) {
 			out.write(kp.getPublic().getEncoded());
 		}
 	}
 
-	/* Larger data gives:
-	 *
-	 * javax.crypto.IllegalBlockSizeException: Data must not be longer
-	 * than 245 bytes
-	 */
-	static private void doEncrypt(String[] args)
-			throws java.security.NoSuchAlgorithmException,
-			java.security.spec.InvalidKeySpecException,
-			javax.crypto.NoSuchPaddingException,
-			javax.crypto.BadPaddingException,
-			java.security.InvalidKeyException,
-			javax.crypto.IllegalBlockSizeException,
-			java.io.IOException
-	{
-		if ( args.length != 2 ) {
-			System.err.println("enc pvtKeyFile inputFile");
-			System.exit(1);
-		}
 
-		int index = 0;
-		String pvtKeyFile = args[index++];
-		String inputFile = args[index++];
-		byte[] bytes = Files.readAllBytes(Paths.get(pvtKeyFile));
-		PKCS8EncodedKeySpec ks = new PKCS8EncodedKeySpec(bytes);
-		KeyFactory kf = KeyFactory.getInstance("RSA");
-		PrivateKey pvt = kf.generatePrivate(ks);
-
-		Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-		cipher.init(Cipher.ENCRYPT_MODE, pvt);
-		processFile(cipher, inputFile, inputFile + ".enc");
-	}
-
-	static private void doDecrypt(String[] args)
-			throws java.security.NoSuchAlgorithmException,
-			java.security.spec.InvalidKeySpecException,
-			javax.crypto.NoSuchPaddingException,
-			javax.crypto.BadPaddingException,
-			java.security.InvalidKeyException,
-			javax.crypto.IllegalBlockSizeException,
-			java.io.IOException
-	{
-		if ( args.length != 2 ) {
-			System.err.println("dec pubKeyFile inputFile");
-			System.exit(1);
-		}
-
-		int index = 0;
-		String pubKeyFile = args[index++];
-		String inputFile = args[index++];
-		byte[] bytes = Files.readAllBytes(Paths.get(pubKeyFile));
-		X509EncodedKeySpec ks = new X509EncodedKeySpec(bytes);
-		KeyFactory kf = KeyFactory.getInstance("RSA");
-		PublicKey pub = kf.generatePublic(ks);
-
-		Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-		cipher.init(Cipher.DECRYPT_MODE, pub);
-		processFile(cipher, inputFile, inputFile + ".ver");
-	}
-
-	static private void doEncryptRSAWithAES(String[] args)
-			throws java.security.NoSuchAlgorithmException,
-			java.security.InvalidAlgorithmParameterException,
-			java.security.InvalidKeyException,
-			java.security.spec.InvalidKeySpecException,
-			javax.crypto.NoSuchPaddingException,
-			javax.crypto.BadPaddingException,
-			javax.crypto.IllegalBlockSizeException,
-			java.io.IOException
-	{
-		if ( args.length != 2 ) {
-			System.err.println("enc pvtKeyFile inputFile");
-			System.exit(1);
-		}
-
-		int index = 0;
-		String pvtKeyFile = args[index++];
-		String inputFile = args[index++];
-		byte[] bytes = Files.readAllBytes(Paths.get(pvtKeyFile));
+	static private File doEncryptRSAWithAES(File inputFile, String key)
+			throws NoSuchAlgorithmException,
+			InvalidAlgorithmParameterException,
+			InvalidKeyException,
+			InvalidKeySpecException,
+			NoSuchPaddingException,
+			BadPaddingException,
+			IllegalBlockSizeException,
+			IOException {
+		byte[] bytes = Files.readAllBytes(Paths.get(key));
 		PKCS8EncodedKeySpec ks = new PKCS8EncodedKeySpec(bytes);
 		KeyFactory kf = KeyFactory.getInstance("RSA");
 		PrivateKey pvt = kf.generatePrivate(ks);
@@ -186,26 +119,21 @@ public class TestEncrypt
 				processFile(ci, in, out);
 			}
 		}
+		File encrypted = new File(inputFile+".enc");
+		return(encrypted);
 	}
 
-	static private void doDecryptRSAWithAES(String[] args)
-			throws java.security.NoSuchAlgorithmException,
-			java.security.InvalidAlgorithmParameterException,
-			java.security.InvalidKeyException,
-			java.security.spec.InvalidKeySpecException,
-			javax.crypto.NoSuchPaddingException,
-			javax.crypto.BadPaddingException,
-			javax.crypto.IllegalBlockSizeException,
-			java.io.IOException
+	static private File doDecryptRSAWithAES(File inputFile, String key)
+			throws NoSuchAlgorithmException,
+			InvalidAlgorithmParameterException,
+			InvalidKeyException,
+			InvalidKeySpecException,
+			NoSuchPaddingException,
+			BadPaddingException,
+			IllegalBlockSizeException,
+			IOException
 	{
-		if ( args.length != 2 ) {
-			System.err.println("dec pvtKeyFile inputFile");
-			System.exit(1);
-		}
-
-		int index = 0;
-		String pubKeyFile = args[index++];
-		String inputFile = args[index++];
+		String pubKeyFile = key;
 		byte[] bytes = Files.readAllBytes(Paths.get(pubKeyFile));
 		X509EncodedKeySpec ks = new X509EncodedKeySpec(bytes);
 		KeyFactory kf = KeyFactory.getInstance("RSA");
@@ -233,30 +161,12 @@ public class TestEncrypt
 				processFile(ci, in, out);
 			}
 		}
+		File decrypted = new File(inputFile+".ver");
+		return(decrypted);
 	}
-
-	static public void main(String[] args) throws Exception
-	{
-		if ( args.length == 0 ) {
-			System.err.print("usage: java sample1 command params..\n" +
-					"where commands are:\n" +
-					"  genkey fileBase\n" +
-					"  tnyenc pvtKeyFile inputFile\n" +
-					"  tnydec pubKeyFile inputFile\n" +
-					"  enc pvtKeyFile inputFile\n" +
-					"  dec pubKeyFile inputFile\n");
-			System.exit(1);
-		}
-
-		int index = 0;
-		String command = args[index++];
-		System.out.println(command);
-		String[] params = Arrays.copyOfRange(args, index, args.length);
-		if ( command.equals("genkey") ) doGenkey(params);
-		else if ( command.equals("tnyenc") ) doEncrypt(params);
-		else if ( command.equals("tnydec") ) doDecrypt(params);
-		else if ( command.equals("enc") ) doEncryptRSAWithAES(params);
-		else if ( command.equals("dec") ) doDecryptRSAWithAES(params);
-		else throw new Exception("Unknown command: " + command);
+	public static void main(String[] args) throws InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeySpecException, NoSuchPaddingException, BadPaddingException, IllegalBlockSizeException, IOException {
+		doGenkey();
+		File f1 = doEncryptRSAWithAES(new File("files/document.txt"), "files/rsa.key");
+		File f2 = doDecryptRSAWithAES(f1, "files/rsa.pub");
 	}
 }
