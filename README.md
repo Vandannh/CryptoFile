@@ -24,3 +24,16 @@ First, make sure you are logged in, then follow the steps.
 First, make sure you are logged in, then follow the steps. 
 1. Click on "Download file".
 2. Write the name of the file you have uploaded.
+
+### Delete file
+First, make sure you are logged in, then follow the steps. 
+1. Click on "Delete file".
+2.  Write the name of the file you want to delete.
+
+### Logout
+First, make sure you are logged in, then follow the steps. 
+1. Click on "Logout".
+
+### Unregister
+First, make sure you are logged in, then follow the steps. 
+1. Click on "Unregister".

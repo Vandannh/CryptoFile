@@ -1,5 +1,6 @@
 package main.java.controller;
 
+<<<<<<< HEAD
 import java.io.*;
 import java.nio.file.*;
 import java.security.*;
@@ -8,10 +9,28 @@ import javax.swing.*;
 import main.java.azure.*;
 import main.java.database.*;
 import main.java.encryption.*;
+=======
+import java.io.File;
+import java.util.ArrayList;
+
+import javax.swing.JFileChooser;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+
+import main.java.azure.AzureFileShareIO;
+import main.java.database.Authentication;
+import main.java.database.Registration;
+import main.java.session.ActiveSessions;
+import main.java.session.Session;
+import main.java.text.SafeString;
+>>>>>>> refs/heads/develop
 import mssql.MSSQL;
+<<<<<<< HEAD
 import test2.ConnectionStrings;
 import main.java.session.*;
 import main.java.text.*; 
+=======
+>>>>>>> refs/heads/develop
 
 /**
  * Is used to control the events in the application 
