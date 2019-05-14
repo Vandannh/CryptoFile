@@ -1,6 +1,5 @@
 package main.java.controller;
 
-<<<<<<< HEAD
 import java.io.*;
 import java.nio.file.*;
 import java.security.*;
