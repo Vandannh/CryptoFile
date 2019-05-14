@@ -9,7 +9,8 @@ import main.java.controller.*;
 
 public class Server {
 	private boolean running;
-	private static Controller controller;
+	private Controller controller;
+	private String userid;
 
 	public Server() {
 		controller = new Controller();
@@ -61,8 +62,7 @@ public class Server {
 		private Object operation(Message msg) throws NoSuchAlgorithmException, IOException {
 			switch(msg.getType()) {
 			case Message.LOGIN:		
-				if(controller.login(msg.getUsername(), msg.getPassword())) return "Logged in";
-				else return "Not logged in";
+				return controller.login(msg.getUsername(), msg.getPassword());
 			case Message.LOGOUT: 	
 				return "You are logging out";
 			case Message.REGISTER: 	
@@ -71,12 +71,13 @@ public class Server {
 					text+=s+"\n";
 				return text;
 			case Message.UPLOAD: 	
-				return controller.uploadFile(msg.getFile(), msg.getDirectory(), "1");
+				return controller.uploadFile(msg.getFile(), msg.getDirectory(), msg.getFilename());
 			case Message.DOWNLOAD: 	
 				return controller.downloadFile(msg.getFilename(),msg.getDirectory());
+			case Message.DELETE:
+				return controller.deleteFile(msg.getFilename(), msg.getDirectory());
 			}
 			return null;
 		}
-
 	}
 }

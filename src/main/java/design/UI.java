@@ -36,7 +36,7 @@ public class UI {
 	private JLabel lblCryptofile;
 	private Client client;
 	private JLabel lblResult = new JLabel("");
-	private boolean confirm=false;
+	private boolean confirm=true;
 	private String textMessage;
 
 	/**
@@ -112,12 +112,7 @@ public class UI {
 				String username = usernameField.getText();
 				String password="";
 				for(char c : passwordField.getPassword()) password+=c+"";
-				Message message = new Message(1,username,password);
-				try {
-					client.sendMessage(message);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				client.login(username, password);
 				if(confirm) {
 					loginPanel.setVisible(false);
 					homePage(true);
@@ -191,13 +186,7 @@ public class UI {
 				String username = usernameField.getText();
 				String email = emailField.getText();
 				String password=passwordField.getText();
-
-				Message message = new Message(3, username, email, password);
-				try {
-					client.sendMessage(message);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				client.register(username, email, password);
 				System.out.println(confirm);
 				if(!confirm)
 					lblResult.setText(textMessage);
@@ -239,7 +228,11 @@ public class UI {
 		btnUpload.setBounds(155, 94, 122, 25);
 		btnUpload.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//				lblResult.setText(controller.uploadFile());
+				try {
+					client.upload();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		homePanel.add(btnUpload);
@@ -248,7 +241,7 @@ public class UI {
 		btnDownload.setBounds(155, 124, 122, 25);
 		btnDownload.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//				lblResult.setText(controller.downloadFile());
+				client.download(); 
 			}
 		});
 		homePanel.add(btnDownload);
@@ -257,6 +250,7 @@ public class UI {
 		btnDelete.setBounds(155, 154, 122, 25);
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent agr0) {
+				client.deleteFile();
 				//				lblResult.setText(controller.deleteFile());
 			}
 		});
@@ -326,7 +320,7 @@ public class UI {
 	public void setTextMessage(String textMessage) {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Date date = new Date();
-		System.out.println(dateFormat.format(date)+": textMessage");
+		System.out.println(dateFormat.format(date)+": "+textMessage.toString()+" ("+textMessage.getClass().toString()+")");
 		this.textMessage=textMessage;
 	}
 }

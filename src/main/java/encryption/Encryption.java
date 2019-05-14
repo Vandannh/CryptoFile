@@ -43,6 +43,7 @@ public class Encryption{
 	}
 	
 	public static File encrypt(File inputFile, String key)throws Exception{
+		System.out.println(key);
 		byte[] bytes = Files.readAllBytes(Paths.get(key));
 		PKCS8EncodedKeySpec ks = new PKCS8EncodedKeySpec(bytes);
 		KeyFactory kf = KeyFactory.getInstance("RSA");

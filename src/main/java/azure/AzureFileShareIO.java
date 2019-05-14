@@ -71,12 +71,13 @@ public class AzureFileShareIO {
 	 * @param userDirectory 
 	 * @param file 
 	 */
-	public void upload(String directory, File file) {
+	public void upload(String directory, byte[] buffer, String filename) {
 		try {
 			CloudFileDirectory rootDir = share.getRootDirectoryReference();
 			CloudFileDirectory userDir = rootDir.getDirectoryReference(directory);
-			CloudFile cloudFile = userDir.getFileReference(file.getName());
-			cloudFile.uploadFromFile(file.toString());	
+			CloudFile cloudFile = userDir.getFileReference(filename);
+//			cloudFile.uploadFromFile(file.toString());	
+			cloudFile.uploadFromByteArray(buffer, 0, buffer.length);
 			System.out.println(directory);
 			System.out.println(checkAvailableSpace()); //MARK: for test purpose
 		} catch (StorageException | URISyntaxException | IOException e) {
@@ -90,38 +91,63 @@ public class AzureFileShareIO {
 	 * @param userDirectory the name of the directory the file is being downloaded from
 	 * @param filename the name of the file to download
 	 * @return if the download was successful
+	 * @throws StorageException 
+	 * @throws URISyntaxException 
 	 */
 //<<<<<<< HEAD
-	public byte[] download(String directory, String filename, String resource) {
-//=======
+//	public byte[] download(String directory, String filename, String resource) {
+////=======
+////	public boolean download(String directory, String filename, String resource) {
+////>>>>>>> branch 'develop' of https://github.com/Vandannh/CryptoFile.git
+//		try {
+//			CloudFileDirectory rootDir = share.getRootDirectoryReference();
+//			CloudFileDirectory userDir = rootDir.getDirectoryReference(directory);	
+//			CloudFile file = userDir.getFileReference(filename);
+////<<<<<<< HEAD
+////			String resource = "downloads/";
+////			createDirectoryLocally(resource);
+////			file.download(new FileOutputStream(new File(resource + filename))); 
+//			
+//			byte[] buffer = new byte[file.getStreamWriteSizeInBytes()];
+//			
+//			file.downloadToByteArray(buffer, 0);
+//			
+//			return buffer;
+//		} catch (StorageException | URISyntaxException e) {
+////=======
+////			createDirectoryLocally(resource);
+////			try(FileOutputStream fos = new  FileOutputStream(new File(resource + filename))){
+////				file.download(fos);
+////			}
+////			return true;
+////		} catch (StorageException | URISyntaxException | IOException e) {
+////>>>>>>> branch 'develop' of https://github.com/Vandannh/CryptoFile.git
+//			e.printStackTrace();
+//			return null;
+//		}
+//	}
 //	public boolean download(String directory, String filename, String resource) {
-//>>>>>>> branch 'develop' of https://github.com/Vandannh/CryptoFile.git
-		try {
-			CloudFileDirectory rootDir = share.getRootDirectoryReference();
-			CloudFileDirectory userDir = rootDir.getDirectoryReference(directory);	
-			CloudFile file = userDir.getFileReference(filename);
-//<<<<<<< HEAD
-//			String resource = "downloads/";
-//			createDirectoryLocally(resource);
-//			file.download(new FileOutputStream(new File(resource + filename))); 
-			
-			byte[] buffer = new byte[file.getStreamWriteSizeInBytes()];
-			
-			file.downloadToByteArray(buffer, 0);
-			
-			return buffer;
-		} catch (StorageException | URISyntaxException e) {
-//=======
+//		try {
+//			CloudFileDirectory rootDir = share.getRootDirectoryReference();
+//			CloudFileDirectory userDir = rootDir.getDirectoryReference(directory);	
+//			CloudFile file = userDir.getFileReference(filename);
 //			createDirectoryLocally(resource);
 //			try(FileOutputStream fos = new  FileOutputStream(new File(resource + filename))){
 //				file.download(fos);
 //			}
 //			return true;
-//		} catch (StorageException | URISyntaxException | IOException e) {
-//>>>>>>> branch 'develop' of https://github.com/Vandannh/CryptoFile.git
-			e.printStackTrace();
-			return null;
-		}
+//		}catch (StorageException | URISyntaxException | IOException e) {
+//			return false;
+//		}
+//	}
+	
+	public byte[] download(String directory, String filename) throws StorageException, URISyntaxException {
+			CloudFileDirectory rootDir = share.getRootDirectoryReference();
+			CloudFileDirectory userDir = rootDir.getDirectoryReference(directory);	
+			CloudFile file = userDir.getFileReference(filename);
+			byte[] buffer = new byte[file.getStreamWriteSizeInBytes()];		
+			file.downloadToByteArray(buffer, 0);
+			return buffer;
 	}
 
 	/**

@@ -5,10 +5,10 @@ import java.io.Serializable;
 
 public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
-	public static final int LOGIN = 1, LOGOUT = 2, REGISTER = 3, UPLOAD = 4, DOWNLOAD = 5;
+	public static final int LOGIN = 1, LOGOUT = 2, REGISTER = 3, UPLOAD = 4, DOWNLOAD = 5, DELETE = 6;
 	private int type;
 	private String username, email, password, directory, filename;
-	private File file;
+	private byte[] file;
 
 	public Message(int type, String username, String email, String password) {
 		this.type=type;
@@ -23,16 +23,17 @@ public class Message implements Serializable {
 			this.username=input1;
 			this.password=input2;
 		}
-		else if(type==5) {
+		else if(type==5||type==6) {
 			this.directory=input1;
 			this.filename=input2;
 		}
 	}
 	
-	public Message(int type, String directory, File file) {
+	public Message(int type, String directory, byte[] file, String filename) {
 		this.type=type;
 		this.directory=directory;
 		this.file=file;
+		this.filename=filename;
 	}
 
 	public int getType() {
@@ -55,7 +56,7 @@ public class Message implements Serializable {
 		return directory;
 	}
 
-	public File getFile() {
+	public byte[] getFile() {
 		return file;
 	}
 	

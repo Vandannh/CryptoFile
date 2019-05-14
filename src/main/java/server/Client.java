@@ -1,35 +1,25 @@
 package main.java.server;
 
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 import main.java.Message;
 import main.java.design.UI;
+import main.java.encryption.Encryption;
 
-public class Client extends JPanel implements ActionListener{
+public class Client {
 	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
 	private String nameOfDownloadedFile;
-	private JButton btnSend = new JButton("Send");
 	private UI ui;
-
-	public static void main(String argv[]) throws Exception {
-		JFrame frame = new JFrame( "Client" );
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.add( new Client(null) );
-		frame.pack();
-		frame.setVisible(true);
-	}
+	private final String privateKey="temp/rsa.key", publicKey="temp/rsa.pub";
 
 	public Client(UI ui){
 		this.ui=ui;
@@ -37,24 +27,23 @@ public class Client extends JPanel implements ActionListener{
 			Socket clientSocket = new Socket("localhost", 6789);
 			oos = new ObjectOutputStream(clientSocket.getOutputStream());
 			ois = new ObjectInputStream(clientSocket.getInputStream());
-//			setLayout(new GridLayout(1,2));
-//			add(btnSend);
-//			btnSend.addActionListener(this);
 			new ListenFromServer().start();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	public void sendMessage(Message message) throws IOException {
-		//		Message msg = new Message(1,"test1", "Password1");
-		oos.writeObject(message);
-		//		nameOfDownloadedFile="Bad Gastien 1.PNG";
-		//		msg = new Message(5,"private", "Bad Gastien 1.PNG");
-		//		oos.writeObject(msg);
+	public void download() {
+		String choosenDirectory = chooseDirectory().toLowerCase();
+		nameOfDownloadedFile = JOptionPane.showInputDialog("Write file to download.(Including the file extension)");
+		Message message = new Message(5, choosenDirectory, nameOfDownloadedFile);
+		try {
+			oos.writeObject(message);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
-	private void upload() throws IOException {
+	public void upload() throws IOException {
 		JFileChooser chooser = new JFileChooser();
 		int returnVal = chooser.showOpenDialog(null);
 		File file = null;
@@ -62,28 +51,79 @@ public class Client extends JPanel implements ActionListener{
 			file = chooser.getSelectedFile();
 		if(file!=null) {
 			String choosenDirectory = chooseDirectory().toLowerCase();	
-
-			Message msg = new Message(4,choosenDirectory, file);
-			oos.writeObject(msg);
+			try {
+				file = Encryption.encrypt(file, privateKey);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			byte[] buffer = readFileToByteArray(file);
+			Message message = new Message(4,choosenDirectory, buffer, file.getName());
+			deleteFile(file.getPath());
+			oos.writeObject(message);
+		}
+	}
+	public void register(String username, String email, String password) {
+		Message message = new Message(3, username, email, password);
+		try {
+			oos.writeObject(message);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
+	public void login(String username, String password) {
+		Message message = new Message(1,username,password);
+		try {
+			oos.writeObject(message);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteFile() {
+		String directory = chooseDirectory().toLowerCase();
+		String filename = JOptionPane.showInputDialog("Write file to Delete.(Including the file extension)");
+		Message message = new Message(6,directory,filename);
+		try {
+			oos.writeObject(message);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private byte[] readFileToByteArray(File file){
+		FileInputStream fis = null;
+		byte[] bArray = new byte[(int) file.length()];
+		try{
+			fis = new FileInputStream(file);
+			fis.read(bArray);
+			fis.close();           
+		}catch(IOException ioExp){
+			ioExp.printStackTrace();
+		}
+		return bArray;
+	}
+	
 	private String chooseDirectory() {
 		JList<String> list = new JList<String>(new String[] {"Private", "Public"});
 		JOptionPane.showMessageDialog(null, list, "Choose directory", JOptionPane.PLAIN_MESSAGE);
 		return list.getSelectedValue();
 	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(e.getSource()==btnSend) {
-			try {
-				Message msg = new Message(1,"test1", "Password1");
-				sendMessage(msg);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
+	/**
+	 * Creates a directory on local computer if it doesn't exists
+	 * 
+	 * @param directoryName the name of the directory being created
+	 * @throws IOException 
+	 */
+	public void createDirectoryLocally(String directoryName) throws IOException {
+		Path path = Paths.get(directoryName);
+		if (!Files.exists(path)) {
+			Files.createDirectory(path);
 		}
+	}
+	private void deleteFile(String filename) {
+		File file = new File(filename);
+		file.delete();
 	}
 	private class ListenFromServer extends Thread {
 		public synchronized void run() {
@@ -93,13 +133,32 @@ public class Client extends JPanel implements ActionListener{
 					Object obj = ois.readObject();
 					if(obj instanceof byte[]) {
 						System.out.println("File downloaded");
-						OutputStream os = new FileOutputStream("downloads/"+nameOfDownloadedFile); 
-						os.write((byte[])obj);
+						try(OutputStream os = new FileOutputStream("downloads/"+nameOfDownloadedFile)){ 
+							os.write((byte[])obj);
+							Encryption.decrypt(new File("downloads/"+nameOfDownloadedFile), publicKey);	
+						}finally {
+							deleteFile("downloads/"+nameOfDownloadedFile);
+						}
+					}
+					else if(obj instanceof byte[][]) {
+						System.out.println("Key Pair");
+						byte[][] keyPair = (byte[][])obj;
+						try {
+							createDirectoryLocally("temp");
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						try(OutputStream os = new FileOutputStream(privateKey)){ 
+							os.write(keyPair[0]);
+						}
+						try(OutputStream os = new FileOutputStream(publicKey)){ 
+							os.write(keyPair[1]);
+						}
 					}
 					String str = obj.toString();
 					ui.setTextMessage(str);
-//					ui.confirm(true);
-				} catch (ClassNotFoundException | IOException e) {
+					ui.confirm(true);
+				} catch (Exception e) {
 					e.printStackTrace();
 					running=false;
 				}
