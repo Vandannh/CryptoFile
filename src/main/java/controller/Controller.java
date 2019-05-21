@@ -3,7 +3,6 @@ package main.java.controller;
 
 import java.io.*;
 import java.net.URISyntaxException;
-import java.nio.file.*;
 import java.security.*;
 import java.util.*;
 import javax.swing.*;
@@ -36,7 +35,7 @@ public class Controller {
 	private MSSQL mssql;
 	private SafeString safeString = new SafeString();
 	private Session session;
-	private final String privateKey="temp/rsa.key", publicKey="temp/rsa.pub";
+	private final String privateKey="rsa.key", publicKey="rsa.pub";
 
 	private final String connectionString = ConnectionStrings.connectionString;
 
@@ -106,10 +105,10 @@ public class Controller {
 			temp.connect("keys");
 			temp.createDirectoryInAzure(messages.get(0));
 			Encryption.doGenkey();
-			temp.upload(messages.get(0), readFileToByteArray(new File(privateKey)), privateKey);
-			temp.upload(messages.get(0), readFileToByteArray(new File(publicKey)), publicKey);
-			deleteFile(privateKey);
-			deleteFile(publicKey);
+			temp.upload(messages.get(0), readFileToByteArray(new File("temp/"+privateKey)), privateKey);
+			temp.upload(messages.get(0), readFileToByteArray(new File("temp/"+publicKey)), publicKey);
+			deleteFile("temp/"+privateKey);
+			deleteFile("temp/"+publicKey);
 			message.add("User created");
 			return message;
 		}

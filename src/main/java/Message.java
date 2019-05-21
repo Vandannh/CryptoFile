@@ -5,9 +5,9 @@ import java.io.Serializable;
 
 public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
-	public static final int LOGIN = 1, LOGOUT = 2, REGISTER = 3, UPLOAD = 4, DOWNLOAD = 5, DELETE = 6;
+	public static final int RETURN=0, LOGIN = 1, LOGOUT = 2, REGISTER = 3, UPLOAD = 4, DOWNLOAD = 5, DELETE = 6;
 	private int type;
-	private String username, email, password, directory, filename;
+	private String username, email, password, directory, filename, returnMessage;
 	private byte[] file;
 
 	public Message(int type, String username, String email, String password) {
@@ -36,6 +36,11 @@ public class Message implements Serializable {
 		this.filename=filename;
 	}
 
+	public Message(int type, String returnMessage) {
+		this.type=type;
+		this.returnMessage=returnMessage;
+	}
+
 	public int getType() {
 		return type;
 	}
@@ -62,5 +67,9 @@ public class Message implements Serializable {
 	
 	public String getFilename() {
 		return filename;
+	}
+	
+	public String getReturnMessage() {
+		return returnMessage;
 	}
 }

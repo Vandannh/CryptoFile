@@ -19,6 +19,7 @@ public class Client {
 	private ObjectInputStream ois;
 	private String nameOfDownloadedFile;
 	private UI ui;
+	private boolean confirm;
 	private final String privateKey="temp/rsa.key", publicKey="temp/rsa.pub";
 
 	public Client(UI ui){
@@ -125,6 +126,11 @@ public class Client {
 		File file = new File(filename);
 		file.delete();
 	}
+	
+	public boolean getConfirm() {
+		return confirm;
+	}
+	
 	private class ListenFromServer extends Thread {
 		public synchronized void run() {
 			boolean running=true;
@@ -132,36 +138,50 @@ public class Client {
 				try {
 					Object obj = ois.readObject();
 					if(obj instanceof byte[]) {
-						System.out.println("File downloaded");
-						try(OutputStream os = new FileOutputStream("downloads/"+nameOfDownloadedFile)){ 
-							os.write((byte[])obj);
-							Encryption.decrypt(new File("downloads/"+nameOfDownloadedFile), publicKey);	
-						}finally {
-							deleteFile("downloads/"+nameOfDownloadedFile);
-						}
+						downloadedFile((byte[])obj);
 					}
 					else if(obj instanceof byte[][]) {
-						System.out.println("Key Pair");
-						byte[][] keyPair = (byte[][])obj;
-						try {
-							createDirectoryLocally("temp");
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-						try(OutputStream os = new FileOutputStream(privateKey)){ 
-							os.write(keyPair[0]);
-						}
-						try(OutputStream os = new FileOutputStream(publicKey)){ 
-							os.write(keyPair[1]);
+						keyPair((byte[][])obj);
+					}
+					else if(obj instanceof Message){
+						if(((Message) obj).getType()==Message.RETURN) {
+							String returnMessage = ((Message) obj).getReturnMessage();
+							System.out.println(returnMessage);
+							if (returnMessage.equals("Logged in")) {
+								confirm=true;
+							}
+							else {
+								confirm=false;
+//								ui.getLblResult().setText(returnMessage);
+							}
 						}
 					}
-					String str = obj.toString();
-					ui.setTextMessage(str);
-					ui.confirm(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 					running=false;
 				}
+			}
+		}
+		private void downloadedFile(byte[] obj) throws Exception {
+			System.out.println("File downloaded");
+			try(OutputStream os = new FileOutputStream("downloads/"+nameOfDownloadedFile)){ 
+				os.write((byte[])obj);
+				Encryption.decrypt(new File("downloads/"+nameOfDownloadedFile), publicKey);	
+			}finally {
+				deleteFile("downloads/"+nameOfDownloadedFile);
+			}
+		}
+		private void keyPair(byte[][] keyPair) throws FileNotFoundException, IOException {
+			System.out.println("Key Pair");
+			try {
+				createDirectoryLocally("temp");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			try(OutputStream os1 = new FileOutputStream(privateKey);
+				OutputStream os2 = new FileOutputStream(publicKey)){ 
+				os1.write(keyPair[0]);
+				os2.write(keyPair[1]);
 			}
 		}
 	}

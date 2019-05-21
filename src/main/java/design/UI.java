@@ -113,12 +113,14 @@ public class UI {
 				String password="";
 				for(char c : passwordField.getPassword()) password+=c+"";
 				client.login(username, password);
-				if(confirm) {
-					loginPanel.setVisible(false);
-					homePage(true);
-				}
-				else
-					lblResult.setText("Worng username/password");
+//				System.out.println(client.getConfirm());
+//				if(client.getConfirm()) {
+////					loginPanel.setVisible(false);
+////					homePage(true);
+//					lblResult.setText("logged in");
+//				}
+//				else
+//					lblResult.setText("Worng username/password");
 			}
 		});
 		btnRegister.addActionListener(new ActionListener() {
@@ -175,7 +177,7 @@ public class UI {
 		btnBack.setBounds(144, 140, 116, 25);
 		registerPanel.add(btnBack);
 
-		JLabel lblResult = new JLabel("");
+		lblResult = new JLabel("");
 		lblResult.setHorizontalAlignment(SwingConstants.CENTER);
 		lblResult.setBounds(47, 170, 350, 16);
 		registerPanel.add(lblResult);
@@ -192,12 +194,6 @@ public class UI {
 					lblResult.setText(textMessage);
 				else
 					lblResult.setText("User created");
-
-				///				ArrayList<String> message = controller.register(username, email, password);
-				//				for(String s : message) {
-				//					System.out.println(s);
-				//					lblResult.setText(lblResult.getText()+"\n"+s);
-				//				}
 			}
 		});
 		btnBack.addActionListener(new ActionListener() {
@@ -322,5 +318,9 @@ public class UI {
 		Date date = new Date();
 		System.out.println(dateFormat.format(date)+": "+textMessage.toString()+" ("+textMessage.getClass().toString()+")");
 		this.textMessage=textMessage;
+	}
+	
+	public JLabel getLblResult() {
+		return lblResult;
 	}
 }

@@ -55,14 +55,18 @@ public class Server {
 					if(obj instanceof Message) {
 						msg = (Message)obj;
 					}
-					oos.writeObject(operation(msg));
+					Object object = operation(msg);
+					oos.writeObject(object);
 				}
 			} catch (IOException | ClassNotFoundException | NoSuchAlgorithmException e) {}
 		}
 		private Object operation(Message msg) throws NoSuchAlgorithmException, IOException {
 			switch(msg.getType()) {
 			case Message.LOGIN:		
-				return controller.login(msg.getUsername(), msg.getPassword());
+				if(controller.login(msg.getUsername(), msg.getPassword())==null) 
+					return new Message(0, "Wrong username/password");
+				else
+					return new Message(0, "Logged in");
 			case Message.LOGOUT: 	
 				return "You are logging out";
 			case Message.REGISTER: 	
