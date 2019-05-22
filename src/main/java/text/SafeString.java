@@ -4,7 +4,7 @@ package main.java.text;
  * This class is used to make a String safe
  * 
  * @version 1.0
- * @since 2019-05-07
+ * @since 2019-04-27
  * @author Mattias Jönsson
  *
  */
