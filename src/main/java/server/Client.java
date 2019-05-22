@@ -138,12 +138,7 @@ public class Client {
 						keyPair((byte[][])obj);
 					}
 					else if(obj instanceof Message){
-						if(((Message) obj).getType()==Message.RETURN) {
-							Object returnMessage = ((Message) obj).getReturnMessage();
-							if(returnMessage instanceof Session) {
-								System.out.println(((Session) returnMessage).getSessionID());
-							}
-						}
+						
 					}
 				} catch (Exception e) {
 					e.printStackTrace();

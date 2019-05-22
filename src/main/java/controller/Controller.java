@@ -6,12 +6,11 @@ import java.net.URISyntaxException;
 import java.security.*;
 import java.util.*;
 import javax.swing.*;
-
 import com.microsoft.azure.storage.StorageException;
-
 import main.java.azure.*;
 import main.java.database.*;
 import main.java.encryption.*;
+import main.java.server.Server;
 import mssql.MSSQL;
 import test2.ConnectionStrings;
 import main.java.session.*;
@@ -34,7 +33,7 @@ public class Controller {
 	private String userid;
 	private MSSQL mssql;
 	private SafeString safeString = new SafeString();
-	private Session session;
+//	private Session session;
 	private final String privateKey="rsa.key", publicKey="rsa.pub";
 
 	private final String connectionString = ConnectionStrings.connectionString;
@@ -58,9 +57,6 @@ public class Controller {
 		if(authentication.getAuthentication(username, password)) {
 			userid=mssql.select("users", new String[] {"id"}, "username='"+username+"'").replace("\t\t", "").trim();
 			azureFileShareIO.connect("user"+userid);
-//			session = new Session(userid);
-//			activeSession.addSession(session);
-//			new AutomaticLogout().start();
 			return getKeyPair();
 		}
 		else
@@ -193,9 +189,9 @@ public class Controller {
 	 * Logs out the user
 	 */
 	public boolean logout() {
-		deleteFile(privateKey);
-		deleteFile(publicKey);
-		deleteFile("temp");
+//		deleteFile(privateKey);
+//		deleteFile(publicKey);
+//		deleteFile("temp");
 //		activeSession.removeSession(session);
 		return true;
 	}
@@ -213,15 +209,26 @@ public class Controller {
 		return bArray;
 	}
 	
-//	private class AutomaticLogout extends Thread{
-//		public void run(){
-//			while(!Thread.interrupted())
-//				if(session.getSecondsPassed()==session.sessionMaxTime) {
-//					logout();
-//					interrupt();
-//				}
-//		}
-//	}
+	public void startAutomaticLogout(Session session) {
+		new AutomaticLogout(session).start();
+	}
+	
+	private class AutomaticLogout extends Thread{
+		private Session session;
+		private boolean running = true;
+		public AutomaticLogout(Session session) {
+			this.session=session;
+		}
+		public void run(){
+			while(!Thread.interrupted())
+				if(session.getSecondsPassed() == session.sessionMaxTime) {
+					System.out.println("Logged out");
+//					server.logout();
+					interrupt();
+					running=false;
+				}
+		}
+	}
 	
 
 }

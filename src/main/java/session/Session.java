@@ -19,7 +19,7 @@ public class Session implements Serializable {
 	private Timer timer;
 	private TimerTask task;
 	private int secondsPassed = 0;
-	public final int sessionMaxTime = 15*60*1000; //15 minutes written in miliseconds
+	public final int sessionMaxTime = 15;//*60*1000; //15 minutes written in miliseconds
 
 
 	public Session(String userID) {
@@ -60,8 +60,10 @@ public class Session implements Serializable {
 		timer = new Timer();
 		task = new TimerTask() {
 			public void run() {
-				if(secondsPassed < sessionMaxTime)
+				if(secondsPassed < sessionMaxTime) {
 					changeTime(1);
+					System.out.println(secondsPassed);
+				}
 				else
 					timer.cancel();
 			}

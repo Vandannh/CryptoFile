@@ -37,6 +37,7 @@ public class Server {
 	}
 	public void stop() {
 		running=false;
+	
 	}
 
 	private class ClientHandler extends Thread{
@@ -60,25 +61,20 @@ public class Server {
 						msg = (Message)obj;
 					}
 					Object object = operation(msg);
-					if(object instanceof Session) {
-						Session s = (Session)object;
-						System.out.println(s.getSessionID());
-						oos.writeObject(s);
-					}
-					else
-						oos.writeObject(object);
+					oos.writeObject(object);
 				}
 			} catch (IOException | ClassNotFoundException | NoSuchAlgorithmException e) {}
 		}
 		private Object operation(Message msg) throws NoSuchAlgorithmException, IOException {
 			switch(msg.getType()) {
 			case Message.LOGIN:		
-				if(controller.login(msg.getUsername(), msg.getPassword())==null) 
+				if(controller.login(msg.getUsername(), msg.getPassword())==null)					
 					return new Message(0, "Wrong username/password");
 				else {
-					session = new Session(msg.getUsername());
+					session = new Session(userid);
 					activeSessions.addSession(session);
-					return session;
+					controller.startAutomaticLogout(session);
+					return new Message(0, "Logged in");
 				}
 			case Message.LOGOUT: 	
 				activeSessions.removeSession(session);
@@ -96,6 +92,9 @@ public class Server {
 				return controller.deleteFile(msg.getFilename(), msg.getDirectory());
 			}
 			return null;
+		}
+		public void logout() {
+			System.out.println("Logged out");
 		}
 	}
 }
