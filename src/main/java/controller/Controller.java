@@ -58,9 +58,9 @@ public class Controller {
 		if(authentication.getAuthentication(username, password)) {
 			userid=mssql.select("users", new String[] {"id"}, "username='"+username+"'").replace("\t\t", "").trim();
 			azureFileShareIO.connect("user"+userid);
-			session = new Session(userid);
-			activeSession.addSession(session);
-			new AutomaticLogout().start();
+//			session = new Session(userid);
+//			activeSession.addSession(session);
+//			new AutomaticLogout().start();
 			return getKeyPair();
 		}
 		else
@@ -196,7 +196,7 @@ public class Controller {
 		deleteFile(privateKey);
 		deleteFile(publicKey);
 		deleteFile("temp");
-		activeSession.removeSession(session);
+//		activeSession.removeSession(session);
 		return true;
 	}
 	
@@ -213,15 +213,15 @@ public class Controller {
 		return bArray;
 	}
 	
-	private class AutomaticLogout extends Thread{
-		public void run(){
-			while(!Thread.interrupted())
-				if(session.getSecondsPassed()==session.sessionMaxTime) {
-					logout();
-					interrupt();
-				}
-		}
-	}
+//	private class AutomaticLogout extends Thread{
+//		public void run(){
+//			while(!Thread.interrupted())
+//				if(session.getSecondsPassed()==session.sessionMaxTime) {
+//					logout();
+//					interrupt();
+//				}
+//		}
+//	}
 	
 
 }

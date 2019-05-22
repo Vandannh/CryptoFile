@@ -1,5 +1,6 @@
 package main.java.session;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -7,7 +8,8 @@ import java.util.ArrayList;
  * @author Broceps
  *
  */
-public class ActiveSessions {
+public class ActiveSessions implements Serializable {
+	private static final long serialVersionUID = 1L;
 	ArrayList<Session> sessions = new ArrayList<Session>();
 	
 	public void addSession(Session s) {

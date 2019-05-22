@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import main.java.Message;
 import main.java.design.UI;
 import main.java.encryption.Encryption;
+import main.java.session.Session;
 
 public class Client {
 	private ObjectOutputStream oos;
@@ -43,7 +44,6 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
-
 	public void upload() throws IOException {
 		JFileChooser chooser = new JFileChooser();
 		int returnVal = chooser.showOpenDialog(null);
@@ -71,7 +71,6 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
-
 	public void login(String username, String password) {
 		Message message = new Message(1,username,password);
 		try {
@@ -80,7 +79,6 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
-	
 	public void deleteFile() {
 		String directory = chooseDirectory().toLowerCase();
 		String filename = JOptionPane.showInputDialog("Write file to Delete.(Including the file extension)");
@@ -91,7 +89,6 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
-	
 	private byte[] readFileToByteArray(File file){
 		FileInputStream fis = null;
 		byte[] bArray = new byte[(int) file.length()];
@@ -104,7 +101,6 @@ public class Client {
 		}
 		return bArray;
 	}
-	
 	private String chooseDirectory() {
 		JList<String> list = new JList<String>(new String[] {"Private", "Public"});
 		JOptionPane.showMessageDialog(null, list, "Choose directory", JOptionPane.PLAIN_MESSAGE);
@@ -126,11 +122,9 @@ public class Client {
 		File file = new File(filename);
 		file.delete();
 	}
-	
 	public boolean getConfirm() {
 		return confirm;
-	}
-	
+	}	
 	private class ListenFromServer extends Thread {
 		public synchronized void run() {
 			boolean running=true;
@@ -145,14 +139,9 @@ public class Client {
 					}
 					else if(obj instanceof Message){
 						if(((Message) obj).getType()==Message.RETURN) {
-							String returnMessage = ((Message) obj).getReturnMessage();
-							System.out.println(returnMessage);
-							if (returnMessage.equals("Logged in")) {
-								confirm=true;
-							}
-							else {
-								confirm=false;
-//								ui.getLblResult().setText(returnMessage);
+							Object returnMessage = ((Message) obj).getReturnMessage();
+							if(returnMessage instanceof Session) {
+								System.out.println(((Session) returnMessage).getSessionID());
 							}
 						}
 					}

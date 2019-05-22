@@ -1,9 +1,8 @@
 package main.java.session;
 
-import java.util.Random;
+import java.io.Serializable;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
@@ -13,7 +12,8 @@ import org.mindrot.jbcrypt.BCrypt;
  * @author Broceps
  *
  */
-public class Session {
+public class Session implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private String sessionID;
 	private String userID;
 	private Timer timer;

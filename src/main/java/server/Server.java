@@ -6,11 +6,14 @@ import java.security.NoSuchAlgorithmException;
 
 import main.java.Message;
 import main.java.controller.*;
+import main.java.session.ActiveSessions;
+import main.java.session.Session;
 
 public class Server {
 	private boolean running;
 	private Controller controller;
 	private String userid;
+	private ActiveSessions activeSessions = new ActiveSessions();
 
 	public Server() {
 		controller = new Controller();
@@ -41,6 +44,7 @@ public class Server {
 		ObjectInputStream ois;
 		ObjectOutputStream oos;
 		Message msg;
+		Session session;
 		ClientHandler(Socket socket) throws ClassNotFoundException, IOException {
 			this.socket=socket;
 		}
@@ -56,7 +60,13 @@ public class Server {
 						msg = (Message)obj;
 					}
 					Object object = operation(msg);
-					oos.writeObject(object);
+					if(object instanceof Session) {
+						Session s = (Session)object;
+						System.out.println(s.getSessionID());
+						oos.writeObject(s);
+					}
+					else
+						oos.writeObject(object);
 				}
 			} catch (IOException | ClassNotFoundException | NoSuchAlgorithmException e) {}
 		}
@@ -65,9 +75,13 @@ public class Server {
 			case Message.LOGIN:		
 				if(controller.login(msg.getUsername(), msg.getPassword())==null) 
 					return new Message(0, "Wrong username/password");
-				else
-					return new Message(0, "Logged in");
+				else {
+					session = new Session(msg.getUsername());
+					activeSessions.addSession(session);
+					return session;
+				}
 			case Message.LOGOUT: 	
+				activeSessions.removeSession(session);
 				return "You are logging out";
 			case Message.REGISTER: 	
 				String text="";
