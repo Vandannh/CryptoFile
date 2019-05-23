@@ -194,13 +194,30 @@ public class Controller {
 		File file = new File(filename);
 		file.delete();
 	}
+	
+	private static void deleteDirectory(Path path) throws IOException {
+		  if (Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)) {
+		    try (DirectoryStream<Path> entries = Files.newDirectoryStream(path)) {
+		      for (Path entry : entries) {
+		        deleteDirectory(entry);
+		      }
+		    }
+		  }
+		  Files.delete(path);
+		}
+	
 	/**
 	 * Logs out the user
+	 * @throws IOException 
 	 */
 	public boolean logout() {
 		deleteFile(privateKey);
 		deleteFile(publicKey);
-		deleteFile("temp");
+		try {
+			deleteDirectory(Paths.get("temp/"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		activeSession.removeSession(session);
 		return true;
 	}
