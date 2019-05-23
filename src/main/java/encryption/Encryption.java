@@ -56,7 +56,7 @@ public class Encryption{
 		srandom.nextBytes(iv);
 		IvParameterSpec ivspec = new IvParameterSpec(iv);
 
-		try (FileOutputStream out = new FileOutputStream(inputFile + ".enc")) {
+		try (FileOutputStream out = new FileOutputStream("temp/" + inputFile.getName() + ".enc")) {
 			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 			cipher.init(Cipher.ENCRYPT_MODE, pvt);
 			byte[] b = cipher.doFinal(skey.getEncoded());
@@ -70,7 +70,7 @@ public class Encryption{
 				processFile(ci, in, out);
 			}
 		}
-		File encrypted = new File(inputFile+".enc");
+		File encrypted = new File("temp/" + inputFile.getName() + ".enc");
 		return(encrypted);
 	}
 
