@@ -2,25 +2,19 @@ package main.java.database;
 
 import org.mindrot.jbcrypt.BCrypt;
 import mssql.MSSQL;
+import test2.ConnectionStrings;
 
 /**
  * The class is used to authenticate the user
  * 
  * @version 1.0
  * @since 2019-04-13
-<<<<<<< HEAD
  * @author Mattias J�nsson
-=======
- * @author Mattias J�nsson
->>>>>>> refs/heads/feature/SQLInjections
  *
  */
 public class Authentication {
 	private MSSQL mssql;
-	private final String connectionString = "jdbc:sqlserver://cryptofiletesting.database.windows.net:1433;"
-			   + "database=Testing;user=db_writer_reader@cryptofiletesting;password=CryptoFileHasACoolPassword1;"
-			   + "encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;"
-			   + "loginTimeout=30;"; // Edit this
+	private final String connectionString = ConnectionStrings.connectionString;
 	/**
 	 * Sets up a connection to the database.
 	 */

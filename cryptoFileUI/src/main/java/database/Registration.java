@@ -6,23 +6,20 @@ import java.util.Random;
 import javax.mail.internet.*;
 import org.mindrot.jbcrypt.BCrypt;
 import mssql.MSSQL;
+import test2.ConnectionStrings;
 
 /**
  * This class is used to register a user in the database.
  * 
  * @version 1.0
  * @since 2019-04-14
-<<<<<<< HEAD
  * @author Mattias J�nsson
  *
  */
 public class Registration {
 	private String username,password,email;
 	private MSSQL mssql;
-	private final String connectionString = "jdbc:sqlserver://cryptofiletesting.database.windows.net:1433;"
-			   + "database=Testing;user=db_writer_reader@cryptofiletesting;password=CryptoFileHasACoolPassword1;"
-			   + "encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;"
-			   + "loginTimeout=30;"; // Edit this
+	private final String connectionString = ConnectionStrings.connectionString;
 
 	/**
 	 * Constructs a Registration-object containing the username, email-address and password
@@ -52,12 +49,12 @@ public class Registration {
 			messages.add((String)validation[0][1]);
 			messages.add((String)validation[1][1]);
 			messages.add((String)validation[2][1]);
-			deleteEmptyElement(messages);
+//			deleteEmptyElement(messages);
 		}
 		else {
 			String code = generateUserCode();
-			mssql.insert("Users", new String[] {"username","password","email","code"},new String[] {username,hashPassword(password),email,code});
-			String id = mssql.select("Users", new String[] {"id"}, "username='"+username+"' AND code ='"+code+"'").replace("\t\t", "").trim();
+			mssql.insert("Users", new String[] {"username","password","email","user_code"},new String[] {username,hashPassword(password),email,code});
+			String id = mssql.select("Users", new String[] {"id"}, "username='"+username+"' AND user_code ='"+code+"'").replace("\t\t", "").trim();
 			mssql.insert("Directory", new String[] {"name","user_id","type"}, new Object[] {id,Integer.parseInt(id),"Directory"});
 			mssql.insert("Directory", new String[] {"name","user_id","type"}, new Object[] {"private",Integer.parseInt(id),"Directory"});
 			mssql.insert("Directory", new String[] {"name","user_id","type"}, new Object[] {"public",Integer.parseInt(id),"Directory"});
@@ -86,7 +83,9 @@ public class Registration {
 			if(input.isEmpty())
 				inputError = "Username is required";
 			else {
-				if(!isValidUsername(input))
+				if (input.length()>25)
+					inputError = "Username is to long. Maximum of 25 characters.";
+				else if(!isValidUsername(input))
 					inputError = "Username is not valid";
 				else if(usernameExists(input))
 					inputError = "Username already exists";
@@ -104,7 +103,7 @@ public class Registration {
 			break;
 		case 3:
 			if(input.isEmpty())
-				inputError = "Password address is required";
+				inputError = "Password is required";
 			else 
 				if(!isValidPassword(input))
 					inputError = "Password is not valid";
@@ -133,7 +132,7 @@ public class Registration {
 	 * @return if the email address exists in the database or not
 	 */
 	private boolean emailExists(String input) {
-		String emails = mssql.select("Users", new String[] {"username"}).replace("\t\t", "");
+		String emails = mssql.select("Users", new String[] {"email"}).replace("\t\t", "");
 		for(String s : emails.split("\n"))
 			if(s.toUpperCase().equals(input.toUpperCase())) 
 				return true;

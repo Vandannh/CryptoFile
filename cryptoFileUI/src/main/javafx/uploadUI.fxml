@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane fx:id="uploadRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="450.0" style="-fx-background-color: rgb(255,255,255);" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.UserInterfaceController">
+   <children>
+      <ScrollPane fx:id="scrollUploadList" layoutY="220.0" prefHeight="60.0" prefWidth="450.0" style="-fx-background-color: rgb(240,240,240);">
+      	<Pane fx:id="uploadList">
+      		<Label fx:id="fileToUpload" layoutX="30.0" layoutY="19.0" text="">
+               <font>
+                  <Font name="Helvetica Neue" size="13.0" />
+               </font>
+            </Label>
+            <Button fx:id="removeUploadFileButton"  visible="false" onAction="#removeUploadFile" layoutX="392.0" layoutY="14.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="26.0" style="-fx-background-color: rgb(237, 107, 90);" text="X" textFill="WHITE">
+               <font>
+                  <Font name="Helvetica Neue Bold" size="11.0" />
+               </font>
+            </Button>
+      	</Pane>
+      </ScrollPane>
+      <Button layoutX="50.0" layoutY="472.0" mnemonicParsing="false" onAction="#uploadSuccesfulButton" prefHeight="50.0" prefWidth="278.0" style="-fx-background-color: rgb(90, 51, 103);" text="Upload" textFill="WHITE">
+         <font>
+            <Font name="Helvetica Neue Bold" size="16.0" />
+         </font>
+      </Button>
+      <Button layoutX="82.0" layoutY="536.0" mnemonicParsing="false" onAction="#cancelUploadButton" style="-fx-background-color: rgb(255,255,255);" text="Return" textFill="#5a3367">
+         <font>
+            <Font name="Helvetica Neue Bold" size="13.0" />
+         </font>
+      </Button>
+      <Button fx:id="uploadButton" layoutX="349.0" layoutY="472.0" mnemonicParsing="false" onAction="#chooseFileButton" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: rgb(26,116,168);" text="+" textFill="WHITE">
+         <font>
+            <Font name="Helvetica Neue Bold" size="24.0" />
+         </font>
+      </Button>
+      <Label fx:id="uploadFail" prefWidth="450" layoutY="370.0" textFill="#cd0f0f">
+         <font>
+            <Font name="Helvetica Neue Bold" size="13.0" />
+         </font>
+      </Label>
+      <Button fx:id="publicDirectoryUploadButton" onAction="#choosePublicDirectory" layoutX="119.0" layoutY="400.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" style="-fx-border-color: rgb(26,116,168); -fx-background-color: rgb(255,255,255); -fx-border-radius: 3;" text="Public" textFill="#1a74a8">
+         <font>
+            <Font name="Helvetica Neue Bold" size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="privateDirectoryUploadButton" onAction="#choosePrivateDirectory" layoutX="258.0" layoutY="400.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" style="-fx-background-color: rgb(255,255,255); -fx-border-color: rgb(26,116,168); -fx-border-radius: 3;" text="Private" textFill="#1a74a8">
+         <font>
+            <Font name="Helvetica Neue Bold" size="14.0" />
+         </font>
+      </Button>
+      <ImageView fitHeight="90.0" fitWidth="350.0" layoutX="53.0" layoutY="60.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="https://i.ibb.co/WpkkLh2/logga.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

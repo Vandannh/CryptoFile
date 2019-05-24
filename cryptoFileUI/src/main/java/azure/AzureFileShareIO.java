@@ -17,6 +17,8 @@ import java.util.Map;
 import com.microsoft.azure.storage.*;
 import com.microsoft.azure.storage.file.*;
 
+import test2.ConnectionStrings;
+
 /**
  * This class will function as a bridge between Azure storage and local files. 
  * By connecting to an Azure storage account and store/get files from the storage. 
@@ -35,9 +37,7 @@ public class AzureFileShareIO {
 	 * The Connection string used to connect to Azure storage account
 	 * Change this string if you want to change which storage to work from
 	 */
-	public static final String storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=cryptofile1;"
-			+ "AccountKey=e93IzFOe+Z5okcXlk4WpAZ9ozaHPifAd8l8rLvGFlNORKtoBASySgx8clTwukGRqsL/1UyET7Y5HRO8KceTlqQ==;"
-			+ "EndpointSuffix=core.windows.net"; // Edit this
+	public static final String storageConnectionString = ConnectionStrings.storageConnectionString;
 
 
 	/**
@@ -57,7 +57,6 @@ public class AzureFileShareIO {
 				properties.setShareQuota(5); //set the limit of storage to 5GB
 				share.uploadProperties();
 			}
-			System.out.println(usedMemoryPercentage()); 
 		} catch (InvalidKeyException | URISyntaxException | StorageException e) {
 			e.printStackTrace();
 		}
@@ -75,8 +74,6 @@ public class AzureFileShareIO {
 			CloudFileDirectory userDir = rootDir.getDirectoryReference(directory);
 			CloudFile cloudFile = userDir.getFileReference(file.getName());
 			cloudFile.uploadFromFile(file.toString());	
-			System.out.println(directory);
-			System.out.println(checkAvailableSpace()); //MARK: for test purpose
 		} catch (StorageException | URISyntaxException | IOException e) {
 			e.printStackTrace();
 		}
@@ -89,14 +86,15 @@ public class AzureFileShareIO {
 	 * @param filename the name of the file to download
 	 * @return if the download was successful
 	 */
-	public boolean download(String directory, String filename) {
+	public boolean download(String directory, String filename, String resource) {
 		try {
 			CloudFileDirectory rootDir = share.getRootDirectoryReference();
 			CloudFileDirectory userDir = rootDir.getDirectoryReference(directory);	
 			CloudFile file = userDir.getFileReference(filename);
-			String resource = "downloads/";
 			createDirectoryLocally(resource);
-			file.download(new FileOutputStream(new File(resource + filename))); 
+			try(FileOutputStream fos = new  FileOutputStream(new File(resource + filename))){
+				file.download(fos);
+			}
 			return true;
 		} catch (StorageException | URISyntaxException | IOException e) {
 			e.printStackTrace();
@@ -111,14 +109,12 @@ public class AzureFileShareIO {
 	 * @param name of file to be deleted
 	 * @return if the download was successful
 	 */
-	public boolean deleteFile(String userDirectory, String directory, String filename) {
+	public boolean deleteFile(String directory, String filename) {
 		try {
 			CloudFileDirectory rootDir = share.getRootDirectoryReference();
-			CloudFileDirectory userDir = rootDir.getDirectoryReference(userDirectory);
-			CloudFileDirectory userInnerDir = userDir.getDirectoryReference(directory);		
-			CloudFile file = userInnerDir.getFileReference(filename);
+			CloudFileDirectory userDir = rootDir.getDirectoryReference(directory);	
+			CloudFile file = userDir.getFileReference(filename);
 			if(file.deleteIfExists()) {
-				System.out.println("file: " + file.getName().toString() + " has been deleted!");
 				return true;
 			}else
 				return false;
@@ -166,7 +162,6 @@ public class AzureFileShareIO {
 			ShareStats stats = share.getStats();
 			double memoryInBytes = stats.getUsageInBytes();
 			double memoryInMegabytes = memoryInBytes/1000000;
-			System.out.println(memoryInMegabytes); //MARK: for test only
 			return memoryInMegabytes;
 
 		} catch(StorageException e) {
@@ -185,6 +180,14 @@ public class AzureFileShareIO {
 			CloudFileDirectory containerDir = rootDir.getDirectoryReference(directoryName);
 			containerDir.deleteIfExists();
 		} catch (StorageException | URISyntaxException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteShare(String shareName) {
+		try {
+			share.deleteIfExists();
+		} catch (StorageException e) {
 			e.printStackTrace();
 		}
 	}
