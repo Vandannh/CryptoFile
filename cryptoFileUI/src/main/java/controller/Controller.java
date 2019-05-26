@@ -32,7 +32,7 @@ public class Controller {
 	private Session session;
 	private final String privateKey="temp/rsa.key", publicKey="temp/rsa.pub";
 	private final String connectionString = ConnectionStrings.connectionString;
-	private Path downloadPath;
+	private String downloadPath;
 
 	/**
 	 * Connects to a MS SQL (SQL Server) database
@@ -40,7 +40,8 @@ public class Controller {
 	public Controller() {
 		mssql = new MSSQL(connectionString);
 		String home = System.getProperty("user.home");
-		downloadPath = Paths.get(new File(home + "/Downloads/").getAbsolutePath());
+		String separator = System.getProperty("file.separator");
+		downloadPath = home + separator + "Downloads" + separator;
 	}
 	/**
 	 * Tries to log in the user
@@ -208,7 +209,7 @@ public class Controller {
 	}
 
 	public String getFiles(String directory) {
-		return mssql.select("directory", new String[]{"name", "parent_id"}, "type='file' AND user_id='"+userid+"' AND parent_id=(select id from directory where name='"+directory+"' AND user_id=15)");
+		return mssql.select("directory", new String[]{"name", "parent_id"}, "type='file' AND user_id='"+userid+"' AND parent_id=(select id from directory where name='"+directory+"' AND user_id='"+userid+"')");
 	}
 	public double getAvailableSpace() {
 		return azureFileShareIO.checkAvailableSpace();
