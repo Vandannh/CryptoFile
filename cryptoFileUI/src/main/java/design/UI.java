@@ -13,7 +13,7 @@ import java.awt.*;
 
 /**
  * A simple UI for the application
- * 
+ *
  * @author Mattias Jönsson
  *
  */
@@ -109,7 +109,7 @@ public class UI {
 					homePage(true);
 				}
 				else
-					lblResult.setText("Worng username/password");
+					lblResult.setText("Wrong username/password");
 			}
 		});
 		btnRegister.addActionListener(new ActionListener() {
@@ -122,7 +122,7 @@ public class UI {
 
 	/**
 	 * The contents of the login page.
-	 * 
+	 *
 	 * @param show if the page should be shown or not
 	 */
 	private void registerPage(boolean show) {
@@ -199,7 +199,7 @@ public class UI {
 
 	/**
 	 * The contents of the home page.
-	 * 
+	 *
 	 * @param show if the page should be shown or not
 	 */
 	public void homePage(boolean show) {
@@ -212,7 +212,7 @@ public class UI {
 		JLabel lblResult = new JLabel("Test");
 		lblResult.setHorizontalAlignment(SwingConstants.CENTER);
 		lblResult.setBounds(0, 245, 400, 16);
-		homePanel.add(lblResult); 
+		homePanel.add(lblResult);
 
 		btnUpload = new JButton("Upload file");
 		btnUpload.setBounds(155, 94, 122, 25);
@@ -285,7 +285,7 @@ public class UI {
 
 	/**
 	 * Resizes a given image of the size of a given JContent-object
-	 * 
+	 *
 	 * @param ImagePath the path of the image
 	 * @param jc the JContent the image should resize to
 	 * @return the resized image
