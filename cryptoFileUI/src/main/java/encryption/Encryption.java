@@ -6,98 +6,128 @@ import java.security.*;
 import java.security.spec.*;
 import javax.crypto.*;
 import javax.crypto.spec.*;
-import main.java.azure.*;
 
+/**
+ * Contains static methods for generating RSA keypairs, encrypting and decrypting files using AES/RSA encryption.
+ * @version 1.0
+ * @since 2019-05-15
+ * @author Daniel Hägg
+ *
+ */
 public class Encryption{
-	static SecureRandom srandom = new SecureRandom();
+	static SecureRandom sRandom = new SecureRandom();
 
-	private static void processFile(Cipher ci,InputStream in,OutputStream out) throws IllegalBlockSizeException,BadPaddingException,IOException {
-		byte[] ibuf = new byte[1024];
-		int len;
-		while ((len = in.read(ibuf)) != -1) {
-			byte[] obuf = ci.update(ibuf, 0, len);
-			if ( obuf != null ) out.write(obuf);
+	/**
+	 * Encrypts and decrypts a file
+	 * @param cipher The cipher that is used to process the file
+	 * @param inStream Stream to the file to be processed
+	 * @param outStream Stream to the file to be processed
+	 * @throws IllegalBlockSizeException
+	 * @throws BadPaddingException
+	 * @throws IOException
+	 */
+	private static void processFile(Cipher cipher,InputStream inStream,OutputStream outStream) throws IllegalBlockSizeException,BadPaddingException,IOException {
+		byte[] inBuffer = new byte[1024];
+		int length;
+		while ((length = inStream.read(inBuffer)) != -1) {
+			byte[] outBuffer = cipher.update(inBuffer, 0, length);
+			if ( outBuffer != null )
+				outStream.write(outBuffer);
 		}
-		byte[] obuf = ci.doFinal();
-		if ( obuf != null ) out.write(obuf);
+		byte[] outBuffer = cipher.doFinal();
+		if ( outBuffer != null )
+			outStream.write(outBuffer);
 	}
 
-	private static void processFile(Cipher ci,String inFile,String outFile) throws IllegalBlockSizeException, BadPaddingException, IOException {
-		try (FileInputStream in = new FileInputStream(inFile);
-				FileOutputStream out = new FileOutputStream(outFile)) {
-			processFile(ci, in, out);
-		}
-	}
-
+	/**
+	 * Generates a RSA keypair
+	 * @return KeyPair The RSA keypair
+	 * @throws NoSuchAlgorithmException
+	 * @throws IOException
+	 */
 	public static KeyPair doGenkey() throws NoSuchAlgorithmException,IOException {
-		KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-		kpg.initialize(2048);
-		KeyPair kp = kpg.generateKeyPair();
-		try (FileOutputStream out = new FileOutputStream("temp/rsa.key")) {
-			out.write(kp.getPrivate().getEncoded());
+		KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
+		keyPairGen.initialize(2048);
+		KeyPair keyPair = keyPairGen.generateKeyPair();
+		try (FileOutputStream outStream = new FileOutputStream("temp/rsa.key")) {
+			outStream.write(keyPair.getPrivate().getEncoded());
 		}
-		try (FileOutputStream out = new FileOutputStream("temp/rsa.pub")) {
-			out.write(kp.getPublic().getEncoded());
+		try (FileOutputStream outStream = new FileOutputStream("temp/rsa.pub")) {
+			outStream.write(keyPair.getPublic().getEncoded());
 		}
-		return kp;
+		return keyPair;
 	}
-	
-	public static File encrypt(File inputFile, String key)throws Exception{
-		byte[] bytes = Files.readAllBytes(Paths.get(key));
-		PKCS8EncodedKeySpec ks = new PKCS8EncodedKeySpec(bytes);
-		KeyFactory kf = KeyFactory.getInstance("RSA");
-		PrivateKey pvt = kf.generatePrivate(ks);
 
-		KeyGenerator kgen = KeyGenerator.getInstance("AES");
-		kgen.init(128);
-		SecretKey skey = kgen.generateKey();
+	/**
+	 * Encrypts a file with an RSA key
+	 * @param inputFile The file to be encrypted
+	 * @param key The RSA key used to encrypt the file
+	 * @return File The encrypted file is returned
+	 * @throws Exception
+	 */
+	public static File encrypt(File inputFile, String key)throws Exception{
+		byte[] keyBytes = Files.readAllBytes(Paths.get(key));
+		PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
+		KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+		PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
+
+		KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+		keyGen.init(128);
+		SecretKey secretKey = keyGen.generateKey();
 
 		byte[] iv = new byte[128/8];
-		srandom.nextBytes(iv);
-		IvParameterSpec ivspec = new IvParameterSpec(iv);
+		sRandom.nextBytes(iv);
+		IvParameterSpec ivSpec = new IvParameterSpec(iv);
 
-		try (FileOutputStream out = new FileOutputStream(inputFile + ".enc")) {
-			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-			cipher.init(Cipher.ENCRYPT_MODE, pvt);
-			byte[] b = cipher.doFinal(skey.getEncoded());
-			out.write(b);
-			System.err.println("AES Key Length: " + b.length);
-			out.write(iv);
+		try (FileOutputStream outStream = new FileOutputStream(inputFile + ".enc")) {
+			Cipher cipherRSA = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+			cipherRSA.init(Cipher.ENCRYPT_MODE, privateKey);
+			byte[] fileBytes = cipherRSA.doFinal(secretKey.getEncoded());
+			outStream.write(fileBytes);
+			System.err.println("AES Key Length: " + fileBytes.length);
+			outStream.write(iv);
 			System.err.println("IV Length: " + iv.length);
-			Cipher ci = Cipher.getInstance("AES/CBC/PKCS5Padding");
-			ci.init(Cipher.ENCRYPT_MODE, skey, ivspec);
-			try (FileInputStream in = new FileInputStream(inputFile)) {
-				processFile(ci, in, out);
+			Cipher cipherAES = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			cipherAES.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec);
+			try (FileInputStream inStream = new FileInputStream(inputFile)) {
+				processFile(cipherAES, inStream, outStream);
 			}
 		}
 		File encrypted = new File(inputFile+".enc");
 		return(encrypted);
 	}
 
+	/**
+	 * Decrypts a file with an RSA key
+	 * @param inputFile The file to be decrypted
+	 * @param key The RSA key used to decrypt the file
+	 * @return File The decrypted file is returned
+	 * @throws Exception
+	 */
 	public static File decrypt(File inputFile, String key) throws Exception{
 		File decrypted = null;
 		String pubKeyFile = key;
 		byte[] bytes = Files.readAllBytes(Paths.get(pubKeyFile));
-		X509EncodedKeySpec ks = new X509EncodedKeySpec(bytes);
-		KeyFactory kf = KeyFactory.getInstance("RSA");
-		PublicKey pub = kf.generatePublic(ks);
+		X509EncodedKeySpec keySpec = new X509EncodedKeySpec(bytes);
+		KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+		PublicKey publicKey = keyFactory.generatePublic(keySpec);
 
-		try (FileInputStream in = new FileInputStream(inputFile)) {
-			SecretKeySpec skey = null;
-			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-			cipher.init(Cipher.DECRYPT_MODE, pub);
-			byte[] b = new byte[256];
-			in.read(b);
-			byte[] keyb = cipher.doFinal(b);
-			skey = new SecretKeySpec(keyb, "AES");
+		try (FileInputStream inStream = new FileInputStream(inputFile)) {
+			SecretKeySpec secretKeySpec = null;
+			Cipher cipherRSA = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+			cipherRSA.init(Cipher.DECRYPT_MODE, publicKey);
+			byte[] fileBytes = new byte[256];
+			inStream.read(fileBytes);
+			byte[] keyBytes = cipherRSA.doFinal(fileBytes);
+			secretKeySpec = new SecretKeySpec(keyBytes, "AES");
 			byte[] iv = new byte[128/8];
-			in.read(iv);
+			inStream.read(iv);
 			IvParameterSpec ivspec = new IvParameterSpec(iv);
-			Cipher ci = Cipher.getInstance("AES/CBC/PKCS5Padding");
-			ci.init(Cipher.DECRYPT_MODE, skey, ivspec);
+			Cipher cipherAES = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			cipherAES.init(Cipher.DECRYPT_MODE, secretKeySpec, ivspec);
 			decrypted = new File(inputFile.getPath().replace(".enc", ""));
-			try (FileOutputStream out = new FileOutputStream(decrypted)){
-				processFile(ci, in, out);
+			try (FileOutputStream outStream = new FileOutputStream(decrypted)){
+				processFile(cipherAES, inStream, outStream);
 			}
 		}
 		return(decrypted);
