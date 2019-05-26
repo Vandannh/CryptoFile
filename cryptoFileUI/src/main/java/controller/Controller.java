@@ -11,11 +11,11 @@ import main.java.encryption.*;
 import mssql.MSSQL;
 import test2.ConnectionStrings;
 import main.java.session.*;
-import main.java.text.*; 
+import main.java.text.*;
 
 /**
- * Is used to control the events in the application 
- * 
+ * Is used to control the events in the application
+ *
  * @version 1.0
  * @since 2019-04-17
  * @author Mattias Jönsson & Robin Andersson
@@ -32,16 +32,19 @@ public class Controller {
 	private Session session;
 	private final String privateKey="temp/rsa.key", publicKey="temp/rsa.pub";
 	private final String connectionString = ConnectionStrings.connectionString;
+	private Path downloadPath;
 
 	/**
 	 * Connects to a MS SQL (SQL Server) database
 	 */
 	public Controller() {
 		mssql = new MSSQL(connectionString);
+		String home = System.getProperty("user.home");
+		downloadPath = Paths.get(new File(home + "/Downloads/").getAbsolutePath());
 	}
 	/**
 	 * Tries to log in the user
-	 * 
+	 *
 	 * @param username the username the user is trying to log in with
 	 * @param password the password the user is trying to log in with
 	 * @return if the user can log in or not
@@ -61,7 +64,7 @@ public class Controller {
 		else
 			return false;
 	}
-	
+
 	private void getKeyPair() {
 		AzureFileShareIO temp = new AzureFileShareIO();
 		temp.connect("keys");
@@ -75,14 +78,14 @@ public class Controller {
 	}
 	/**
 	 * Tries to register the user
-	 * 
+	 *
 	 * @param username the username the user is trying to register
-	 * @param email the email the user is trying to register 
+	 * @param email the email the user is trying to register
 	 * @param password the password the user is trying to register
-	 * @return an ArrayList of the error messages if the user fail to register of 
+	 * @return an ArrayList of the error messages if the user fail to register of
 	 * a message telling the user it was created
-	 * @throws IOException 
-	 * @throws NoSuchAlgorithmException 
+	 * @throws IOException
+	 * @throws NoSuchAlgorithmException
 	 */
 	public ArrayList<String> register(String username, String email, String password) throws NoSuchAlgorithmException, IOException {
 		username = safeString.completeSafeString(username);
@@ -90,7 +93,7 @@ public class Controller {
 		email = safeString.completeSafeString(email);
 		registration = new Registration(username, email, password);
 		ArrayList<String> messages = registration.register();
-		if(messages.get(0).isEmpty()) 
+		if(messages.get(0).isEmpty())
 			messages.set(0, " ");
 		if(isNumeric(messages.get(0).toCharArray()[0])) {
 			azureFileShareIO.connect("user"+messages.get(0));
@@ -114,13 +117,13 @@ public class Controller {
 	}
 	/**
 	 * Gets a file and tries to upload it
-	 * 
-	 * @return a String telling the user of the success of the upload 
+	 *
+	 * @return a String telling the user of the success of the upload
 	 */
 	public String uploadFile(File file, String directory) {
 		if(file!=null) {
 			if(file.length()>1048576*5)
-				return "File is too big";			
+				return "File is too big";
 			String directoryId = mssql.select("directory", new String[] {"id"}, "name='"+directory+"' AND user_id='"+userid+"'").replace("\t\t", "").trim();
 			try {
 				file = Encryption.encrypt(file, privateKey);
@@ -135,14 +138,14 @@ public class Controller {
 	}
 	/**
 	 * Tries to download a file from Azure File Share
-	 * 
+	 *
 	 * @return a String telling the user of the success of the download
 	 */
 	public String downloadFile(String directory, String filename){
-		if(azureFileShareIO.download(directory,filename, "downloads/")) {
+		if(azureFileShareIO.download(directory,filename, downloadPath.toString())) {
 			try {
-				Encryption.decrypt(new File("downloads/"+filename), publicKey);
-				deleteFile("downloads/"+filename);
+				Encryption.decrypt(new File(downloadPath.toString()+filename), publicKey);
+				deleteFile(downloadPath.toString()+filename);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -161,7 +164,7 @@ public class Controller {
 
 	/**
 	 * Checks if the character is a number
-	 * 
+	 *
 	 * @param ch the character
 	 * @return if the character is a number or not
 	 */
@@ -175,7 +178,7 @@ public class Controller {
 		azureFileShareIO.deleteShare("user"+userid);
 		return logout();
 	}
-	
+
 	private static void deleteFile(String filename) {
 		File file = new File(filename);
 		file.delete();
@@ -190,12 +193,12 @@ public class Controller {
 		activeSession.removeSession(session);
 		return true;
 	}
-	
+
 	/**
 	 * Creates a directory on local computer if it doesn't exists
-	 * 
+	 *
 	 * @param directoryName the name of the directory being created
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void createDirectoryLocally(String directoryName) throws IOException {
 		Path path = Paths.get(directoryName);
@@ -203,7 +206,7 @@ public class Controller {
 			Files.createDirectory(path);
 		}
 	}
-	
+
 	public String getFiles(String directory) {
 		return mssql.select("directory", new String[]{"name", "parent_id"}, "type='file' AND user_id='"+userid+"' AND parent_id=(select id from directory where name='"+directory+"' AND user_id=15)");
 	}
@@ -213,7 +216,7 @@ public class Controller {
 	public double getUsedMemoryPercentage() {
 		return azureFileShareIO.usedMemoryPercentage();
 	}
-	
+
 	private class AutomaticLogout extends Thread{
 		public void run(){
 			while(!Thread.interrupted())
@@ -223,6 +226,6 @@ public class Controller {
 				}
 		}
 	}
-	
+
 
 }
