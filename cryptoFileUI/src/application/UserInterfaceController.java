@@ -3,7 +3,7 @@ package application;
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
+import javafx.application.Platform;
 import javafx.fxml.*;
 import javafx.geometry.Pos;
 import javafx.scene.*;
@@ -11,97 +11,104 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import main.java.controller.*;
+import main.java.Client;
 
 public class UserInterfaceController{
-	@FXML private AnchorPane signInRoot, signUpRoot, homeRoot, uploadRoot, filesRoot, succesfulRoot;
-	@FXML private Label incorrectSignIn;
-	@FXML private TextField username, password, usernameSignUp, passwordSignUp, emailSignUp, repasswordSignUp;
+	@FXML private AnchorPane signInRoot, signUpRoot, homeRoot, uploadRoot, filesRoot, succesfulRoot, searchRoot;
+	@FXML private TextField username, password, usernameSignUp, passwordSignUp, emailSignUp, searchBar;
 	@FXML private Button signIn, signUpNow, signUp, cancelSignUp, uploadButton, removeUploadFileButton, publicDirectoryUploadButton, privateDirectoryUploadButton, privateFilesButton, publicFilesButton;
-	@FXML private Pane uploadList, downloadFileList;
-	@FXML private Label usernameError, passwordError, emailError, repasswordError, uploadFail, fileToUpload, progressLabel;
+	@FXML private Pane uploadList, downloadFileList, searchList;
+	@FXML private Label incorrectSignIn, usernameError, passwordError, emailError, repasswordError, uploadFail, fileToUpload, progressLabel;
 	@FXML private ScrollPane scrollUploadList, scrollFileList;
 	@FXML private ToggleGroup toggleGroupUpload;
 	@FXML private ProgressBar progressbar;
-//	@FXML private ListView<String> uploadFileList = new ListView<String>();
-	private Controller controller;
 	private Stage stage;
-	private double layoutX = 30.0, layoutY = 19.0;
 	private File file;
 	private boolean publicDirectory, privateDirectory, selected=false;
 	private ListView<String> listView;
-	
-	
-	
+	private Label resultLabel = new Label();
+	private Client client;
+	private ProgressIndicator loader;
+
+
+
 	@FXML
 	public void initialize() {
+		loader = new ProgressIndicator();
+		loader.setPrefHeight(250);
+		loader.setPrefWidth(250);
+		loader.setLayoutX(100);
+		loader.setLayoutY(140);
+		resultLabel.setFont(Font.font("Helvetica Neue Bold", 14.0));
+		resultLabel.setLayoutY(435);
+		resultLabel.setLayoutX(50);
+		resultLabel.setAlignment(Pos.CENTER);
 		if(filesRoot!=null) {
-			setFileList();
-			controller = Main.getController();
-			double procentage = Math.round(controller.getUsedMemoryPercentage()*10)/10.0;
-			progressbar.setProgress(procentage);
-			progressLabel.setText(Double.toString(procentage)+"/5.0 GB used");
+			getFileList();
+			progressbar.setVisible(false);
+			//			controller = Main.getController();
+			//			double procentage = Math.round(controller.getUsedMemoryPercentage()*10)/10.0;
+			//			progressbar.setProgress(procentage);
+			//			progressLabel.setText(Double.toString(procentage)+"/5.0 GB used");
 		}
 		else if(uploadRoot!=null) {
 			uploadFail.setAlignment(Pos.CENTER);
 		}
+		else if(searchRoot!=null) {
+			searchBar.setFocusTraversable(false);
+		}
+		else if(homeRoot!=null) {
+			searchBar.setFocusTraversable(false);
+		}
+		else if(signInRoot!=null) {
+			username.setFocusTraversable(false);
+			password.setFocusTraversable(false);
+		}
+		else if(signUpRoot!=null) {
+			usernameSignUp.setFocusTraversable(false);
+			passwordSignUp.setFocusTraversable(false);
+			emailSignUp.setFocusTraversable(false);
+		}
 	}
-	
+
 	@FXML
 	public void signInButton() throws IOException {
-		controller = Main.getController();
-		if(controller.login(username.getText(), password.getText())) {
-			Parent controllerPane = FXMLLoader.load(Main.class.getResource("../main/javafx/homePageUI.fxml"));
-			signInRoot.getChildren().setAll(controllerPane);
-		}else {
-			incorrectSignIn.setText("Username/password is incorrect. Try again!");
-		}
+		client = Main.getClient();
+		client.setUserInterface(this);
+		client.login(username.getText(), password.getText());
+		signInRoot.getChildren().add(loader);
+		signIn.setDisable(true);
+		signUpNow.setDisable(true);
+		username.setDisable(true);
+		password.setDisable(true);
 	}
-	
+
 	@FXML
 	public void signOutButton() throws IOException {
-		controller = Main.getController();
-		if(controller.logout()) {
-			Parent controllerPane = FXMLLoader.load(Main.class.getResource("../main/javafx/signInUI.fxml"));
-			if(succesfulRoot==null)
-				homeRoot.getChildren().setAll(controllerPane);
-			else
-				succesfulRoot.getChildren().setAll(controllerPane);
-			System.out.println("Logged out");
-		}
+		client = Main.getClient();
+		client.setUserInterface(this);
+		client.logout();
 	}
 
 	@FXML
 	public void unregisterButton() throws IOException {
-		controller = Main.getController();
-		if(controller.unregisterUser()) {
-			Parent controllerPane = FXMLLoader.load(Main.class.getResource("../main/javafx/signInUI.fxml"));
-			homeRoot.getChildren().setAll(controllerPane);
-			System.out.println("Unregistered");
-		}
+		client = Main.getClient();
+		client.setUserInterface(this);
+		client.unregister(); 
 	}
 
 	@FXML
 	public void signUpButton() throws IOException, NoSuchAlgorithmException {
-		controller = Main.getController();
-		ArrayList<String> messages = controller.register(usernameSignUp.getText(), emailSignUp.getText(), passwordSignUp.getText());
-		if(messages.get(0).equals("User created")) {
-			if(controller.login(usernameSignUp.getText(), passwordSignUp.getText())) {
-				Parent controllerPane = FXMLLoader.load(Main.class.getResource("../main/javafx/homePageUI.fxml"));
-				signUpRoot.getChildren().setAll(controllerPane);
-			}else {
-				Parent controllerPane = FXMLLoader.load(Main.class.getResource("../main/javafx/signInUI.fxml"));
-				signUpRoot.getChildren().setAll(controllerPane);
-			}
-		}
-		else {
-			usernameError.setText(messages.get(0));
-			passwordError.setText(messages.get(2));
-			emailError.setText(messages.get(1));
-		}
+		client = Main.getClient();
+		client.setUserInterface(this);
+		client.register(usernameSignUp.getText(), emailSignUp.getText(), passwordSignUp.getText());
+		signUpRoot.getChildren().add(loader);
+		usernameSignUp.setDisable(true);
+		passwordSignUp.setDisable(true);
+		emailSignUp.setDisable(true);
+		signUp.setDisable(true);
 	}
 
 	@FXML
@@ -111,78 +118,69 @@ public class UserInterfaceController{
 		file = fileChooser.showOpenDialog(stage);
 		if (file != null) {
 			fileToUpload.setText(file.getName());
-			fileToUpload.setLayoutX(layoutX);
-			fileToUpload.setLayoutY(layoutY);
+			fileToUpload.setLayoutX(30.0);
+			fileToUpload.setLayoutY(19.0);
 			removeUploadFileButton.setVisible(true);
 		}
 	}
 
 	@FXML
 	public void uploadSuccesfulButton() throws IOException {
-		controller = Main.getController();
-		if(file != null) {
-			if(selected) {
-				String message = controller.uploadFile(file, getChosenDirectory());
-				if(!message.contains("has been uploaded"))
-					uploadFail.setText(message);
-				else {
-					Parent controllerPane = FXMLLoader.load(Main.class.getResource("../main/javafx/uploadSuccesfulUI.fxml"));
-					uploadRoot.getChildren().setAll(controllerPane);
-				}
-			}
-			else 
-				uploadFail.setText("Please select a directory to upload into");
-		}
+		client = Main.getClient();
+		client.setUserInterface(this);
+		client.upload(file, getChosenDirectory());
+		uploadButton.setDisable(false);
 	}
-	
-	public void returnToHomePageFromSuccessfulUploadButton() throws IOException {
-		Parent controllerPane = FXMLLoader.load(Main.class.getResource("../main/javafx/homePageUI.fxml"));
-		succesfulRoot.getChildren().setAll(controllerPane);
-	}
-	
 
 	@FXML
 	public void fileButton() throws IOException{
-		Parent controllerPane = FXMLLoader.load(Main.class.getResource("../main/javafx/filesUI.fxml"));
+		Parent controllerPane = FXMLLoader.load(Main.class.getResource("filesUI.fxml"));
 		homeRoot.getChildren().setAll(controllerPane);
 	}
 
 	@FXML
-	public void returnToHomePageFromFilesButton() throws IOException {
-		Parent controllerPane = FXMLLoader.load(Main.class.getResource("../main/javafx/homePageUI.fxml"));
-		filesRoot.getChildren().setAll(controllerPane);
+	public void returnToHomePage() throws IOException {
+		Parent controllerPane = FXMLLoader.load(Main.class.getResource("homePageUI.fxml"));
+		if(filesRoot!=null)
+			filesRoot.getChildren().setAll(controllerPane);
+		else if(succesfulRoot!=null)
+			succesfulRoot.getChildren().setAll(controllerPane);
+		else if(searchRoot!=null) 
+			searchRoot.getChildren().setAll(controllerPane);
+		else if(uploadRoot!=null) 
+			uploadRoot.getChildren().setAll(controllerPane);
 	}
 
 	@FXML
 	public void signUpNowButton() throws IOException {
-		Parent controllerPane = FXMLLoader.load(Main.class.getResource("../main/javafx/signUpUI.fxml"));
+		Parent controllerPane = FXMLLoader.load(Main.class.getResource("signUpUI.fxml"));
 		signInRoot.getChildren().setAll(controllerPane);
 	}
 
 	@FXML
 	public void cancelSignUpButton() throws IOException {
-		Parent controllerPane = FXMLLoader.load(Main.class.getResource("../main/javafx/signInUI.fxml"));
+		Parent controllerPane = FXMLLoader.load(Main.class.getResource("signInUI.fxml"));
 		signUpRoot.getChildren().setAll(controllerPane);
 	}
 
 	@FXML
 	public void uploadButton() throws IOException {
-		Parent controllerPane = FXMLLoader.load(Main.class.getResource("../main/javafx/upLoadUI.fxml"));
+		Parent controllerPane = FXMLLoader.load(Main.class.getResource("upLoadUI.fxml"));
 		homeRoot.getChildren().setAll(controllerPane);
 	}
-
+	
 	@FXML
-	public void cancelUploadButton() throws IOException {
-		Parent controllerPane = FXMLLoader.load(Main.class.getResource("../main/javafx/homePageUI.fxml"));
-		uploadRoot.getChildren().setAll(controllerPane);
+	public void searchButton() {
+		System.out.println(searchBar.getText());
 	}
+	
 	@FXML
 	public void removeUploadFile() {
 		fileToUpload.setText("");
 		removeUploadFileButton.setVisible(false);
 		file=null;
 	}
-	
+
 	@FXML
 	public void choosePublicDirectory() {
 		selected=true;
@@ -193,7 +191,7 @@ public class UserInterfaceController{
 		privateDirectoryUploadButton.setStyle("-fx-border-color: rgb(90, 51, 103); -fx-background-color: rgb(255,255,255); -fx-border-radius: 3;");
 		privateDirectoryUploadButton.setTextFill(Color.web("rgb(90, 51, 103)"));
 	}
-	
+
 	@FXML
 	public void choosePrivateDirectory() {
 		selected=true;
@@ -206,31 +204,20 @@ public class UserInterfaceController{
 	}
 	@FXML
 	public void deleteFileButton(){
-		String filename = listView.getSelectionModel().getSelectedItem()+".enc";
-		String result = controller.deleteFile(getChosenDirectory(), filename);
-		Label resultLabel = new Label(result);
-		resultLabel.setFont(Font.font("Helvetica Neue Bold", 14.0));
-		resultLabel.setLayoutY(435);
-		resultLabel.setLayoutX(50);
-		resultLabel.setAlignment(Pos.CENTER);
-		filesRoot.getChildren().add(resultLabel);
-		System.out.println(filename+" - "+getChosenDirectory());
+		client = Main.getClient();
+		client.setUserInterface(this);
+		String filename = listView.getSelectionModel().getSelectedItem();
+		client.deleteFile(filename, getChosenDirectory());
 	}
 	@FXML
 	public void downloadButton(){
-		controller = Main.getController();
-		String filename = listView.getSelectionModel().getSelectedItem().split(" ")[0]+".enc";
-		String result = controller.downloadFile(getChosenDirectory(), filename);
-		Label resultLabel = new Label(result);
-		resultLabel.setFont(Font.font("Helvetica Neue Bold", 14.0));
-		resultLabel.setLayoutY(435);
-		resultLabel.setLayoutX(50);
-		resultLabel.setAlignment(Pos.CENTER);
-		filesRoot.getChildren().add(resultLabel);
-		System.out.println(filename+" - "+getChosenDirectory());
+		client = Main.getClient();
+		client.setUserInterface(this);
+		String filename = listView.getSelectionModel().getSelectedItem();
+		client.download(filename, getChosenDirectory());
 	}
 	@FXML
-	public void setFileList() {
+	public void getFileList() {
 		selectPrivateFilesButton();
 	}
 	@FXML
@@ -241,7 +228,7 @@ public class UserInterfaceController{
 		publicFilesButton.setTextFill(Color.WHITE);
 		privateFilesButton.setStyle("-fx-border-color: rgb(90, 51, 103); -fx-background-color: rgb(255,255,255); -fx-border-radius: 3;");
 		privateFilesButton.setTextFill(Color.web("rgb(90, 51, 103)"));
-		setFileList("public");
+		getFileList("public");
 	}
 	@FXML
 	public void selectPrivateFilesButton() {
@@ -251,24 +238,26 @@ public class UserInterfaceController{
 		privateFilesButton.setTextFill(Color.WHITE);
 		publicFilesButton.setStyle("-fx-border-color: rgb(90, 51, 103); -fx-background-color: rgb(255,255,255); -fx-border-radius: 3;");
 		publicFilesButton.setTextFill(Color.web("rgb(90, 51, 103)"));
-		setFileList("private");
+		getFileList("private");
 	}
-	
-	
 	public void setStage(Stage stage) {
 		this.stage=stage;
-	}
-	public void setController(main.java.controller.Controller controller) {
-		this.controller=controller;
 	}
 	private String getChosenDirectory() {
 		if(privateDirectory) return "private";
 		return "public";
 	}
-	
-	private void setFileList(String directory) {
-		controller = Main.getController();
-		String files = controller.getFiles(directory);
+
+	private void getFileList(String directory) {
+		client = Main.getClient();
+		client.setUserInterface(this);
+		client.getFilelist(directory);
+	}
+	public void updateFileList() {
+		getFileList(getChosenDirectory());
+	}
+
+	public void setFileList(String files) {
 		listView = new ListView<String>();
 		listView.setPrefHeight(200);
 		listView.setPrefWidth(400);
@@ -279,9 +268,89 @@ public class UserInterfaceController{
 		if(!files.isEmpty()) {
 			for(String file : files.split("\n")) {
 				String filename = file.split("\t\t")[0];
-				listView.getItems().add(filename.replace(".enc", ""));
+				listView.getItems().add(filename);
 			}
 		}
-		downloadFileList.getChildren().add(listView);
+		Platform.runLater(new Runnable() {
+			public void run() {
+				if(downloadFileList.getChildren().size()>0)
+					downloadFileList.getChildren().remove(0);
+				downloadFileList.getChildren().add(listView);
+			}
+		});
+	}
+	
+	public void changeScene(int type) throws IOException {
+		Platform.runLater(new Runnable() {
+			Parent controllerPane = null;
+			public void run() {
+				try {
+					System.out.println(type);
+					switch(type) {
+					case 1:
+						controllerPane = FXMLLoader.load(Main.class.getResource("homePageUI.fxml"));
+						signInRoot.getChildren().setAll(controllerPane);
+						break;
+					case 2: 
+						controllerPane = FXMLLoader.load(Main.class.getResource("signInUI.fxml"));
+						if(homeRoot!=null)
+							homeRoot.getChildren().setAll(controllerPane);
+						else if(succesfulRoot!=null)
+							succesfulRoot.getChildren().setAll(controllerPane);
+						System.out.println("Logged out");
+						break;					
+					case 3:
+						controllerPane = FXMLLoader.load(Main.class.getResource("homePageUI.fxml"));
+						signUpRoot.getChildren().setAll(controllerPane);
+						break;
+					case 4:
+						controllerPane = FXMLLoader.load(Main.class.getResource("uploadSuccesfulUI.fxml"));
+						uploadRoot.getChildren().setAll(controllerPane);
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	public void displayMessage(int type, String message) throws IOException {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				switch(type) {
+				case 1: 
+					incorrectSignIn.setText(message);
+					signInRoot.getChildren().remove(loader);
+					signIn.setDisable(false);
+					signUpNow.setDisable(false);
+					username.setDisable(false);
+					password.setDisable(false);
+					break;
+				case 2: 
+					String[] messages = message.split("\n");
+					usernameError.setText(messages[0]);
+					passwordError.setText(messages[2]);
+					emailError.setText(messages[1]);
+					signUpRoot.getChildren().remove(loader);
+					usernameSignUp.setDisable(false);
+					passwordSignUp.setDisable(false);
+					emailSignUp.setDisable(false);
+					signUp.setDisable(false);
+					break;
+				case 3:
+					filesRoot.getChildren().remove(resultLabel);
+					resultLabel.setText(message);
+					filesRoot.getChildren().add(resultLabel);
+					break;
+				case 4:
+					uploadRoot.getChildren().remove(resultLabel);
+					resultLabel.setText(message);
+					uploadRoot.getChildren().add(resultLabel);
+					uploadRoot.getChildren().remove(loader);
+					uploadButton.setDisable(true);
+				}
+			}
+		});
 	}
 }

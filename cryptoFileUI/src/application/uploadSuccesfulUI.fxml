@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="succesfulRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.UserInterfaceController">
+   <children>
+      <Label layoutX="114.0" layoutY="280.0" text="Upload succesful!" textFill="#45a839">
+         <font>
+            <Font name="Helvetica Neue Bold" size="26.0" />
+         </font>
+      </Label>
+      <Button layoutX="96.0" layoutY="400.0" mnemonicParsing="false" onAction="#returnToHomePageFromSuccessfulUploadButton" prefHeight="40.0" prefWidth="114.0" style="-fx-background-color: rgb(90, 51, 103);" text="Return" textFill="WHITE">
+         <font>
+            <Font name="Helvetica Neue Bold" size="16.0" />
+         </font>
+      </Button>
+      <Button layoutX="241.0" layoutY="400.0" mnemonicParsing="false" onAction="#signOutButton" prefHeight="40.0" prefWidth="114.0" style="-fx-background-color: rgb(90, 51, 103);" text="Sign out" textFill="WHITE">
+         <font>
+            <Font name="Helvetica Neue Bold" size="16.0" />
+         </font>
+      </Button>
+      <ImageView fitHeight="90.0" fitWidth="350.0" layoutX="53.0" layoutY="60.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="https://i.ibb.co/WpkkLh2/logga.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
