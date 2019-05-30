@@ -96,7 +96,7 @@ public class UserInterfaceController{
 	public void unregisterButton() throws IOException {
 		client = Main.getClient();
 		client.setUserInterface(this);
-		client.unregister(); 
+		client.unregister();
 	}
 
 	@FXML
@@ -128,7 +128,10 @@ public class UserInterfaceController{
 	public void uploadSuccesfulButton() throws IOException {
 		client = Main.getClient();
 		client.setUserInterface(this);
-		client.upload(file, getChosenDirectory());
+		if(publicDirectory)
+			client.upload(file, getChosenDirectory(), "pub");
+		else
+			client.upload(file, getChosenDirectory(), "pvt");
 		uploadButton.setDisable(false);
 	}
 
@@ -145,9 +148,9 @@ public class UserInterfaceController{
 			filesRoot.getChildren().setAll(controllerPane);
 		else if(succesfulRoot!=null)
 			succesfulRoot.getChildren().setAll(controllerPane);
-		else if(searchRoot!=null) 
+		else if(searchRoot!=null)
 			searchRoot.getChildren().setAll(controllerPane);
-		else if(uploadRoot!=null) 
+		else if(uploadRoot!=null)
 			uploadRoot.getChildren().setAll(controllerPane);
 	}
 
@@ -168,12 +171,12 @@ public class UserInterfaceController{
 		Parent controllerPane = FXMLLoader.load(Main.class.getResource("upLoadUI.fxml"));
 		homeRoot.getChildren().setAll(controllerPane);
 	}
-	
+
 	@FXML
 	public void searchButton() {
 		System.out.println(searchBar.getText());
 	}
-	
+
 	@FXML
 	public void removeUploadFile() {
 		fileToUpload.setText("");
@@ -279,7 +282,7 @@ public class UserInterfaceController{
 			}
 		});
 	}
-	
+
 	public void changeScene(int type) throws IOException {
 		Platform.runLater(new Runnable() {
 			Parent controllerPane = null;
@@ -291,14 +294,14 @@ public class UserInterfaceController{
 						controllerPane = FXMLLoader.load(Main.class.getResource("homePageUI.fxml"));
 						signInRoot.getChildren().setAll(controllerPane);
 						break;
-					case 2: 
+					case 2:
 						controllerPane = FXMLLoader.load(Main.class.getResource("signInUI.fxml"));
 						if(homeRoot!=null)
 							homeRoot.getChildren().setAll(controllerPane);
 						else if(succesfulRoot!=null)
 							succesfulRoot.getChildren().setAll(controllerPane);
 						System.out.println("Logged out");
-						break;					
+						break;
 					case 3:
 						controllerPane = FXMLLoader.load(Main.class.getResource("homePageUI.fxml"));
 						signUpRoot.getChildren().setAll(controllerPane);
@@ -319,7 +322,7 @@ public class UserInterfaceController{
 			@Override
 			public void run() {
 				switch(type) {
-				case 1: 
+				case 1:
 					incorrectSignIn.setText(message);
 					signInRoot.getChildren().remove(loader);
 					signIn.setDisable(false);
@@ -327,7 +330,7 @@ public class UserInterfaceController{
 					username.setDisable(false);
 					password.setDisable(false);
 					break;
-				case 2: 
+				case 2:
 					String[] messages = message.split("\n");
 					usernameError.setText(messages[0]);
 					passwordError.setText(messages[2]);

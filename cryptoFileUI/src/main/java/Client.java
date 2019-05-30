@@ -24,7 +24,7 @@ public class Client {
 	private boolean loggedIn;
 	private UserInterfaceController uic;
 	private String downloadPath;
-	
+
 	public Client(UserInterfaceController uic){
 		this.uic=uic;
 		String home = System.getProperty("user.home");
@@ -51,10 +51,13 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
-	public void upload(File file, String directory) throws IOException {
+	public void upload(File file, String directory, String dir) throws IOException {
 		if(file!=null) {
 			try {
-				file = Encryption.encrypt(file, privateKey);
+				if(dir == "pub")
+					file = Encryption.encrypt(file, privateKey);
+				else
+					file = Encryption.encrypt(file, publicKey);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -102,7 +105,7 @@ public class Client {
 		try{
 			fis = new FileInputStream(file);
 			fis.read(bArray);
-			fis.close();           
+			fis.close();
 		}catch(IOException ioExp){
 			ioExp.printStackTrace();
 		}
@@ -115,9 +118,9 @@ public class Client {
 	}
 	/**
 	 * Creates a directory on local computer if it doesn't exists
-	 * 
+	 *
 	 * @param directoryName the name of the directory being created
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void createDirectoryLocally(String directoryName) throws IOException {
 		Path path = Paths.get(directoryName);
@@ -172,22 +175,22 @@ public class Client {
 					else if(obj instanceof Message){
 						String returnMessage = (String) ((Message)obj).getReturnMessage();
 						switch(returnMessage.trim()) {
-						case "Logged in": 
-							uic.changeScene(1); 
+						case "Logged in":
+							uic.changeScene(1);
 							break;
-						case "Wrong username/password": 
-							uic.displayMessage(1,returnMessage); 
+						case "Wrong username/password":
+							uic.displayMessage(1,returnMessage);
 							break;
-						case "Logged out": 
-							loggedout(); 
-							uic.changeScene(2); 
+						case "Logged out":
+							loggedout();
+							uic.changeScene(2);
 							break;
-						case "User created": 
-							uic.changeScene(3); 
+						case "User created":
+							uic.changeScene(3);
 							break;
-						case "Unregistered": 
-							loggedout(); 
-							uic.changeScene(2); 
+						case "Unregistered":
+							loggedout();
+							uic.changeScene(2);
 							break;
 						case "File is too big":
 							uic.displayMessage(3, returnMessage);
@@ -202,7 +205,7 @@ public class Client {
 						case "An error occured. Delete failed":
 							uic.displayMessage(3, returnMessage);
 							break;
-						default: 
+						default:
 							uic.displayMessage(2, returnMessage);
 							break;
 						}
@@ -218,7 +221,7 @@ public class Client {
 			}
 		}
 		private boolean downloadedFile(byte[] obj) {
-//			try(OutputStream os = new FileOutputStream(("downloads/"+nameOfDownloadedFile))){ 
+//			try(OutputStream os = new FileOutputStream(("downloads/"+nameOfDownloadedFile))){
 //				os.write((byte[])obj);
 //				System.out.println(obj.length);
 //				Encryption.decrypt(new File("downloads/"+nameOfDownloadedFile), publicKey);
@@ -232,7 +235,7 @@ public class Client {
 			try {
 				FileUtils.writeByteArrayToFile(new File(downloadPath+nameOfDownloadedFile), obj);
 				Encryption.decrypt(new File(downloadPath+nameOfDownloadedFile), publicKey);
-			} catch (Exception e) {				
+			} catch (Exception e) {
 				e.printStackTrace();
 				return false;
 			}finally {
@@ -248,7 +251,7 @@ public class Client {
 				e.printStackTrace();
 			}
 			try(OutputStream os1 = new FileOutputStream(privateKey);
-					OutputStream os2 = new FileOutputStream(publicKey)){ 
+					OutputStream os2 = new FileOutputStream(publicKey)){
 				os1.write(keyPair[0]);
 				os2.write(keyPair[1]);
 			}

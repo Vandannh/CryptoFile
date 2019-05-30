@@ -111,7 +111,6 @@ public class Encryption{
 		X509EncodedKeySpec keySpec = new X509EncodedKeySpec(bytes);
 		KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 		PublicKey publicKey = keyFactory.generatePublic(keySpec);
-
 		try (FileInputStream inStream = new FileInputStream(inputFile)) {
 			SecretKeySpec secretKeySpec = null;
 			Cipher cipherRSA = Cipher.getInstance("RSA/ECB/PKCS1Padding");
@@ -126,10 +125,47 @@ public class Encryption{
 			Cipher cipherAES = Cipher.getInstance("AES/CBC/PKCS5Padding");
 			cipherAES.init(Cipher.DECRYPT_MODE, secretKeySpec, ivspec);
 			decrypted = new File(inputFile.getPath().replace(".enc", ""));
+			decrypted = getFileName(decrypted);
 			try (FileOutputStream outStream = new FileOutputStream(decrypted)){
 				processFile(cipherAES, inStream, outStream);
 			}
 		}
 		return(decrypted);
+	}
+
+	public static File getFileName(File file) {
+        if (file.exists()){
+            String newFileName = file.getName();
+            String simpleName = file.getName().substring(0,newFileName.indexOf("."));
+            String strDigit="";
+
+            try {
+                simpleName = (Integer.parseInt(simpleName)+1+"");
+                File newFile = new File(file.getParent()+"/"+simpleName+getExtension(file.getName()));
+                return getFileName(newFile);
+            }catch (Exception e){}
+
+            for (int i=simpleName.length()-1;i>=0;i--){
+                if (!Character.isDigit(simpleName.charAt(i))){
+                    strDigit = simpleName.substring(i+1);
+                    simpleName = simpleName.substring(0,i+1);
+                    break;
+                }
+            }
+
+            if (strDigit.length()>0){
+                simpleName = simpleName+(Integer.parseInt(strDigit)+1);
+            }else {
+                simpleName+="1";
+            }
+
+            File newFile = new File(file.getParent()+"/"+simpleName+getExtension(file.getName()));
+            return getFileName(newFile);
+        }
+        return file;
+    }
+
+	public static String getExtension(String name) {
+	        return name.substring(name.lastIndexOf("."));
 	}
 }

@@ -34,6 +34,7 @@ public class Main extends Application {
 			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			    @Override
 			    public void handle(WindowEvent t) {
+			    	client.logout();
 			        Platform.exit();
 			        System.exit(0);
 			    }
@@ -42,10 +43,11 @@ public class Main extends Application {
 			e.printStackTrace();
 		}
 	}
+
 	public static Client getClient() {
 		return client;
 	}
-	
+
 	public static void main(String[] args) {
 		launch(args);
 	}
