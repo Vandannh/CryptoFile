@@ -111,11 +111,6 @@ public class Client {
 		}
 		return bArray;
 	}
-	private String chooseDirectory() {
-		JList<String> list = new JList<String>(new String[] {"Private", "Public"});
-		JOptionPane.showMessageDialog(null, list, "Choose directory", JOptionPane.PLAIN_MESSAGE);
-		return list.getSelectedValue();
-	}
 	/**
 	 * Creates a directory on local computer if it doesn't exists
 	 *

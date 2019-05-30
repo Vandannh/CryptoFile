@@ -21,7 +21,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		primaryStage.setTitle("CryptoFile");
 		try {
-			FXMLLoader loader = new FXMLLoader(Main.class.getResource("../main/javafx/signInUI.fxml"));
+			FXMLLoader loader = new FXMLLoader(Main.class.getResource("signInUI.fxml"));
 			AnchorPane page = (AnchorPane) loader.load();
 			UserInterfaceController uicontroller = (UserInterfaceController)loader.getController();
 			client = new Client(uicontroller);
