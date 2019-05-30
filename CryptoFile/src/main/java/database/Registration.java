@@ -49,7 +49,6 @@ public class Registration {
 			messages.add((String)validation[0][1]);
 			messages.add((String)validation[1][1]);
 			messages.add((String)validation[2][1]);
-//			deleteEmptyElement(messages);
 		}
 		else {
 			String code = generateUserCode();
@@ -222,20 +221,5 @@ public class Registration {
 	 */
 	private String generateUserCode() {
 		return BCrypt.hashpw(Integer.toString(new Random().nextInt(1000000000)), BCrypt.gensalt(12));
-	}
-	
-	/**
-	 * Deletes all empty elements from a ArrayList
-	 * 
-	 * @param messages the ArrayList in which the elements will be deleted from
-	 */
-	private void deleteEmptyElement(ArrayList<String> messages) {
-		ArrayList<String> toRemove = new ArrayList<String>();
-		for (String str : messages) {
-		    if (str.isEmpty()) {
-		        toRemove.add(str);
-		    }
-		}
-		messages.removeAll(toRemove);
 	}
 }

@@ -3,7 +3,6 @@ package main.java.server;
 import java.io.*;
 import java.net.*;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import main.java.Message;
@@ -36,6 +35,7 @@ public class Server {
 			executor.execute(new ClientHandler(socket));
 			if(!running) executor.shutdown();
 		}
+		serverSocket.close();
 	}
 	public void stop() {
 		running=false;
@@ -78,7 +78,6 @@ public class Server {
 					activeSessions.addSession(session);
 					controller.startAutomaticLogout(session);
 					oos.writeObject(keys);
-//					oos.flush();
 					return new Message(0, "Logged in");
 				}
 			case Message.LOGOUT: 	

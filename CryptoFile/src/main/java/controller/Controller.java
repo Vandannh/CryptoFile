@@ -4,10 +4,7 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.security.*;
 import java.util.*;
-import javax.swing.*;
-
 import com.microsoft.azure.storage.StorageException;
-
 import main.java.azure.*;
 import main.java.database.*;
 import main.java.encryption.Encryption;
@@ -27,7 +24,7 @@ import main.java.text.*;
 public class Controller {
 	private AzureFileShareIO azureFileShareIO = new AzureFileShareIO();
 	private Authentication authentication = new Authentication();
-	private ActiveSessions activeSession = new ActiveSessions();
+//	private ActiveSessions activeSession = new ActiveSessions();
 	private Registration registration;
 	private String userid;
 	private MSSQL mssql;
@@ -167,12 +164,6 @@ public class Controller {
 		return ch>='0'&&ch<='9';
 	}
 
-	private String chooseDirectory() {
-		JList<String> list = new JList<String>(new String[] {"Private", "Public"});
-		JOptionPane.showMessageDialog(null, list, "Choose directory", JOptionPane.PLAIN_MESSAGE);
-		return list.getSelectedValue();
-	}
-
 	public void unregisterUser() {
 		mssql.delete("users", "id="+userid);
 		mssql.delete("directory", "user_id="+userid);
@@ -222,7 +213,6 @@ public class Controller {
 	
 	private class AutomaticLogout extends Thread{
 		private Session session;
-		private boolean running = true;
 		public AutomaticLogout(Session session) {
 			this.session=session;
 		}
@@ -232,7 +222,6 @@ public class Controller {
 					System.out.println("Logged out");
 //					server.logout();
 					interrupt();
-					running=false;
 				}
 		}
 	}

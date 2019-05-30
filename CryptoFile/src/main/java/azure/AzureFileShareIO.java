@@ -1,12 +1,8 @@
 package main.java.azure;
 
-import java.awt.*;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -14,14 +10,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import com.microsoft.azure.storage.*;
 import com.microsoft.azure.storage.file.*;
-
-import main.java.encryption.Encryption;
 import test2.ConnectionStrings;
 
 /**
@@ -78,7 +68,6 @@ public class AzureFileShareIO {
 			CloudFileDirectory rootDir = share.getRootDirectoryReference();
 			CloudFileDirectory userDir = rootDir.getDirectoryReference(directory);
 			CloudFile cloudFile = userDir.getFileReference(filename);
-			//			cloudFile.uploadFromFile(file.toString());	
 			cloudFile.uploadFromByteArray(buffer, 0, buffer.length);
 			System.out.println(directory);
 			System.out.println(checkAvailableSpace()); //MARK: for test purpose
@@ -108,9 +97,6 @@ public class AzureFileShareIO {
 		CloudFileDirectory rootDir = share.getRootDirectoryReference();
 		CloudFileDirectory userDir = rootDir.getDirectoryReference(directory);	
 		CloudFile file = userDir.getFileReference(filename);
-		//		byte[] buffer = new byte[file.getStreamWriteSizeInBytes()];	
-		//		System.out.println(filename+"- "+file.getStreamWriteSizeInBytes());
-		//		file.downloadToByteArray(buffer, 0);
 		File dfile = new File("temp/"+filename);
 		byte [] buffer = null;
 		try(FileOutputStream fos = new FileOutputStream(dfile);){
@@ -119,12 +105,10 @@ public class AzureFileShareIO {
 			byte[] b = new byte[(int)f.length()];
 			f.readFully(b);
 			buffer = b;
+			f.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-
-
 		return buffer;
 	}
 
