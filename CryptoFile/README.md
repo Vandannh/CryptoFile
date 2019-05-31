@@ -1,5 +1,5 @@
 # CryptoFile
-An application to store files on a secure and smooth way.
+An cloud service that store files on a secure and smooth way.
 
 ## Run application
 You run the application by starting the jar-file called CryptoFile.jar. 
