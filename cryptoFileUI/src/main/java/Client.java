@@ -55,9 +55,9 @@ public class Client {
 		if(file!=null) {
 			try {
 				if(dir == "pub")
-					file = Encryption.encrypt(file, privateKey, "pvt");
-				else
 					file = Encryption.encrypt(file, publicKey, "pub");
+				else
+					file = Encryption.encrypt(file, privateKey, "pvt");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -230,9 +230,9 @@ public class Client {
 			try {
 				FileUtils.writeByteArrayToFile(new File(downloadPath+nameOfDownloadedFile), obj);
 				if(uic.isPublic()) {
-					Encryption.decrypt(new File(downloadPath+nameOfDownloadedFile), publicKey, "pub");
-				} else if(uic.isPrivate()) {
 					Encryption.decrypt(new File(downloadPath+nameOfDownloadedFile), privateKey, "pvt");
+				} else {
+					Encryption.decrypt(new File(downloadPath+nameOfDownloadedFile), publicKey, "pub");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

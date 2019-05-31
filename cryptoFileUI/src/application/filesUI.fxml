@@ -25,7 +25,7 @@
             <Font name="Helvetica Neue Bold" size="16.0" />
          </font>
       </Button>
-      <Button layoutX="81.0" layoutY="536.0" mnemonicParsing="false" onAction="#returnToHomePageFromFilesButton" style="-fx-background-color: rgb(255,255,255);" text="Return" textFill="#5a3367">
+      <Button layoutX="81.0" layoutY="536.0" mnemonicParsing="false" onAction="#returnToHomePage" style="-fx-background-color: rgb(255,255,255);" text="Return" textFill="#5a3367">
          <font>
             <Font name="Helvetica Neue Bold" size="13.0" />
          </font>

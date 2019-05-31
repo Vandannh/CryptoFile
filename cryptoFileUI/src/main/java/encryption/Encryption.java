@@ -121,7 +121,7 @@ public class Encryption{
 			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 			PublicKey publicKey = keyFactory.generatePublic(keySpec);
 			cipherRSA.init(Cipher.DECRYPT_MODE, publicKey);
-		} else if(key == "pvt") {
+		} else {
 			byte[] keyBytes = Files.readAllBytes(Paths.get(keyPath));
 			PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
 			KeyFactory keyFactory = KeyFactory.getInstance("RSA");

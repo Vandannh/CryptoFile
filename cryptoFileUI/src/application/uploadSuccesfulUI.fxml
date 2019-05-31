@@ -14,7 +14,7 @@
             <Font name="Helvetica Neue Bold" size="26.0" />
          </font>
       </Label>
-      <Button layoutX="96.0" layoutY="400.0" mnemonicParsing="false" onAction="#returnToHomePageFromSuccessfulUploadButton" prefHeight="40.0" prefWidth="114.0" style="-fx-background-color: rgb(90, 51, 103);" text="Return" textFill="WHITE">
+      <Button layoutX="96.0" layoutY="400.0" mnemonicParsing="false" onAction="#returnToHomePage" prefHeight="40.0" prefWidth="114.0" style="-fx-background-color: rgb(90, 51, 103);" text="Return" textFill="WHITE">
          <font>
             <Font name="Helvetica Neue Bold" size="16.0" />
          </font>
