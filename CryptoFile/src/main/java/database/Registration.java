@@ -46,6 +46,7 @@ public class Registration {
 		Object[][] validation = {validate(username, 1),validate(email, 2),validate(password, 3)};
 		int errorCount = (int)validation[0][0]+(int)validation[1][0]+(int)validation[2][0];
 		if(errorCount>0) {
+			messages.add("Error");
 			messages.add((String)validation[0][1]);
 			messages.add((String)validation[1][1]);
 			messages.add((String)validation[2][1]);
