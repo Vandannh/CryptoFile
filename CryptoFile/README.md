@@ -23,4 +23,4 @@ First, make sure you are logged in, then follow the steps.
 ### Download file
 First, make sure you are logged in, then follow the steps. 
 1. Click on "Download file".
-2. Write the name of the file you have uploaded.
+2. Simply select one file from your storage listed in the application.
