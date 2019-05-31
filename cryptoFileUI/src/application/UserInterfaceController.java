@@ -184,6 +184,14 @@ public class UserInterfaceController{
 		file=null;
 	}
 
+	public boolean isPublic() {
+		return publicDirectory;
+	}
+
+	public boolean isPrivate() {
+		return privateDirectory;
+	}
+
 	@FXML
 	public void choosePublicDirectory() {
 		selected=true;
