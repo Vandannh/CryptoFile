@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import javafx.application.Platform;
+import javafx.event.*;
 import javafx.fxml.*;
 import javafx.geometry.Pos;
 import javafx.scene.*;
@@ -14,6 +15,7 @@ import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.java.Client;
+
 
 public class UserInterfaceController{
 	@FXML private AnchorPane signInRoot, signUpRoot, homeRoot, uploadRoot, filesRoot, succesfulRoot, searchRoot, unregisterRoot;
@@ -192,10 +194,7 @@ public class UserInterfaceController{
 		}
 	}
 
-	@FXML
-	public void searchButton() {
-		System.out.println(searchBar.getText());
-	}
+	
 
 	@FXML
 	public void removeUploadFile() {
