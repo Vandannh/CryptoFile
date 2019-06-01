@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="unregisterRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.UserInterfaceController">
+   <children>
+      <Label layoutX="78.0" layoutY="250.0" prefHeight="40.0" prefWidth="294.0" text="Are you sure that you would like" textFill="#1a74a8">
+         <font>
+            <Font name="Helvetica Neue" size="20.0" />
+         </font>
+      </Label>
+      <Button layoutX="95.0" layoutY="403.0" mnemonicParsing="false" onAction="#verifyUnregisterButton" prefHeight="50.0" prefWidth="260.0" style="-fx-background-color: rgb(90, 51, 103);" text="Unregister" textFill="WHITE">
+         <font>
+            <Font name="Helvetica Neue Bold" size="16.0" />
+         </font>
+      </Button>
+      <ImageView fitHeight="90.0" fitWidth="350.0" layoutX="53.0" layoutY="60.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="https://i.ibb.co/WpkkLh2/logga.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="105.0" layoutY="290.0" text="to unregister you account?" textFill="#1a74a8">
+         <font>
+            <Font name="Helvetica Neue" size="20.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

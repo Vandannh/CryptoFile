@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 import main.java.Client;
 
 public class UserInterfaceController{
-	@FXML private AnchorPane signInRoot, signUpRoot, homeRoot, uploadRoot, filesRoot, succesfulRoot, searchRoot;
+	@FXML private AnchorPane signInRoot, signUpRoot, homeRoot, uploadRoot, filesRoot, succesfulRoot, searchRoot, unregisterRoot;
 	@FXML private TextField username, password, usernameSignUp, passwordSignUp, emailSignUp, searchBar;
 	@FXML private Button signIn, signUpNow, signUp, cancelSignUp, uploadButton, removeUploadFileButton, publicDirectoryUploadButton, privateDirectoryUploadButton, privateFilesButton, publicFilesButton;
 	@FXML private Pane uploadList, downloadFileList, searchList;
@@ -94,9 +94,17 @@ public class UserInterfaceController{
 
 	@FXML
 	public void unregisterButton() throws IOException {
+		Parent controllerPane = FXMLLoader.load(Main.class.getResource("unregisterUI.fxml"));
+		homeRoot.getChildren().setAll(controllerPane);
+
+	}
+
+	public void verifyUnregisterButton() throws IOException{
 		client = Main.getClient();
 		client.setUserInterface(this);
 		client.unregister();
+		Parent controllerPane = FXMLLoader.load(Main.class.getResource("signInUI.fxml"));
+		unregisterRoot.getChildren().setAll(controllerPane);
 	}
 
 	@FXML
