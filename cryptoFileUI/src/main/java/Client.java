@@ -14,7 +14,11 @@ import org.apache.commons.io.FileUtils;
 import application.*;
 import main.java.Message;
 import main.java.encryption.Encryption;
-
+/**
+ * Class for the client
+ * @author Mattias Jönnson, Markus Masalkovski
+ *
+ */
 public class Client {
 	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
@@ -26,6 +30,10 @@ public class Client {
 	private String downloadPath;
 	private String searchedUser;
 
+	/**
+	 * Constructor that initiate the connection
+	 * @param uic
+	 */
 	public Client(UserInterfaceController uic){
 		this.uic=uic;
 		String home = System.getProperty("user.home");

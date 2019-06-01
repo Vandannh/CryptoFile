@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import javafx.application.Platform;
-import javafx.event.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.*;
 import javafx.geometry.Pos;
 import javafx.scene.*;
@@ -15,14 +16,17 @@ import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.java.Client;
-
-
+/**
+ * Class that contains the methods for the UI
+ * @author Ramy Behnam, Mattias Jönsson
+ *
+ */
 public class UserInterfaceController{
-	@FXML private AnchorPane signInRoot, signUpRoot, homeRoot, uploadRoot, filesRoot, succesfulRoot, searchRoot, unregisterRoot, userPageRoot;
+	@FXML private AnchorPane signInRoot, signUpRoot, homeRoot, uploadRoot, filesRoot, succesfulRoot, searchRoot, unregisterRoot;
 	@FXML private TextField username, password, usernameSignUp, passwordSignUp, emailSignUp, searchBar;
 	@FXML private Button signIn, signUpNow, signUp, cancelSignUp, uploadButton, removeUploadFileButton, publicDirectoryUploadButton, privateDirectoryUploadButton, privateFilesButton, publicFilesButton;
 	@FXML private Pane uploadList, downloadFileList, searchList;
-	@FXML private Label incorrectSignIn, usernameError, passwordError, emailError, repasswordError, uploadFail, fileToUpload, progressLabel, userLabel;
+	@FXML private Label incorrectSignIn, usernameError, passwordError, emailError, repasswordError, uploadFail, fileToUpload, progressLabel;
 	@FXML private ScrollPane scrollUploadList, scrollFileList;
 	@FXML private ToggleGroup toggleGroupUpload;
 	@FXML private ProgressBar progressbar;
@@ -61,6 +65,9 @@ public class UserInterfaceController{
 		else if(searchRoot!=null) {
 			searchBar.setFocusTraversable(false);
 		}
+		else if(homeRoot!=null) {
+			searchBar.setFocusTraversable(false);
+		}
 		else if(signInRoot!=null) {
 			username.setFocusTraversable(false);
 			password.setFocusTraversable(false);
@@ -70,13 +77,12 @@ public class UserInterfaceController{
 			passwordSignUp.setFocusTraversable(false);
 			emailSignUp.setFocusTraversable(false);
 		}
-		else if(userPageRoot!=null) {
-			client=Main.getClient();
-			System.out.println(client.getSearchedUser());
-			userLabel.setText(client.getSearchedUser());
-		}
 	}
-
+	
+	/**
+	 * Method for sign in
+	 * @throws IOException
+	 */
 	@FXML
 	public void signInButton() throws IOException {
 		client = Main.getClient();
@@ -88,21 +94,33 @@ public class UserInterfaceController{
 		username.setDisable(true);
 		password.setDisable(true);
 	}
-
+	
+	/**
+	 * Method for sign out
+	 * @throws IOException
+	 */
 	@FXML
 	public void signOutButton() throws IOException {
 		client = Main.getClient();
 		client.setUserInterface(this);
 		client.logout();
 	}
-
+	
+	/**
+	 * Method for unregistering
+	 * @throws IOException
+	 */
 	@FXML
 	public void unregisterButton() throws IOException {
 		Parent controllerPane = FXMLLoader.load(Main.class.getResource("unregisterUI.fxml"));
 		homeRoot.getChildren().setAll(controllerPane);
 
 	}
-
+	
+	/**
+	 * Method for verifying that use wants to unregister acount
+	 * @throws IOException
+	 */
 	public void verifyUnregisterButton() throws IOException{
 		client = Main.getClient();
 		client.setUserInterface(this);
@@ -110,7 +128,12 @@ public class UserInterfaceController{
 		Parent controllerPane = FXMLLoader.load(Main.class.getResource("signInUI.fxml"));
 		unregisterRoot.getChildren().setAll(controllerPane);
 	}
-
+	
+	/**
+	 * Method for sign up
+	 * @throws IOException
+	 * @throws NoSuchAlgorithmException
+	 */
 	@FXML
 	public void signUpButton() throws IOException, NoSuchAlgorithmException {
 		client = Main.getClient();
@@ -122,7 +145,11 @@ public class UserInterfaceController{
 		emailSignUp.setDisable(true);
 		signUp.setDisable(true);
 	}
-
+	
+	/**
+	 * Method for choosing file that user wishes to upload 
+	 * @throws IOException
+	 */
 	@FXML
 	public void chooseFileButton() throws IOException{
 		FileChooser fileChooser = new FileChooser();
@@ -135,7 +162,11 @@ public class UserInterfaceController{
 			removeUploadFileButton.setVisible(true);
 		}
 	}
-
+	
+	/**
+	 * Method for uploading the file
+	 * @throws IOException
+	 */
 	@FXML
 	public void uploadSuccesfulButton() throws IOException {
 		client = Main.getClient();
@@ -147,12 +178,20 @@ public class UserInterfaceController{
 		uploadButton.setDisable(false);
 	}
 
+	/**
+	 * Method that changes scene from homePageUI to filesUI
+	 * @throws IOException
+	 */
 	@FXML
 	public void fileButton() throws IOException{
 		Parent controllerPane = FXMLLoader.load(Main.class.getResource("filesUI.fxml"));
 		homeRoot.getChildren().setAll(controllerPane);
 	}
 
+	/**
+	 * Method that returns to homePageUI from different scenes
+	 * @throws IOException
+	 */
 	@FXML
 	public void returnToHomePage() throws IOException {
 		Parent controllerPane = FXMLLoader.load(Main.class.getResource("homePageUI.fxml"));
@@ -164,27 +203,42 @@ public class UserInterfaceController{
 			searchRoot.getChildren().setAll(controllerPane);
 		else if(uploadRoot!=null)
 			uploadRoot.getChildren().setAll(controllerPane);
-		else if(userPageRoot!=null)
-			userPageRoot.getChildren().setAll(controllerPane);
 	}
-
+	
+	/**
+	 * Method that changes scene from signInUI to signUpUI
+	 * @throws IOException
+	 */
 	@FXML
 	public void signUpNowButton() throws IOException {
 		Parent controllerPane = FXMLLoader.load(Main.class.getResource("signUpUI.fxml"));
 		signInRoot.getChildren().setAll(controllerPane);
 	}
 
+	/**
+	 * Method that changes scene from signUpUI to signInUI
+	 * @throws IOException
+	 */
 	@FXML
 	public void cancelSignUpButton() throws IOException {
 		Parent controllerPane = FXMLLoader.load(Main.class.getResource("signInUI.fxml"));
 		signUpRoot.getChildren().setAll(controllerPane);
 	}
 
+	/**
+	 * Method that changes scene from homePageUI touploadUI
+	 * @throws IOException
+	 */
 	@FXML
 	public void uploadButton() throws IOException {
 		Parent controllerPane = FXMLLoader.load(Main.class.getResource("upLoadUI.fxml"));
 		homeRoot.getChildren().setAll(controllerPane);
 	}
+	
+	/**
+	 * Method for search function
+	 * @throws IOException
+	 */
 	@FXML
 	public void searchButton() throws IOException {
 		if(homeRoot!=null) {
@@ -199,6 +253,10 @@ public class UserInterfaceController{
 			}
 		}
 	}
+	
+	/**
+	 * Method for removing file that the user no longer want to upload
+	 */
 	@FXML
 	public void removeUploadFile() {
 		fileToUpload.setText("");
@@ -206,14 +264,25 @@ public class UserInterfaceController{
 		file=null;
 	}
 
+	/**
+	 * Method that returns publicDirectory
+	 * @return
+	 */
 	public boolean isPublic() {
 		return publicDirectory;
 	}
 
+	/**
+	 * Method that returns privateDirectory
+	 * @return
+	 */
 	public boolean isPrivate() {
 		return privateDirectory;
 	}
-
+	
+	/**
+	 * Method for choosing public directory when trying to upload file
+	 */
 	@FXML
 	public void choosePublicDirectory() {
 		selected=true;
@@ -224,7 +293,10 @@ public class UserInterfaceController{
 		privateDirectoryUploadButton.setStyle("-fx-border-color: rgb(90, 51, 103); -fx-background-color: rgb(255,255,255); -fx-border-radius: 3;");
 		privateDirectoryUploadButton.setTextFill(Color.web("rgb(90, 51, 103)"));
 	}
-
+	
+	/**
+	 * Method for choosing private directory when trying to upload file
+	 */
 	@FXML
 	public void choosePrivateDirectory() {
 		selected=true;
@@ -235,6 +307,10 @@ public class UserInterfaceController{
 		publicDirectoryUploadButton.setStyle("-fx-border-color: rgb(90, 51, 103); -fx-background-color: rgb(255,255,255); -fx-border-radius: 3;");
 		publicDirectoryUploadButton.setTextFill(Color.web("rgb(90, 51, 103)"));
 	}
+	
+	/**
+	 * Method for deleting chosen file from users directory
+	 */
 	@FXML
 	public void deleteFileButton(){
 		client = Main.getClient();
@@ -242,6 +318,10 @@ public class UserInterfaceController{
 		String filename = listView.getSelectionModel().getSelectedItem();
 		client.deleteFile(filename, getChosenDirectory());
 	}
+	
+	/**
+	 * Method for downloading chosen file from users directory
+	 */
 	@FXML
 	public void downloadButton(){
 		client = Main.getClient();
@@ -249,10 +329,15 @@ public class UserInterfaceController{
 		String filename = listView.getSelectionModel().getSelectedItem();
 		client.download(filename, getChosenDirectory());
 	}
+	
 	@FXML
 	public void getFileList() {
 		selectPrivateFilesButton();
 	}
+	
+	/**
+	 * Method for choosing public directory when trying to download or delete files from users files
+	 */
 	@FXML
 	public void selectPublicFilesButton() {
 		publicDirectory=true;
@@ -263,6 +348,10 @@ public class UserInterfaceController{
 		privateFilesButton.setTextFill(Color.web("rgb(90, 51, 103)"));
 		getFileList("public");
 	}
+	
+	/**
+	 * Method for choosing public directory when trying to download or delete files from users files
+	 */
 	@FXML
 	public void selectPrivateFilesButton() {
 		privateDirectory=true;
@@ -273,20 +362,31 @@ public class UserInterfaceController{
 		publicFilesButton.setTextFill(Color.web("rgb(90, 51, 103)"));
 		getFileList("private");
 	}
+	
 	public void setStage(Stage stage) {
 		this.stage=stage;
 	}
+	
+	
 	private String getChosenDirectory() {
 		if(privateDirectory) return "private";
 		return "public";
 	}
-
+	
+	/**
+	 * Method for fetching files from the chosen directory
+	 * @param directory
+	 */
 	private void getFileList(String directory) {
 		client = Main.getClient();
 		client.setUserInterface(this);
 		client.getFilelist(directory);
 	}
-
+	
+	/**
+	 * Method for showing list for users
+	 * @param searchItems
+	 */
 	public void setSearchList(String searchItems) {
 		ListView<Button> listView = new ListView<Button>();
 		listView.setPrefHeight(300);
@@ -323,10 +423,18 @@ public class UserInterfaceController{
 			}
 		});
 	}
+	
+	/**
+	 * Method for updating users files
+	 */
 	public void updateFileList() {
 		getFileList(getChosenDirectory());
 	}
-
+	
+	/**
+	 * Method for showing users files
+	 * @param files
+	 */
 	public void setFileList(String files) {
 		listView = new ListView<String>();
 		listView.setPrefHeight(200);
@@ -350,6 +458,11 @@ public class UserInterfaceController{
 		});
 	}
 
+	/**
+	 * Method for changing different scenes
+	 * @param type
+	 * @throws IOException
+	 */
 	public void changeScene(int type) throws IOException {
 		Platform.runLater(new Runnable() {
 			Parent controllerPane = null;
@@ -385,6 +498,12 @@ public class UserInterfaceController{
 		});
 	}
 
+	/**
+	 * Method for displaying different messages
+	 * @param type
+	 * @param message
+	 * @throws IOException
+	 */
 	public void displayMessage(int type, String message) throws IOException {
 		Platform.runLater(new Runnable() {
 			@Override
