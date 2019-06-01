@@ -34,6 +34,7 @@ public class Client {
 	 * Constructor that initiate the connection
 	 * @param uic
 	 */
+	
 	public Client(UserInterfaceController uic){
 		this.uic=uic;
 		String home = System.getProperty("user.home");
@@ -48,15 +49,31 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * Method that sets the userinterface
+	 * @param uic
+	 */
 	public void setUserInterface(UserInterfaceController uic) {
 		this.uic=uic;
 	}
+	/**
+	 * Method that sets the searchedUser 
+	 * @param searchedUser
+	 */
 	public void setSearchedUser(String searchedUser) {
 		this.searchedUser=searchedUser;
 	}
+	/**
+	 * @return the searchedUser
+	 */
 	public String getSearchedUser() {
 		return searchedUser;
 	}
+	/**
+	 * Method that lets the client dowload a file
+	 * @param nameOfDownloadedFile
+	 * @param directory
+	 */
 	public void download(String nameOfDownloadedFile, String directory) {
 		this.nameOfDownloadedFile=nameOfDownloadedFile;
 		Message message = new Message(5, directory, nameOfDownloadedFile);
@@ -66,6 +83,13 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * Method that lets the client upload a file
+	 * @param file
+	 * @param directory
+	 * @param dir
+	 * @throws IOException
+	 */
 	public void upload(File file, String directory, String dir) throws IOException {
 		if(file!=null) {
 			try {
@@ -82,6 +106,12 @@ public class Client {
 			oos.writeObject(message);
 		}
 	}
+	/**
+	 * Method that lets the client register as a user
+	 * @param username
+	 * @param email
+	 * @param password
+	 */
 	public void register(String username, String email, String password) {
 		Message message = new Message(3, username, email, password);
 		try {
@@ -90,6 +120,11 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * Method that lets the client login
+	 * @param username
+	 * @param password
+	 */
 	public void login(String username, String password) {
 		Message message = new Message(1,username,password);
 		try {
@@ -98,6 +133,11 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * Method that lets the client delete a file
+	 * @param filename
+	 * @param directory
+	 */
 	public void deleteFile(String filename, String directory) {
 		Message message = new Message(6,directory,filename);
 		try {
@@ -106,6 +146,10 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * Method that lets the client get the filelist 
+	 * @param directory
+	 */
 	public void getFilelist(String directory) {
 		Message message = new Message(7,directory);
 		try {
@@ -114,6 +158,11 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * Method that reads a file into a byte array
+	 * @param file
+	 * @return
+	 */
 	private byte[] readFileToByteArray(File file){
 		FileInputStream fis = null;
 		byte[] bArray = new byte[(int) file.length()];
@@ -138,11 +187,18 @@ public class Client {
 			Files.createDirectory(path);
 		}
 	}
+	/**
+	 * Method that deletes a file
+	 * @param filename
+	 */
 	private void deleteFile(String filename) {
 		File file = new File(filename);
 		file.delete();
 	}
 
+	/**
+	 * Method that lets the client logout
+	 */
 	public void logout() {
 		Message message = new Message(2);
 		try {
@@ -151,6 +207,9 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * Method that lets the client unregister as a user
+	 */
 	public void unregister() {
 		Message message = new Message(8);
 		try {
@@ -160,6 +219,10 @@ public class Client {
 		}
 	}
 	
+	/**
+	 * Method that lets the user search
+	 * @param text
+	 */
 	public void search(String text) {
 		Message message = new Message(9, text);
 		try {
@@ -175,6 +238,9 @@ public class Client {
 	}
 
 	private class ListenFromServer extends Thread {
+		/**
+		 * Inner class that listens from teh server
+		 */
 		public synchronized void run() {
 			boolean running=true;
 			while(running) {
@@ -244,6 +310,11 @@ public class Client {
 				}
 			}
 		}
+		/**
+		 * 
+		 * @param obj
+		 * @return true if the file is downloaded
+		 */
 		private boolean downloadedFile(byte[] obj) {
 //			try(OutputStream os = new FileOutputStream(("downloads/"+nameOfDownloadedFile))){
 //				os.write((byte[])obj);
@@ -271,6 +342,12 @@ public class Client {
 			}
 			return true;
 		}
+		/**
+		 * Writes a keypair to the server
+		 * @param keyPair
+		 * @throws FileNotFoundException
+		 * @throws IOException
+		 */
 		private void keyPair(byte[][] keyPair) throws FileNotFoundException, IOException {
 			System.out.println("Key Pair");
 			try {

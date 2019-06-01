@@ -1,6 +1,18 @@
 package main.java.text;
 
+/**
+ * @author Ramy Behnam
+ * 
+ * Written 10/05-2019
+ *
+ */
 public class SafeString {
+	
+	/**
+	 * Switches given characters to new ones
+	 * @param string
+	 * @return the Stringbuilder
+	 */
 	public static String escapeCharacters(String string) {
 		StringBuilder sb = new StringBuilder();
 		for(char c : string.toCharArray()) {
@@ -20,6 +32,11 @@ public class SafeString {
 		}
 		return sb.toString();
 	}
+	/**
+	 * Switches given characters to new ones
+	 * @param safeString
+	 * @return the Stringbuilder
+	 */
 	public static String unescapeCharacters(String safeString) {
 		StringBuilder sb = new StringBuilder();
 		for(String s : safeString.split("&")) {
@@ -39,13 +56,28 @@ public class SafeString {
 		return sb.toString();
 	}
 
+	/**
+	 * Removes forwardslashes in the given String
+	 * @param string
+	 * @return the String
+	 */
 	public static String stripForwardSlashes(String string) {
 		return string.replace("\\", "");
 	}
+	/**
+	 * Removes backSlashes in the given String
+	 * @param string
+	 * @return the String
+	 */
 	public static String stripBackwardSlashes(String string) {
 		return string.replace("//", "");
 	}
 
+	/**
+	 * Removes unnecessary space in the given String
+	 * @param string
+	 * @return the string
+	 */
 	public static String trim(String string) {
 		string=string.trim();
 		int i=0;
@@ -56,6 +88,11 @@ public class SafeString {
 		}
 		return string;
 	}
+	/**
+	 * Takes the given string through the methods above
+	 * @param string
+	 * @return the string
+	 */
 	public String completeSafeString(String string) {
 		string = trim(string);
 		string = stripForwardSlashes(string);
