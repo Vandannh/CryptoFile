@@ -1,7 +1,7 @@
 package main.java.text;
 
 /**
- * @author Ramy Behnam
+ * @author Mattias Jönsson
  * 
  * Written 10/05-2019
  *
