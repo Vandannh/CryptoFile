@@ -18,6 +18,7 @@ import main.java.encryption.Encryption;
  * Class for the client
  * @author Mattias Jönnson, Markus Masalkovski
  *
+ *	Written 30/05-2019
  */
 public class Client {
 	private ObjectOutputStream oos;
