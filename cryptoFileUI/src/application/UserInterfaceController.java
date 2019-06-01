@@ -373,10 +373,6 @@ public class UserInterfaceController{
 						controllerPane = FXMLLoader.load(Main.class.getResource("uploadSuccesfulUI.fxml"));
 						uploadRoot.getChildren().setAll(controllerPane);
 						break;
-					case 5:
-						uploadRoot.getChildren().remove(resultLabel);
-						resultLabel.setText(message);
-						break;
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -420,6 +416,10 @@ public class UserInterfaceController{
 					uploadRoot.getChildren().add(resultLabel);
 					uploadRoot.getChildren().remove(loader);
 					uploadButton.setDisable(true);
+				case 5:
+					uploadRoot.getChildren().remove(resultLabel);
+					resultLabel.setText(message);
+					break;
 				}
 			}
 		});
