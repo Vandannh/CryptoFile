@@ -61,9 +61,6 @@ public class UserInterfaceController{
 		else if(searchRoot!=null) {
 			searchBar.setFocusTraversable(false);
 		}
-		else if(homeRoot!=null) {
-			searchBar.setFocusTraversable(false);
-		}
 		else if(signInRoot!=null) {
 			username.setFocusTraversable(false);
 			password.setFocusTraversable(false);
