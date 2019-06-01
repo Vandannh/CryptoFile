@@ -101,7 +101,10 @@ public class Server {
 				controller.unregisterUser();
 				activeSessions.removeSession(session);
 				return new Message(0, "Unregistered");
+			case Message.SEARCH:
+				return "search"+controller.search(msg.getSearch());
 			}
+			
 			return null;
 		}
 	}

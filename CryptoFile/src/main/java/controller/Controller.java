@@ -202,6 +202,10 @@ public class Controller {
 		return mssql.select("directory", new String[]{"name", "parent_id"}, "type='file' AND user_id='"+userid+"' AND parent_id=(select id from directory where name='"+directory+"' AND user_id="+userid+")");
 	}
 	
+	public String search(String username) {
+        return mssql.select("Users", new String[] {"username"}, "username Like '%" + username + "%'");
+    }
+	
 	public boolean fileExist(String filename, String directory) {
 		String file = mssql.select("directory", new String[]{"name"}, "name='"+filename+"' AND type='file' AND user_id='"+userid+"' AND parent_id=(select id from directory where name='"+directory+"' AND user_id="+userid+")");
 		return (!file.isEmpty());

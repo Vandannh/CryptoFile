@@ -179,6 +179,18 @@ public class UserInterfaceController{
 		Parent controllerPane = FXMLLoader.load(Main.class.getResource("upLoadUI.fxml"));
 		homeRoot.getChildren().setAll(controllerPane);
 	}
+	
+	public void searchButton() throws IOException {
+		if(homeRoot!=null) {
+			Parent controllerPane = FXMLLoader.load(Main.class.getResource("searchResultUI.fxml"));
+			homeRoot.getChildren().setAll(controllerPane);
+		}
+		else if(searchRoot!=null) {
+			client=Main.getClient();
+			client.setUserInterface(this);
+			client.search(searchBar.getText());
+		}
+	}
 
 	@FXML
 	public void searchButton() {
@@ -272,6 +284,41 @@ public class UserInterfaceController{
 		client.setUserInterface(this);
 		client.getFilelist(directory);
 	}
+	
+	public void setSearchList(String searchItems) {
+		ListView<Button> listView = new ListView<Button>();
+		listView.setPrefHeight(300);
+		listView.setPrefWidth(400);
+		if(listView.getItems().size()>0)
+			for(int i=listView.getItems().size();i>=0;i--) 
+				listView.getItems().remove(i);
+		if(!searchItems.isEmpty()) {
+			for(String searchItem : searchItems.split("\n")) {
+				Button button = new Button();
+				button.setText(searchItem.split("\t\t")[0]);
+				button.setStyle("-fx-border-color: rgb(90, 51, 103); -fx-background-color: rgb(255,255,255);-fx-padding: 5; -fx-border-style: none; -fx-border-width: 0; -fx-border-insets: 0; -fx-cursor: hand;");
+				button.setOnAction(new EventHandler<ActionEvent>() {
+		            public void handle(ActionEvent event) {
+						try {
+							Parent controllerPane = FXMLLoader.load(Main.class.getResource("signUpUI.fxml"));
+							searchRoot.getChildren().setAll(controllerPane);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+		            }
+		        });
+				
+				listView.getItems().add(button);
+			}
+		}
+		Platform.runLater(new Runnable() {
+			public void run() {
+				if(searchList.getChildren().size()>0)
+					searchList.getChildren().remove(0);
+				searchList.getChildren().add(listView);
+			}
+		});
+	}
 	public void updateFileList() {
 		getFileList(getChosenDirectory());
 	}
@@ -325,6 +372,11 @@ public class UserInterfaceController{
 					case 4:
 						controllerPane = FXMLLoader.load(Main.class.getResource("uploadSuccesfulUI.fxml"));
 						uploadRoot.getChildren().setAll(controllerPane);
+						break;
+					case 5:
+						uploadRoot.getChildren().remove(resultLabel);
+						resultLabel.setText(message);
+						break;
 					}
 				} catch (IOException e) {
 					e.printStackTrace();

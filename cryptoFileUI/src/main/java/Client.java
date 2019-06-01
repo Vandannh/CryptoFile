@@ -144,6 +144,15 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
+	
+	public void search(String text) {
+		Message message = new Message(9, text);
+		try {
+			oos.writeObject(message);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	private void loggedout() {
 		deleteFile(privateKey);
 		deleteFile(publicKey);
@@ -207,7 +216,12 @@ public class Client {
 					}
 					else if(obj instanceof String) {
 						String str = obj.toString();
-						uic.setFileList(str);
+						if(str.contains("search")) {
+							System.out.println(str);
+										uic.setSearchList(str.replace("search", ""));
+						}
+						else
+							uic.setFileList(str);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
