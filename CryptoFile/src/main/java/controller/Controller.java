@@ -18,7 +18,7 @@ import main.java.text.*;
  * 
  * @version 1.0
  * @since 2019-04-17
- * @author Mattias Jönsson & Robin Andersson
+ * @author Mattias Jï¿½nsson & Robin Andersson
  *
  */
 public class Controller {
@@ -120,7 +120,8 @@ public class Controller {
 			return "File is too big";
 		String directoryId = mssql.select("directory", new String[] {"id"}, "name='"+choosenDirectory+"' AND user_id='"+userid+"'").replace("\n", "").trim();
 		azureFileShareIO.upload(choosenDirectory, buffer, filename);
-		mssql.insert("directory", new String[] {"name","type","user_id","parent_id"}, new String[] {filename,"file",userid,directoryId});
+		if(!fileExist(filename, choosenDirectory)) 
+			mssql.insert("directory", new String[] {"name","type","user_id","parent_id"}, new String[] {filename,"file",userid,directoryId});
 		return "File has been uploaded";
 	}
 	/**
@@ -199,6 +200,11 @@ public class Controller {
 	}
 	public String getFiles(String directory) {
 		return mssql.select("directory", new String[]{"name", "parent_id"}, "type='file' AND user_id='"+userid+"' AND parent_id=(select id from directory where name='"+directory+"' AND user_id="+userid+")");
+	}
+	
+	public boolean fileExist(String filename, String directory) {
+		String file = mssql.select("directory", new String[]{"name"}, "name='"+filename+"' AND type='file' AND user_id='"+userid+"' AND parent_id=(select id from directory where name='"+directory+"' AND user_id="+userid+")");
+		return (!file.isEmpty());
 	}
 	public double getAvailableSpace() {
 		return azureFileShareIO.checkAvailableSpace();

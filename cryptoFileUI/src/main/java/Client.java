@@ -31,7 +31,7 @@ public class Client {
 		String separator = System.getProperty("file.separator");
 		downloadPath = home + separator + "Downloads" + separator;
 		try {
-			Socket clientSocket = new Socket("137.135.251.26", 12345);
+			Socket clientSocket = new Socket("localhost", 12345);
 			oos = new ObjectOutputStream(clientSocket.getOutputStream());
 			ois = new ObjectInputStream(clientSocket.getInputStream());
 			new ListenFromServer().start();
