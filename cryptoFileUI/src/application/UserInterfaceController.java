@@ -18,11 +18,11 @@ import main.java.Client;
 
 
 public class UserInterfaceController{
-	@FXML private AnchorPane signInRoot, signUpRoot, homeRoot, uploadRoot, filesRoot, succesfulRoot, searchRoot, unregisterRoot;
+	@FXML private AnchorPane signInRoot, signUpRoot, homeRoot, uploadRoot, filesRoot, succesfulRoot, searchRoot, unregisterRoot, userPageRoot;
 	@FXML private TextField username, password, usernameSignUp, passwordSignUp, emailSignUp, searchBar;
 	@FXML private Button signIn, signUpNow, signUp, cancelSignUp, uploadButton, removeUploadFileButton, publicDirectoryUploadButton, privateDirectoryUploadButton, privateFilesButton, publicFilesButton;
 	@FXML private Pane uploadList, downloadFileList, searchList;
-	@FXML private Label incorrectSignIn, usernameError, passwordError, emailError, repasswordError, uploadFail, fileToUpload, progressLabel;
+	@FXML private Label incorrectSignIn, usernameError, passwordError, emailError, repasswordError, uploadFail, fileToUpload, progressLabel, userLabel;
 	@FXML private ScrollPane scrollUploadList, scrollFileList;
 	@FXML private ToggleGroup toggleGroupUpload;
 	@FXML private ProgressBar progressbar;
@@ -69,6 +69,11 @@ public class UserInterfaceController{
 			usernameSignUp.setFocusTraversable(false);
 			passwordSignUp.setFocusTraversable(false);
 			emailSignUp.setFocusTraversable(false);
+		}
+		else if(userPageRoot!=null) {
+			client=Main.getClient();
+			System.out.println(client.getSearchedUser());
+			userLabel.setText(client.getSearchedUser());
 		}
 	}
 
@@ -178,21 +183,20 @@ public class UserInterfaceController{
 		Parent controllerPane = FXMLLoader.load(Main.class.getResource("upLoadUI.fxml"));
 		homeRoot.getChildren().setAll(controllerPane);
 	}
-	
+	@FXML
 	public void searchButton() throws IOException {
 		if(homeRoot!=null) {
 			Parent controllerPane = FXMLLoader.load(Main.class.getResource("searchResultUI.fxml"));
 			homeRoot.getChildren().setAll(controllerPane);
 		}
 		else if(searchRoot!=null) {
-			client=Main.getClient();
-			client.setUserInterface(this);
-			client.search(searchBar.getText());
+			if(!searchBar.getText().isEmpty()) {
+				client=Main.getClient();
+				client.setUserInterface(this);
+				client.search(searchBar.getText());
+			}
 		}
 	}
-
-	
-
 	@FXML
 	public void removeUploadFile() {
 		fileToUpload.setText("");
@@ -296,7 +300,9 @@ public class UserInterfaceController{
 				button.setOnAction(new EventHandler<ActionEvent>() {
 		            public void handle(ActionEvent event) {
 						try {
-							Parent controllerPane = FXMLLoader.load(Main.class.getResource("signUpUI.fxml"));
+							client=Main.getClient();
+							client.setSearchedUser(searchItem.split("\t\t")[0]);
+							Parent controllerPane = FXMLLoader.load(Main.class.getResource("userPageUI.fxml"));
 							searchRoot.getChildren().setAll(controllerPane);
 						} catch (IOException e) {
 							e.printStackTrace();

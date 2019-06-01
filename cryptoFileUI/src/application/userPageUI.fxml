@@ -18,7 +18,7 @@
             <Image url="https://i.ibb.co/WpkkLh2/logga.png"/>
          </image>
       </ImageView>
-      <Label layoutX="200.0" layoutY="185.0" text="User" textFill="#383838bd">
+      <Label fx:id="userLabel" layoutX="200.0" layoutY="185.0" text="User" textFill="#383838bd">
          <font>
             <Font name="Helvetica Neue" size="16.0" />
          </font>

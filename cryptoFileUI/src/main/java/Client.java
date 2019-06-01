@@ -24,6 +24,7 @@ public class Client {
 	private boolean loggedIn;
 	private UserInterfaceController uic;
 	private String downloadPath;
+	private String searchedUser;
 
 	public Client(UserInterfaceController uic){
 		this.uic=uic;
@@ -41,6 +42,12 @@ public class Client {
 	}
 	public void setUserInterface(UserInterfaceController uic) {
 		this.uic=uic;
+	}
+	public void setSearchedUser(String searchedUser) {
+		this.searchedUser=searchedUser;
+	}
+	public String getSearchedUser() {
+		return searchedUser;
 	}
 	public void download(String nameOfDownloadedFile, String directory) {
 		this.nameOfDownloadedFile=nameOfDownloadedFile;

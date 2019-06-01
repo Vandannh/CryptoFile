@@ -10,18 +10,17 @@
 
 <AnchorPane fx:id="homeRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="450.0" style="-fx-background-color: rgb(255,255,255);" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.UserInterfaceController">
    <children>
-      <TextField fx:id="searchBar" layoutX="40.0" layoutY="165.0" prefHeight="40.0" prefWidth="300.0" promptText="Search for users" />
-      <Button layoutX="340.0" layoutY="165.0" mnemonicParsing="false" onAction="#searchButton" prefHeight="40.0" prefWidth="80.0" style="-fx-background-color: rgb(90, 51, 103);" text="Search" textFill="WHITE">
+      <Button layoutX="150.0" layoutY="435.0" mnemonicParsing="false" onAction="#searchButton" prefHeight="75.0" prefWidth="150.0" style="-fx-background-color: rgb(90, 51, 103);" text="Search" textFill="WHITE">
          <font>
             <Font name="Helvetica Neue Bold" size="16.0" />
          </font>
       </Button>
-      <Button layoutX="150.0" layoutY="215.0" mnemonicParsing="false" onAction="#uploadButton" prefHeight="100.0" prefWidth="150.0" style="-fx-background-color: rgb(90, 51, 103);" text="Upload files" textFill="WHITE">
+      <Button layoutX="150.0" layoutY="215.0" mnemonicParsing="false" onAction="#uploadButton" prefHeight="75.0" prefWidth="150.0" style="-fx-background-color: rgb(90, 51, 103);" text="Upload files" textFill="WHITE">
          <font>
             <Font name="Helvetica Neue Bold" size="16.0" />
          </font>
       </Button>
-      <Button layoutX="150.0" layoutY="375.0" mnemonicParsing="false" onAction="#fileButton" prefHeight="100.0" prefWidth="150.0" style="-fx-background-color: rgb(90, 51, 103);" text="Files" textFill="WHITE">
+      <Button layoutX="150.0" layoutY="325.0" mnemonicParsing="false" onAction="#fileButton" prefHeight="75.0" prefWidth="150.0" style="-fx-background-color: rgb(90, 51, 103);" text="Files" textFill="WHITE">
          <font>
             <Font name="Helvetica Neue Bold" size="16.0" />
          </font>

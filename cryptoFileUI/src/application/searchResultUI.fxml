@@ -24,7 +24,7 @@
             <Font name="Helvetica Neue Bold" size="16.0" />
          </font>
       </Button>
-      <Pane fx:id="searchList" layoutX="25.0" layoutY="230.0" nodeOrientation="LEFT_TO_RIGHT" pickOnBounds="false" prefHeight="300.0" prefWidth="400.0" style="-fx-background-color: rgb(0,0,0);"/>
+      <Pane fx:id="searchList" layoutX="25.0" layoutY="230.0" nodeOrientation="LEFT_TO_RIGHT" pickOnBounds="false" prefHeight="300.0" prefWidth="400.0" style="-fx-background-color: rgb(255, 255 ,255);"/>
       <Button layoutX="81.0" layoutY="536.0" mnemonicParsing="false" onAction="#returnToHomePage" style="-fx-background-color: rgb(255,255,255);" text="Return" textFill="#5a3367">
          <font>
             <Font name="Helvetica Neue Bold" size="13.0" />
