@@ -164,6 +164,8 @@ public class UserInterfaceController{
 			searchRoot.getChildren().setAll(controllerPane);
 		else if(uploadRoot!=null)
 			uploadRoot.getChildren().setAll(controllerPane);
+		else if(userPageRoot!=null)
+			userPageRoot.getChildren().setAll(controllerPane);
 	}
 
 	@FXML
@@ -284,13 +286,13 @@ public class UserInterfaceController{
 		client.setUserInterface(this);
 		client.getFilelist(directory);
 	}
-	
+
 	public void setSearchList(String searchItems) {
 		ListView<Button> listView = new ListView<Button>();
 		listView.setPrefHeight(300);
 		listView.setPrefWidth(400);
 		if(listView.getItems().size()>0)
-			for(int i=listView.getItems().size();i>=0;i--) 
+			for(int i=listView.getItems().size();i>=0;i--)
 				listView.getItems().remove(i);
 		if(!searchItems.isEmpty()) {
 			for(String searchItem : searchItems.split("\n")) {
@@ -309,7 +311,7 @@ public class UserInterfaceController{
 						}
 		            }
 		        });
-				
+
 				listView.getItems().add(button);
 			}
 		}
