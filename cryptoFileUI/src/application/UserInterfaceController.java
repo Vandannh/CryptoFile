@@ -22,17 +22,17 @@ import main.java.Client;
  *
  */
 public class UserInterfaceController{
-	@FXML private AnchorPane signInRoot, signUpRoot, homeRoot, uploadRoot, filesRoot, succesfulRoot, searchRoot, unregisterRoot;
+	@FXML private AnchorPane signInRoot, signUpRoot, homeRoot, uploadRoot, filesRoot, succesfulRoot, searchRoot, unregisterRoot, userPageRoot;
 	@FXML private TextField username, password, usernameSignUp, passwordSignUp, emailSignUp, searchBar;
 	@FXML private Button signIn, signUpNow, signUp, cancelSignUp, uploadButton, removeUploadFileButton, publicDirectoryUploadButton, privateDirectoryUploadButton, privateFilesButton, publicFilesButton;
 	@FXML private Pane uploadList, downloadFileList, searchList;
-	@FXML private Label incorrectSignIn, usernameError, passwordError, emailError, repasswordError, uploadFail, fileToUpload, progressLabel;
+	@FXML private Label userLabel, incorrectSignIn, usernameError, passwordError, emailError, repasswordError, uploadFail, fileToUpload, progressLabel;
 	@FXML private ScrollPane scrollUploadList, scrollFileList;
 	@FXML private ToggleGroup toggleGroupUpload;
 	@FXML private ProgressBar progressbar;
 	private Stage stage;
 	private File file;
-	private boolean publicDirectory, privateDirectory, selected=false;
+	private boolean publicDirectory, privateDirectory, selected=false, otherUser;
 	private ListView<String> listView;
 	private Label resultLabel = new Label();
 	private Client client;
@@ -65,9 +65,6 @@ public class UserInterfaceController{
 		else if(searchRoot!=null) {
 			searchBar.setFocusTraversable(false);
 		}
-		else if(homeRoot!=null) {
-			searchBar.setFocusTraversable(false);
-		}
 		else if(signInRoot!=null) {
 			username.setFocusTraversable(false);
 			password.setFocusTraversable(false);
@@ -76,6 +73,15 @@ public class UserInterfaceController{
 			usernameSignUp.setFocusTraversable(false);
 			passwordSignUp.setFocusTraversable(false);
 			emailSignUp.setFocusTraversable(false);
+		}
+		else if(userPageRoot!=null) {
+			otherUser=true;
+			privateDirectory=false;
+			publicDirectory=false;
+			client=Main.getClient();
+			client.setUserInterface(this);
+			client.getUserFiles(client.getSearchedUser());
+			userLabel.setText(client.getSearchedUser());
 		}
 	}
 	
@@ -280,6 +286,10 @@ public class UserInterfaceController{
 		return privateDirectory;
 	}
 	
+	public boolean isOtherUser() {
+		return otherUser;
+	}
+	
 	/**
 	 * Method for choosing public directory when trying to upload file
 	 */
@@ -288,6 +298,7 @@ public class UserInterfaceController{
 		selected=true;
 		publicDirectory=true;
 		privateDirectory=false;
+		otherUser=false;
 		publicDirectoryUploadButton.setStyle("-fx-background-color: rgb(90, 51, 103);");
 		publicDirectoryUploadButton.setTextFill(Color.WHITE);
 		privateDirectoryUploadButton.setStyle("-fx-border-color: rgb(90, 51, 103); -fx-background-color: rgb(255,255,255); -fx-border-radius: 3;");
@@ -302,6 +313,7 @@ public class UserInterfaceController{
 		selected=true;
 		privateDirectory=true;
 		publicDirectory=false;
+		otherUser=false;
 		privateDirectoryUploadButton.setStyle("-fx-background-color: rgb(90, 51, 103);");
 		privateDirectoryUploadButton.setTextFill(Color.WHITE);
 		publicDirectoryUploadButton.setStyle("-fx-border-color: rgb(90, 51, 103); -fx-background-color: rgb(255,255,255); -fx-border-radius: 3;");
@@ -327,7 +339,10 @@ public class UserInterfaceController{
 		client = Main.getClient();
 		client.setUserInterface(this);
 		String filename = listView.getSelectionModel().getSelectedItem();
-		client.download(filename, getChosenDirectory());
+		if(userPageRoot!=null) 
+			client.downloadUserFile(filename, client.getSearchedUser());
+		else
+			client.download(filename, getChosenDirectory());
 	}
 	
 	@FXML
@@ -529,9 +544,16 @@ public class UserInterfaceController{
 					signUp.setDisable(false);
 					break;
 				case 3:
-					filesRoot.getChildren().remove(resultLabel);
-					resultLabel.setText(message);
-					filesRoot.getChildren().add(resultLabel);
+					if(filesRoot!=null) {
+						filesRoot.getChildren().remove(resultLabel);
+						resultLabel.setText(message);
+						filesRoot.getChildren().add(resultLabel);
+					}
+					else if(userPageRoot!=null) {
+						userPageRoot.getChildren().remove(resultLabel);
+						resultLabel.setText(message);
+						userPageRoot.getChildren().add(resultLabel);
+					}
 					break;
 				case 4:
 					uploadRoot.getChildren().remove(resultLabel);

@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
-	public static final int RETURN=0, LOGIN = 1, LOGOUT = 2, REGISTER = 3, UPLOAD = 4, DOWNLOAD = 5, DELETE = 6, FILELIST = 7, UNREGISTER = 8, SEARCH = 9;
+	public static final int RETURN=0, LOGIN = 1, LOGOUT = 2, REGISTER = 3, UPLOAD = 4, DOWNLOAD = 5, DELETE = 6, FILELIST = 7, UNREGISTER = 8, SEARCH = 9, USERFILELIST = 10, KEY = 11, DOWNLOADUSERFILE = 12;
 	private int type;
 	private String username, email, password, directory, filename, search;
 	private Object returnMessage;
@@ -46,6 +46,10 @@ public class Message implements Serializable {
 			this.directory=input1;
 			this.filename=input2;
 		}
+		else if(type==12) {
+			this.filename=(String)input1;
+			this.username=(String)input2;
+		}
 	}
 	
 	/**
@@ -75,6 +79,8 @@ public class Message implements Serializable {
 			this.directory=(String)input;
 		else if(type==9)
 			this.search=(String)input;
+		else if(type==10)
+			this.username=(String)input;
 	}
 	
 	/**

@@ -35,7 +35,7 @@ public class Client {
 	 * Constructor that initiate the connection
 	 * @param uic
 	 */
-	
+
 	public Client(UserInterfaceController uic){
 		this.uic=uic;
 		String home = System.getProperty("user.home");
@@ -94,7 +94,7 @@ public class Client {
 	public void upload(File file, String directory, String dir) throws IOException {
 		if(file!=null) {
 			try {
-				if(dir == "pub")
+				if(dir == "pvt")
 					file = Encryption.encrypt(file, publicKey, "pub");
 				else
 					file = Encryption.encrypt(file, privateKey, "pvt");
@@ -219,7 +219,27 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public void getUserFiles(String username) {
+		Message message = new Message(10, username);
+		try {
+			oos.writeObject(message);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	public void downloadUserFile(String filename, String username) {
+		this.nameOfDownloadedFile=filename;
+		Message message = new Message(12, filename, username);
+		try {
+			oos.writeObject(message);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * Method that lets the user search
 	 * @param text
@@ -259,48 +279,61 @@ public class Client {
 						keyPair((byte[][])obj);
 					}
 					else if(obj instanceof Message){
-						String returnMessage = (String) ((Message)obj).getReturnMessage();
-						switch(returnMessage.trim()) {
-						case "Logged in":
-							uic.changeScene(1);
-							break;
-						case "Wrong username/password":
-							uic.displayMessage(1,returnMessage);
-							break;
-						case "Logged out":
-							loggedout();
-							uic.changeScene(2);
-							break;
-						case "User created":
-							uic.changeScene(3);
-							break;
-						case "Unregistered":
-							loggedout();
-							uic.changeScene(2);
-							break;
-						case "File is too big":
-							uic.displayMessage(3, returnMessage);
-							break;
-						case "File has been uploaded":
-							uic.changeScene(4);
-							break;
-						case "File has been deleted":
-							uic.displayMessage(3, returnMessage);
-							uic.updateFileList();
-							break;
-						case "An error occured. Delete failed":
-							uic.displayMessage(3, returnMessage);
-							break;
-						default:
-							uic.displayMessage(2, returnMessage);
-							break;
+						if(((Message)obj).getReturnMessage() instanceof String) {
+							String returnMessage = (String) ((Message)obj).getReturnMessage();
+							switch(returnMessage.trim()) {
+							case "Logged in":
+								uic.changeScene(1);
+								break;
+							case "Wrong username/password":
+								uic.displayMessage(1,returnMessage);
+								break;
+							case "Logged out":
+								loggedout();
+								uic.changeScene(2);
+								break;
+							case "User created":
+								uic.changeScene(3);
+								break;
+							case "Unregistered":
+								loggedout();
+								uic.changeScene(2);
+								break;
+							case "File is too big":
+								uic.displayMessage(3, returnMessage);
+								break;
+							case "File has been uploaded":
+								uic.changeScene(4);
+								break;
+							case "File has been deleted":
+								uic.displayMessage(3, returnMessage);
+								uic.updateFileList();
+								break;
+							case "An error occured. Delete failed":
+								uic.displayMessage(3, returnMessage);
+								break;
+							default:
+								uic.displayMessage(2, returnMessage);
+								break;
+							}
+						}
+						else if (((Message)obj).getReturnMessage() instanceof byte[]) {
+							byte[] key = (byte[])((Message)obj).getReturnMessage();
+							System.out.println("user key downloaded");
+							try(OutputStream os = new FileOutputStream("temp/userKey.pub")){
+								os.write(key);
+							}
 						}
 					}
 					else if(obj instanceof String) {
 						String str = obj.toString();
 						if(str.contains("search")) {
 							System.out.println(str);
-										uic.setSearchList(str.replace("search", ""));
+							uic.setSearchList(str.replace("search", ""));
+						}
+						else if(str.contains("userfilelist")) {
+							System.out.println(str);
+							uic.setFileList(str.replace("userfilelist", ""));
 						}
 						else
 							uic.setFileList(str);
@@ -317,24 +350,15 @@ public class Client {
 		 * @return true if the file is downloaded
 		 */
 		private boolean downloadedFile(byte[] obj) {
-//			try(OutputStream os = new FileOutputStream(("downloads/"+nameOfDownloadedFile))){
-//				os.write((byte[])obj);
-//				System.out.println(obj.length);
-//				Encryption.decrypt(new File("downloads/"+nameOfDownloadedFile), publicKey);
-//				System.out.println("downloaded");
-//			}catch(Exception e) {
-//				e.printStackTrace();
-//				return false;
-//			}
-//			deleteFile("downloads/"+nameOfDownloadedFile);
-//			return true;
 			try {
 				FileUtils.writeByteArrayToFile(new File(downloadPath+nameOfDownloadedFile), obj);
-				if(uic.isPublic()) {
+				if(uic.isPublic()) 
 					Encryption.decrypt(new File(downloadPath+nameOfDownloadedFile), privateKey, "pvt");
-				} else {
+				else if(uic.isPrivate())
 					Encryption.decrypt(new File(downloadPath+nameOfDownloadedFile), publicKey, "pub");
-				}
+				else if(uic.isOtherUser())
+					Encryption.decrypt(new File(downloadPath+nameOfDownloadedFile), "temp/userKey.pub", "pub");
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 				return false;
@@ -343,6 +367,7 @@ public class Client {
 			}
 			return true;
 		}
+
 		/**
 		 * Writes a keypair to the server
 		 * @param keyPair
