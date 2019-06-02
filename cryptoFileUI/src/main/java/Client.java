@@ -2,12 +2,7 @@ package main.java;
 
 import java.io.*;
 import java.net.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import javax.swing.JFileChooser;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
+import java.nio.file.*;
 
 import org.apache.commons.io.FileUtils;
 
@@ -24,9 +19,7 @@ public class Client {
 	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
 	private String nameOfDownloadedFile;
-	private boolean confirm;
 	private final String privateKey="temp/rsa.key", publicKey="temp/rsa.pub";
-	private boolean loggedIn;
 	private UserInterfaceController uic;
 	private String downloadPath;
 	private String searchedUser;
@@ -58,7 +51,7 @@ public class Client {
 		this.uic=uic;
 	}
 	/**
-	 * Method that sets the searchedUser 
+	 * Method that sets the searchedUser
 	 * @param searchedUser
 	 */
 	public void setSearchedUser(String searchedUser) {
@@ -147,8 +140,18 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
+	void deleteDirectory(Path path) throws IOException {
+		  if (Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)) {
+		    try (DirectoryStream<Path> entries = Files.newDirectoryStream(path)) {
+		      for (Path entry : entries) {
+		        deleteDirectory(entry);
+		      }
+		    }
+		  }
+		  Files.delete(path);
+		}
 	/**
-	 * Method that lets the client get the filelist 
+	 * Method that lets the client get the filelist
 	 * @param directory
 	 */
 	public void getFilelist(String directory) {
@@ -252,15 +255,15 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
-	private void loggedout() {
+	private void loggedout() throws IOException  {
 		deleteFile(privateKey);
 		deleteFile(publicKey);
-		deleteFile("temp");
+		deleteDirectory(Paths.get(new File("temp").getAbsolutePath()));
 	}
 
 	private class ListenFromServer extends Thread {
 		/**
-		 * Inner class that listens from teh server
+		 * Inner class that listens from the server
 		 */
 		public synchronized void run() {
 			boolean running=true;
@@ -345,20 +348,20 @@ public class Client {
 			}
 		}
 		/**
-		 * 
+		 *
 		 * @param obj
 		 * @return true if the file is downloaded
 		 */
 		private boolean downloadedFile(byte[] obj) {
 			try {
 				FileUtils.writeByteArrayToFile(new File(downloadPath+nameOfDownloadedFile), obj);
-				if(uic.isPublic()) 
+				if(uic.isPublic())
 					Encryption.decrypt(new File(downloadPath+nameOfDownloadedFile), privateKey, "pvt");
 				else if(uic.isPrivate())
 					Encryption.decrypt(new File(downloadPath+nameOfDownloadedFile), publicKey, "pub");
 				else if(uic.isOtherUser())
 					Encryption.decrypt(new File(downloadPath+nameOfDownloadedFile), "temp/userKey.pub", "pub");
-				
+
 			} catch (Exception e) {
 				e.printStackTrace();
 				return false;
