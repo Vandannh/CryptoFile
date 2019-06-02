@@ -504,7 +504,6 @@ public class UserInterfaceController{
 			Parent controllerPane = null;
 			public void run() {
 				try {
-					System.out.println(type);
 					switch(type) {
 					case 1:
 						controllerPane = FXMLLoader.load(Main.class.getResource("homePageUI.fxml"));
@@ -516,7 +515,6 @@ public class UserInterfaceController{
 							homeRoot.getChildren().setAll(controllerPane);
 						else if(succesfulRoot!=null)
 							succesfulRoot.getChildren().setAll(controllerPane);
-						System.out.println("Logged out");
 						break;
 					case 3:
 						controllerPane = FXMLLoader.load(Main.class.getResource("homePageUI.fxml"));

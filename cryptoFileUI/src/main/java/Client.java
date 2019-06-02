@@ -320,7 +320,6 @@ public class Client {
 					Object obj = ois.readObject();
 					if(obj instanceof byte[]) {
 						boolean downloaded = downloadedFile((byte[])obj);
-						System.out.println(downloaded);
 						if(!downloaded)
 							uic.displayMessage(3, "An error has occured with the downloading");
 						else
@@ -371,7 +370,6 @@ public class Client {
 						}
 						else if (msg.getReturnMessage() instanceof byte[]) {
 							byte[] key = (byte[]) msg.getReturnMessage();
-							System.out.println("user key downloaded");
 							try(OutputStream os = new FileOutputStream("temp/userKey.pub")){
 								os.write(key);
 							}
@@ -380,11 +378,9 @@ public class Client {
 					else if(obj instanceof String) {
 						String str = obj.toString();
 						if(str.contains("search")) {
-							System.out.println(str);
 							uic.setSearchList(str.replace("search", ""));
 						}
 						else if(str.contains("userfilelist")) {
-							System.out.println(str);
 							uic.setFileList(str.replace("userfilelist", ""));
 						}
 						else
@@ -429,7 +425,6 @@ public class Client {
 		 * @throws IOException
 		 */
 		private void keyPair(byte[][] keyPair) throws FileNotFoundException, IOException {
-			System.out.println("Key Pair");
 			try {
 				createDirectoryLocally("temp");
 			} catch (IOException e) {
