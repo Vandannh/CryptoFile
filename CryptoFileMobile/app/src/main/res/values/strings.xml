@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">CryptoFile</string>
+    <string name="login_username">Username</string>
+    <string name="login_password">Password</string>
+    <string name="login_btnLogin">Sign in</string>
+    <string name="login_btnNoAccount">Don\'t have an account? Sign up</string>
+    <string name="register_btnSignUp">Sign up</string>
+    <string name="register_email">Email</string>
+    <string name="register_btnReturn">Return</string>
+    <string name="home_btnUpload">Upload files</string>
+    <string name="home_btnFiles">Files</string>
+    <string name="togglePublic">Public</string>
+    <string name="upload_btnUpload">Upload</string>
+    <string name="upload_textAddFiles">Add files</string>
+    <string name="files_btnDownload">Download</string>
+    <string name="files_btnDelete">Delete</string>
+</resources>
