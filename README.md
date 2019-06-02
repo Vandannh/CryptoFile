@@ -1,5 +1,5 @@
 # CryptoFile
-An cloud service that store files on a secure and smooth way. It contains two part. One part for the server and one part for the client.
+An cloud service that store files on a secure and smooth way. It contains tree part. One part for the server, one part for the desktop client and one part for the mobile client.
 
 ## Run application
 You run the application by starting the server. After that you can run the jar-fil called CryptoFile.jar.
