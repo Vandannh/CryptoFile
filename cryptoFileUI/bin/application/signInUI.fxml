@@ -19,7 +19,7 @@
             <Font name="Helvetica Neue Bold" size="16.0" />
          </font>
       </Button>
-      <Button fx:id="signUpNow" layoutX="115.0" layoutY="500.0" mnemonicParsing="false" onAction="#signUpNowButton" style="-fx-background-color: rgb(255,255,255);" text="Don't have an account? Sign up" textFill="#1a74a8">
+      <Button fx:id="signUpNow" layoutX="115.0" layoutY="500.0" mnemonicParsing="false" onAction="#signUpNowButton" style="-fx-background-color: rgb(255,255,255);" text="Don't have an account? Sign up" textFill="#1a75a5">
          <font>
             <Font name="Helvetica Neue" size="14.0" />
          </font>

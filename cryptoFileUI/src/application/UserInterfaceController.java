@@ -209,6 +209,8 @@ public class UserInterfaceController{
 			searchRoot.getChildren().setAll(controllerPane);
 		else if(uploadRoot!=null)
 			uploadRoot.getChildren().setAll(controllerPane);
+		else if(userPageRoot!=null)
+			userPageRoot.getChildren().setAll(controllerPane);	
 	}
 	
 	/**
@@ -299,10 +301,10 @@ public class UserInterfaceController{
 		publicDirectory=true;
 		privateDirectory=false;
 		otherUser=false;
-		publicDirectoryUploadButton.setStyle("-fx-background-color: rgb(90, 51, 103);");
+		publicDirectoryUploadButton.setStyle("-fx-background-color: rgb(26,116,168);");
 		publicDirectoryUploadButton.setTextFill(Color.WHITE);
-		privateDirectoryUploadButton.setStyle("-fx-border-color: rgb(90, 51, 103); -fx-background-color: rgb(255,255,255); -fx-border-radius: 3;");
-		privateDirectoryUploadButton.setTextFill(Color.web("rgb(90, 51, 103)"));
+		privateDirectoryUploadButton.setStyle("-fx-border-color: rgb(26,116,168); -fx-background-color: rgb(255,255,255); -fx-border-radius: 3;");
+		privateDirectoryUploadButton.setTextFill(Color.web("rgb(26,116,168)"));
 	}
 	
 	/**
@@ -314,10 +316,10 @@ public class UserInterfaceController{
 		privateDirectory=true;
 		publicDirectory=false;
 		otherUser=false;
-		privateDirectoryUploadButton.setStyle("-fx-background-color: rgb(90, 51, 103);");
+		privateDirectoryUploadButton.setStyle("-fx-background-color: rgb(26,116,168);");
 		privateDirectoryUploadButton.setTextFill(Color.WHITE);
-		publicDirectoryUploadButton.setStyle("-fx-border-color: rgb(90, 51, 103); -fx-background-color: rgb(255,255,255); -fx-border-radius: 3;");
-		publicDirectoryUploadButton.setTextFill(Color.web("rgb(90, 51, 103)"));
+		publicDirectoryUploadButton.setStyle("-fx-border-color: rgb(26,116,168); -fx-background-color: rgb(255,255,255); -fx-border-radius: 3;");
+		publicDirectoryUploadButton.setTextFill(Color.web("rgb(26,116,168)"));
 	}
 	
 	/**
@@ -357,10 +359,10 @@ public class UserInterfaceController{
 	public void selectPublicFilesButton() {
 		publicDirectory=true;
 		privateDirectory=false;
-		publicFilesButton.setStyle("-fx-background-color: rgb(90, 51, 103);");
+		publicFilesButton.setStyle("-fx-background-color: rgb(26,116,168);");
 		publicFilesButton.setTextFill(Color.WHITE);
-		privateFilesButton.setStyle("-fx-border-color: rgb(90, 51, 103); -fx-background-color: rgb(255,255,255); -fx-border-radius: 3;");
-		privateFilesButton.setTextFill(Color.web("rgb(90, 51, 103)"));
+		privateFilesButton.setStyle("-fx-border-color: rgb(26,116,168); -fx-background-color: rgb(255,255,255); -fx-border-radius: 3;");
+		privateFilesButton.setTextFill(Color.web("rgb(26,116,168)"));
 		getFileList("public");
 	}
 	
@@ -371,10 +373,10 @@ public class UserInterfaceController{
 	public void selectPrivateFilesButton() {
 		privateDirectory=true;
 		publicDirectory=false;
-		privateFilesButton.setStyle("-fx-background-color: rgb(90, 51, 103);");
+		privateFilesButton.setStyle("-fx-background-color: rgb(26,116,168);");
 		privateFilesButton.setTextFill(Color.WHITE);
-		publicFilesButton.setStyle("-fx-border-color: rgb(90, 51, 103); -fx-background-color: rgb(255,255,255); -fx-border-radius: 3;");
-		publicFilesButton.setTextFill(Color.web("rgb(90, 51, 103)"));
+		publicFilesButton.setStyle("-fx-border-color: rgb(26,116,168); -fx-background-color: rgb(255,255,255); -fx-border-radius: 3;");
+		publicFilesButton.setTextFill(Color.web("rgb(26,116,168)"));
 		getFileList("private");
 	}
 	
@@ -535,7 +537,7 @@ public class UserInterfaceController{
 				case 2:
 					String[] messages = message.split("\n");
 					usernameError.setText(messages[1]);
-					passwordError.setText("Password must contain:\n1 number, 1 letter and 8 characters");
+					passwordError.setText("Password must contain a minimum of:\n1 number, 1 letter and 8 characters");
 					emailError.setText(messages[2]);
 					signUpRoot.getChildren().remove(loader);
 					usernameSignUp.setDisable(false);

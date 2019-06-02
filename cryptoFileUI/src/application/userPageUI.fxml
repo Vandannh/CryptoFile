@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.*?>
 <?import javafx.geometry.*?>
@@ -15,24 +16,24 @@
    <children>
       <ImageView fitHeight="90.0" fitWidth="350.0" layoutX="53.0" layoutY="60.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="https://i.ibb.co/WpkkLh2/logga.png"/>
+            <Image url="https://i.ibb.co/WpkkLh2/logga.png" />
          </image>
       </ImageView>
-      <Label fx:id="userLabel" layoutX="200.0" layoutY="185.0" text="User" textFill="#383838bd">
+      <Label fx:id="userLabel" layoutX="204.0" layoutY="180.0" text="User" textFill="#015380bd">
          <font>
-            <Font name="Helvetica Neue" size="16.0" />
+            <Font name="Helvetica Neue" size="20.0" />
          </font>
       </Label>
       <Pane fx:id="downloadFileList" layoutX="25.0" layoutY="230.0" nodeOrientation="LEFT_TO_RIGHT" pickOnBounds="false" prefHeight="215.0" prefWidth="400.0" style="-fx-background-color: rgb(255,255,255);">
       </Pane>
-      <Button layoutX="120.0" layoutY="472.0" mnemonicParsing="false" onAction="#downloadButton" prefHeight="50.0" prefWidth="220.0" style="-fx-background-color: rgb(90, 51, 103);" text="Download" textFill="WHITE">
+      <Button layoutX="107.0" layoutY="471.0" mnemonicParsing="false" onAction="#downloadButton" prefHeight="50.0" prefWidth="220.0" style="-fx-background-color: rgb(90, 51, 103);" text="Download" textFill="WHITE">
          <font>
             <Font name="Helvetica Neue Bold" size="16.0" />
          </font>
       </Button>
       <Button layoutX="81.0" layoutY="536.0" mnemonicParsing="false" onAction="#returnToHomePage" style="-fx-background-color: rgb(255,255,255);" text="Return" textFill="#5a3367">
          <font>
-            <Font name="Helvetica Neue Bold" size="13.0" />
+            <Font name="Helvetica Neue" size="13.0" />
          </font>
       </Button>
       <Label layoutX="40.0" layoutY="205.0" text="Name" textFill="#383838bd">
