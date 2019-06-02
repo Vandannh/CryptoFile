@@ -9,9 +9,9 @@ import javax.crypto.spec.*;
 
 /**
  * Contains static methods for generating RSA keypairs, encrypting and decrypting files using AES/RSA encryption.
- * @version 1.0
- * @since 2019-05-15
- * @author Daniel Hägg
+ * @version 2.0
+ * @since 2019-05-24
+ * @author Daniel Hï¿½gg
  *
  */
 public class Encryption{
