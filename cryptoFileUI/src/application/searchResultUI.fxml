@@ -15,24 +15,24 @@
    <children>
       <ImageView fitHeight="90.0" fitWidth="350.0" layoutX="53.0" layoutY="60.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="https://i.ibb.co/WpkkLh2/logga.png"/>
+            <Image url="https://i.ibb.co/WpkkLh2/logga.png" />
          </image>
       </ImageView>
-      <TextField fx:id="searchBar" layoutX="40.0" layoutY="165.0" prefHeight="40.0" prefWidth="300.0" promptText="Search for users" />
-      <Button layoutX="340.0" layoutY="165.0" mnemonicParsing="false" onAction="#searchButton" prefHeight="40.0" prefWidth="80.0" style="-fx-background-color: rgb(90, 51, 103);" text="Search" textFill="WHITE">
+      <TextField fx:id="searchBar" layoutX="40.0" layoutY="180.0" prefHeight="45.0" prefWidth="290.0" promptText="Search for users" />
+      <Button layoutX="340.0" layoutY="180.0" mnemonicParsing="false" onAction="#searchButton" prefHeight="45.0" prefWidth="80.0" style="-fx-background-color: rgb(90, 51, 103);" text="Search" textFill="WHITE">
          <font>
             <Font name="Helvetica Neue Bold" size="16.0" />
          </font>
       </Button>
-      <Pane fx:id="searchList" layoutX="25.0" layoutY="230.0" nodeOrientation="LEFT_TO_RIGHT" pickOnBounds="false" prefHeight="300.0" prefWidth="400.0" style="-fx-background-color: rgb(255, 255 ,255);"/>
+      <Pane fx:id="searchList" layoutX="25.0" layoutY="255.0" nodeOrientation="LEFT_TO_RIGHT" pickOnBounds="false" prefHeight="275.0" prefWidth="400.0" style="-fx-background-color: rgb(255, 255 ,255);" />
       <Button layoutX="81.0" layoutY="536.0" mnemonicParsing="false" onAction="#returnToHomePage" style="-fx-background-color: rgb(255,255,255);" text="Return" textFill="#5a3367">
          <font>
-            <Font name="Helvetica Neue Bold" size="13.0" />
+            <Font name="Helvetica Neue" size="13.0" />
          </font>
       </Button>
-      <Label layoutX="40.0" layoutY="205.0" text="Name" textFill="#383838bd">
+      <Label layoutX="45.0" layoutY="235.0" text="Name" textFill="#383838bd">
          <font>
-            <Font name="Helvetica Neue" size="13.0" />
+            <Font name="Helvetica Neue" size="14.0" />
          </font>
       </Label>
    </children>

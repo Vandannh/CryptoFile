@@ -15,10 +15,10 @@
    <children>
       <ImageView fitHeight="90.0" fitWidth="350.0" layoutX="53.0" layoutY="60.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="https://i.ibb.co/WpkkLh2/logga.png"/>
+            <Image url="https://i.ibb.co/WpkkLh2/logga.png" />
          </image>
       </ImageView>
-      <Pane fx:id="downloadFileList" layoutX="25.0" layoutY="230.0" nodeOrientation="LEFT_TO_RIGHT" pickOnBounds="false" prefHeight="215.0" prefWidth="400.0" style="-fx-background-color: rgb(255,255,255);">
+      <Pane fx:id="downloadFileList" layoutX="25.0" layoutY="236.0" nodeOrientation="LEFT_TO_RIGHT" pickOnBounds="false" prefHeight="190.0" prefWidth="400.0" style="-fx-background-color: rgb(255,255,255);">
       </Pane>
       <Button layoutX="50.0" layoutY="472.0" mnemonicParsing="false" onAction="#downloadButton" prefHeight="50.0" prefWidth="220.0" style="-fx-background-color: rgb(90, 51, 103);" text="Download" textFill="WHITE">
          <font>
@@ -27,15 +27,15 @@
       </Button>
       <Button layoutX="81.0" layoutY="536.0" mnemonicParsing="false" onAction="#returnToHomePage" style="-fx-background-color: rgb(255,255,255);" text="Return" textFill="#5a3367">
          <font>
-            <Font name="Helvetica Neue Bold" size="13.0" />
+            <Font name="Helvetica Neue" size="13.0" />
          </font>
       </Button>
-      <Button fx:id="publicFilesButton" onAction="#selectPublicFilesButton" layoutX="230.0" layoutY="165.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="70.0" style="-fx-border-color: rgb(26,116,168); -fx-background-color: rgb(255,255,255); -fx-border-radius: 3;" text="Public" textFill="#1a74a8">
+      <Button fx:id="publicFilesButton" layoutX="120.0" layoutY="170.0" mnemonicParsing="false" onAction="#selectPublicFilesButton" prefHeight="40.0" prefWidth="80.0" style="-fx-border-color: rgb(26,116,168); -fx-background-color: rgb(255,255,255); -fx-border-radius: 3;" text="Public" textFill="#1a74a8">
          <font>
             <Font name="Helvetica Neue Bold" size="14.0" />
          </font>
       </Button>
-      <Button fx:id="privateFilesButton" onAction="#selectPrivateFilesButton" layoutX="120.0" layoutY="165.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="70.0" style="-fx-border-color: rgb(26,116,168); -fx-background-color: rgb(255,255,255); -fx-border-radius: 3;" text="Private" textFill="#1a74a8">
+      <Button fx:id="privateFilesButton" layoutX="258.0" layoutY="170.0" mnemonicParsing="false" onAction="#selectPrivateFilesButton" prefHeight="40.0" prefWidth="80.0" style="-fx-border-color: rgb(26,116,168); -fx-background-color: rgb(255,255,255); -fx-border-radius: 3;" text="Private" textFill="#1a74a8">
          <font>
             <Font name="Helvetica Neue Bold" size="14.0" />
          </font>
@@ -45,12 +45,12 @@
             <Font name="Helvetica Neue Bold" size="16.0" />
          </font>
       </Button>
-      <Label layoutX="40.0" layoutY="205.0" text="Name" textFill="#383838bd">
+      <Label layoutX="40.0" layoutY="215.0" text="Name" textFill="#383838bd">
          <font>
-            <Font name="Helvetica Neue" size="13.0" />
+            <Font name="Helvetica Neue" size="14.0" />
          </font>
       </Label>
-      <ProgressBar fx:id="progressbar" layoutX="40.0" layoutY="435.0"></ProgressBar>
-      <Label fx:id="progressLabel" layoutX="150.0" layoutY="435.0" textFill="#383838bd"></Label>
+      <ProgressBar fx:id="progressbar" layoutX="50.0" layoutY="434.0" />
+      <Label fx:id="progressLabel" layoutX="150.0" layoutY="435.0" textFill="#383838bd" />
    </children>
 </AnchorPane>

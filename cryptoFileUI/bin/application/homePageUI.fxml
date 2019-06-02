@@ -10,25 +10,25 @@
 
 <AnchorPane fx:id="homeRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="450.0" style="-fx-background-color: rgb(255,255,255);" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.UserInterfaceController">
    <children>
-      <Button layoutX="150.0" layoutY="435.0" mnemonicParsing="false" onAction="#searchButton" prefHeight="75.0" prefWidth="150.0" style="-fx-background-color: rgb(90, 51, 103);" text="Search" textFill="WHITE">
+      <Button layoutX="150.0" layoutY="440.0" mnemonicParsing="false" onAction="#searchButton" prefHeight="90.0" prefWidth="150.0" style="-fx-background-color: rgb(90, 51, 103);" text="Search for user" textFill="WHITE">
          <font>
             <Font name="Helvetica Neue Bold" size="16.0" />
          </font>
       </Button>
-      <Button layoutX="150.0" layoutY="215.0" mnemonicParsing="false" onAction="#uploadButton" prefHeight="75.0" prefWidth="150.0" style="-fx-background-color: rgb(90, 51, 103);" text="Upload files" textFill="WHITE">
+      <Button layoutX="150.0" layoutY="200.0" mnemonicParsing="false" onAction="#uploadButton" prefHeight="90.0" prefWidth="150.0" style="-fx-background-color: rgb(90, 51, 103);" text="Upload files" textFill="WHITE">
          <font>
             <Font name="Helvetica Neue Bold" size="16.0" />
          </font>
       </Button>
-      <Button layoutX="150.0" layoutY="325.0" mnemonicParsing="false" onAction="#fileButton" prefHeight="75.0" prefWidth="150.0" style="-fx-background-color: rgb(90, 51, 103);" text="Files" textFill="WHITE">
+      <Button layoutX="150.0" layoutY="320.0" mnemonicParsing="false" onAction="#fileButton" prefHeight="90.0" prefWidth="150.0" style="-fx-background-color: rgb(90, 51, 103);" text="My files" textFill="WHITE">
          <font>
             <Font name="Helvetica Neue Bold" size="16.0" />
          </font>
       </Button>
       <MenuButton layoutX="342.0" layoutY="30.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="71.0" style="-fx-background-color: #1a74a8;" text="Menu" textFill="WHITE">
         <items>
-          <MenuItem mnemonicParsing="false" text="Sign Out" onAction="#signOutButton"/>
-          <MenuItem mnemonicParsing="false" text="Unregister" onAction="#unregisterButton"/>
+          <MenuItem mnemonicParsing="false" onAction="#signOutButton" text="Sign Out" />
+          <MenuItem mnemonicParsing="false" onAction="#unregisterButton" text="Unregister" />
         </items>
          <font>
             <Font name="Helvetica Neue Bold" size="13.0" />
@@ -36,7 +36,7 @@
       </MenuButton>
       <ImageView fitHeight="90.0" fitWidth="350.0" layoutX="53.0" layoutY="60.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="https://i.ibb.co/WpkkLh2/logga.png"/>
+            <Image url="https://i.ibb.co/WpkkLh2/logga.png" />
          </image>
       </ImageView>
    </children>
