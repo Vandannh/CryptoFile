@@ -148,7 +148,8 @@ public class Client {
 		      }
 		    }
 		  }
-		  Files.delete(path);
+		  if(Files.exists(path))
+			  Files.delete(path);
 		}
 	/**
 	 * Method that lets the client get the filelist
