@@ -202,8 +202,10 @@ public class Client {
 
 	/**
 	 * Method that lets the client logout
+	 * @throws IOException
 	 */
-	public void logout() {
+	public void logout() throws IOException {
+		loggedout();
 		Message message = new Message(2);
 		try {
 			oos.writeObject(message);

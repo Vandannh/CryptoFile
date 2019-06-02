@@ -32,7 +32,11 @@ public class Main extends Application {
 			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			    @Override
 			    public void handle(WindowEvent t) {
-			    	client.logout();
+			    	try {
+						client.logout();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 			        Platform.exit();
 			        System.exit(0);
 			    }
