@@ -18,7 +18,10 @@ import javafx.stage.Stage;
 import main.java.Client;
 /**
  * Class that contains the methods for the UI
- * @author Ramy Behnam, Mattias JÃ¶nsson
+ *
+ * @author Ramy Behnam, Mattias Jönsson
+ * @version 2.0
+ * @since 
  *
  */
 public class UserInterfaceController{
@@ -330,7 +333,13 @@ public class UserInterfaceController{
 		client = Main.getClient();
 		client.setUserInterface(this);
 		String filename = listView.getSelectionModel().getSelectedItem();
-		client.deleteFile(filename, getChosenDirectory());
+		if(filename!=null)
+			client.deleteFile(filename, getChosenDirectory());
+		else {
+			filesRoot.getChildren().remove(resultLabel);
+			resultLabel.setText("Please choose a file to delete");
+			filesRoot.getChildren().add(resultLabel);
+		}
 	}
 	
 	/**
@@ -341,10 +350,22 @@ public class UserInterfaceController{
 		client = Main.getClient();
 		client.setUserInterface(this);
 		String filename = listView.getSelectionModel().getSelectedItem();
-		if(userPageRoot!=null) 
-			client.downloadUserFile(filename, client.getSearchedUser());
-		else
-			client.download(filename, getChosenDirectory());
+			if(userPageRoot!=null) 
+				if(filename!=null)
+					client.downloadUserFile(filename, client.getSearchedUser());
+				else {
+					filesRoot.getChildren().remove(resultLabel);
+					resultLabel.setText("Please choose a file to download");
+					filesRoot.getChildren().add(resultLabel);
+				}
+			else
+				if(filename!=null)
+					client.download(filename, getChosenDirectory());
+				else {
+					filesRoot.getChildren().remove(resultLabel);
+					resultLabel.setText("Please choose a file to download");
+					filesRoot.getChildren().add(resultLabel);
+				}
 	}
 	
 	@FXML
@@ -442,15 +463,16 @@ public class UserInterfaceController{
 	}
 	
 	/**
-	 * Method for updating users files
+	 * Updates the filelist
 	 */
 	public void updateFileList() {
 		getFileList(getChosenDirectory());
 	}
 	
 	/**
-	 * Method for showing users files
-	 * @param files
+	 * Sets the filelist and shows it
+	 * 
+	 * @param files the list of the files
 	 */
 	public void setFileList(String files) {
 		listView = new ListView<String>();
@@ -460,12 +482,9 @@ public class UserInterfaceController{
 			for(int i=listView.getItems().size();i>=0;i--) {
 				listView.getItems().remove(i);
 			}
-		if(!files.isEmpty()) {
-			for(String file : files.split("\n")) {
-				String filename = file.split("\t\t")[0];
-				listView.getItems().add(filename);
-			}
-		}
+		if(!files.isEmpty())
+			for(String file : files.split("\n")) 
+				listView.getItems().add(file.split("\t\t")[0]);
 		Platform.runLater(new Runnable() {
 			public void run() {
 				if(downloadFileList.getChildren().size()>0)
@@ -476,8 +495,8 @@ public class UserInterfaceController{
 	}
 
 	/**
-	 * Method for changing different scenes
-	 * @param type
+	 * Changing different scenes
+	 * @param type the type of change
 	 * @throws IOException
 	 */
 	public void changeScene(int type) throws IOException {
@@ -516,7 +535,7 @@ public class UserInterfaceController{
 	}
 
 	/**
-	 * Method for displaying different messages
+	 * Displays different messages
 	 * @param type
 	 * @param message
 	 * @throws IOException

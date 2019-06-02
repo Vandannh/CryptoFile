@@ -93,10 +93,11 @@ public class AzureFileShareIO {
 		return buffer;
 	}
 
-	public byte[] downloadFile(String directory, String filename) throws StorageException, URISyntaxException {
+	public byte[] downloadFile(String directory, String filename) throws StorageException, URISyntaxException, IOException {
 		CloudFileDirectory rootDir = share.getRootDirectoryReference();
 		CloudFileDirectory userDir = rootDir.getDirectoryReference(directory);	
 		CloudFile file = userDir.getFileReference(filename);
+		createDirectoryLocally("temp");
 		File dfile = new File("temp/"+filename);
 		byte [] buffer = null;
 		try(FileOutputStream fos = new FileOutputStream(dfile);){

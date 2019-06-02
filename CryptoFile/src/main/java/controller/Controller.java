@@ -139,12 +139,63 @@ public class Controller {
 	public byte[] downloadFile(String filename, String directory){
 		try {
 			return azureFileShareIO.downloadFile(directory,filename);
-		} catch (StorageException | URISyntaxException e) {
+		} catch (StorageException | URISyntaxException | IOException e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
 
+	/**
+	 * Gets the filelist from a user
+	 * 
+	 * @param username
+	 * @return the file list
+	 */
+	public String getUserFiles(String username) {
+		username = safeString.completeSafeString(username);
+		return mssql.select("directory", new String[] {"name"}, " type='file' AND parent_id=(select id from directory where name='public' AND user_id=(select id from users where username='"+username+"'))");
+	}
+	
+	/**
+	 * Gets a users public key
+	 * 
+	 * @param username the owner of the key
+	 * @return the public key as a byte array
+	 */
+	public byte[] getUserKey(String username) {
+		username = safeString.completeSafeString(username);
+		String id = mssql.select("users", new String[] {"id"}, "username='"+username+"'").trim();
+		AzureFileShareIO temp = new AzureFileShareIO();
+		temp.connect("keys");
+		try {
+			return temp.downloadKeys(id, "rsa.pub");
+		} catch (StorageException | URISyntaxException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
+	 * Downloads a users file
+	 * 
+	 * @param filename 
+	 * @param username
+	 * @return the file as a byte array
+	 */
+	public byte[] downloadUserFile(String filename, String username) {
+		username = safeString.completeSafeString(username);
+		filename = safeString.completeSafeString(filename);
+		String id = mssql.select("users", new String[] {"id"}, "username='"+username+"'").trim();
+		AzureFileShareIO temp = new AzureFileShareIO();
+		temp.connect("user"+id);
+		try {
+			return temp.downloadFile("public", filename);
+		} catch (StorageException | URISyntaxException | IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	/**
 	 * Deletes a file from Azure File Share
 	 * 

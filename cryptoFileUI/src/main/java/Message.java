@@ -4,20 +4,20 @@ import java.io.Serializable;
 
 /**
  * @author Ramy Behnam, Mattias Jönsson, Markus Masalkovski
- * 
- * Written 10/05-2019
+ * @version 2.0
+ * @since 10/05-2019
  *
  */
 public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
-	public static final int RETURN=0, LOGIN = 1, LOGOUT = 2, REGISTER = 3, UPLOAD = 4, DOWNLOAD = 5, DELETE = 6, FILELIST = 7, UNREGISTER = 8, SEARCH = 9, USERFILELIST = 10, KEY = 11, DOWNLOADUSERFILE = 12;
+	public static final int RETURN=0, LOGIN = 1, LOGOUT = 2, REGISTER = 3, UPLOAD = 4, DOWNLOAD = 5, DELETE = 6, FILELIST = 7, UNREGISTER = 8, SEARCH = 9, USERFILELIST = 10, DOWNLOADUSERFILE = 11;
 	private int type;
 	private String username, email, password, directory, filename, search;
 	private Object returnMessage;
 	private byte[] file;
 
 	/**
-	 * First contructor
+	 * First constructor
 	 * @param type
 	 * @param username
 	 * @param email
@@ -31,7 +31,7 @@ public class Message implements Serializable {
 	}
 	
 	/**
-	 * Second constructor with speciel functions for DOWNLOAD and DELETE constances
+	 * Second constructor with speciel functions for DOWNLOAD and DELETE
 	 * @param type
 	 * @param input1
 	 * @param input2
@@ -46,7 +46,7 @@ public class Message implements Serializable {
 			this.directory=input1;
 			this.filename=input2;
 		}
-		else if(type==12) {
+		else if(type==11) {
 			this.filename=(String)input1;
 			this.username=(String)input2;
 		}
@@ -67,7 +67,7 @@ public class Message implements Serializable {
 	}
 
 	/**
-	 * Fourth constructor with speciel functions for FILELIST and SEARCH constances
+	 * Fourth constructor with special functions for FILELIST and SEARCH
 	 * @param type
 	 * @param input
 	 */

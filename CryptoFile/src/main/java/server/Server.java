@@ -90,15 +90,13 @@ public class Server {
 			} catch (IOException | ClassNotFoundException | NoSuchAlgorithmException e) {}
 		}
 		private Object operation(Message msg) throws NoSuchAlgorithmException, IOException {
+			byte[][] keys = null;
 			switch(msg.getType()) {
 			case Message.LOGIN:	
-				byte[][] keys = controller.login(msg.getUsername(), msg.getPassword());
+				keys = controller.login(msg.getUsername(), msg.getPassword());
 				if(keys==null)					
 					return new Message(0, "Wrong username/password");
 				else {
-					session = new Session(userid);
-					activeSessions.addSession(session);
-					controller.startAutomaticLogout(session);
 					oos.writeObject(keys);
 					return new Message(0, "Logged in");
 				}
@@ -109,6 +107,8 @@ public class Server {
 				String text="";
 				for(String s : controller.register(msg.getUsername(), msg.getEmail(), msg.getPassword()))
 					text+=s+"\n";
+				keys = controller.login(msg.getUsername(), msg.getPassword());
+				oos.writeObject(keys);
 				return new Message(0, text);
 			case Message.UPLOAD: 	
 				String returnMessage = controller.uploadFile(msg.getFile(), msg.getDirectory(), msg.getFilename());
@@ -125,6 +125,11 @@ public class Server {
 				return new Message(0, "Unregistered");
 			case Message.SEARCH:
 				return "search"+controller.search(msg.getSearch());
+			case Message.USERFILELIST:
+				oos.writeObject(new Message(0, controller.getUserKey(msg.getUsername())));
+				return "userfilelist"+controller.getUserFiles(msg.getUsername());
+			case Message.DOWNLOADUSERFILE:
+				return controller.downloadUserFile(msg.getFilename(), msg.getUsername());
 			}
 			
 			return null;

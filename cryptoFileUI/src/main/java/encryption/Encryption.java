@@ -9,9 +9,10 @@ import javax.crypto.spec.*;
 
 /**
  * Contains static methods for generating RSA keypairs, encrypting and decrypting files using AES/RSA encryption.
+ * 
+ * @author Daniel Hägg
  * @version 1.0
  * @since 2019-05-15
- * @author Daniel Hägg
  *
  */
 public class Encryption{
@@ -141,7 +142,7 @@ public class Encryption{
 			Cipher cipherAES = Cipher.getInstance("AES/CBC/PKCS5Padding");
 			cipherAES.init(Cipher.DECRYPT_MODE, secretKeySpec, ivspec);
 			decrypted = new File(inputFile.getPath().replace(".enc", ""));
-			decrypted = getFileName(decrypted);
+			decrypted = setFileName(decrypted);
 			try (FileOutputStream outStream = new FileOutputStream(decrypted)){
 				processFile(cipherAES, inStream, outStream);
 			}
@@ -149,39 +150,30 @@ public class Encryption{
 		return(decrypted);
 	}
 
-	public static File getFileName(File file) {
-        if (file.exists()){
-            String newFileName = file.getName();
-            String simpleName = file.getName().substring(0,newFileName.indexOf("."));
-            String strDigit="";
+	/**
+	 * Sets the filename, adds a number within parentheses if a file with the same name already exits
+	 * 
+	 * @param file 
+	 * @return a file with the new name
+	 * @throws IOException
+	 */
+	public static File setFileName(File file) throws IOException {
+		String filename = file.getPath();
+		String simpleName = file.getPath().substring(0,filename.indexOf("."));            
 
-            try {
-                simpleName = (Integer.parseInt(simpleName)+1+"");
-                File newFile = new File(file.getParent()+"/"+simpleName+getExtension(file.getName()));
-                return getFileName(newFile);
-            }catch (Exception e){}
-
-            for (int i=simpleName.length()-1;i>=0;i--){
-                if (!Character.isDigit(simpleName.charAt(i))){
-                    strDigit = simpleName.substring(i+1);
-                    simpleName = simpleName.substring(0,i+1);
-                    break;
-                }
-            }
-
-            if (strDigit.length()>0){
-                simpleName = simpleName+(Integer.parseInt(strDigit)+1);
-            }else {
-                simpleName+="1";
-            }
-
-            File newFile = new File(file.getParent()+"/"+simpleName+getExtension(file.getName()));
-            return getFileName(newFile);
-        }
-        return file;
-    }
+		File newFile = new File(filename);
+		int fileNo = 1;
+		String newFileName = "";
+		if (newFile.exists() && !newFile.isDirectory()) {
+			while(newFile.exists()){
+				newFileName = simpleName+"(" + fileNo++ + ")"+getExtension(file.getName());
+				newFile = new File(newFileName);
+			}
+		} 
+		return newFile;
+	}
 
 	public static String getExtension(String name) {
-	        return name.substring(name.lastIndexOf("."));
+		return name.substring(name.lastIndexOf("."));
 	}
 }

@@ -1,22 +1,23 @@
 package main.java;
 
 import java.io.Serializable;
+
 /**
- * @author Mattias Jönsson, Markus Masalkovski	
- * 
- * Written 30/05-2019
+ * @author Ramy Behnam, Mattias Jönsson, Markus Masalkovski
+ * @version 2.0
+ * @since 10/05-2019
  *
  */
 public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
-	public static final int RETURN=0, LOGIN = 1, LOGOUT = 2, REGISTER = 3, UPLOAD = 4, DOWNLOAD = 5, DELETE = 6, FILELIST = 7, UNREGISTER = 8, SEARCH = 9;
+	public static final int RETURN=0, LOGIN = 1, LOGOUT = 2, REGISTER = 3, UPLOAD = 4, DOWNLOAD = 5, DELETE = 6, FILELIST = 7, UNREGISTER = 8, SEARCH = 9, USERFILELIST = 10, DOWNLOADUSERFILE = 11;
 	private int type;
 	private String username, email, password, directory, filename, search;
 	private Object returnMessage;
 	private byte[] file;
 
 	/**
-	 * First Constructor 
+	 * First constructor
 	 * @param type
 	 * @param username
 	 * @param email
@@ -30,7 +31,7 @@ public class Message implements Serializable {
 	}
 	
 	/**
-	 * Second Constructor with speciel functions for DOWNLOAD and DELETE constances
+	 * Second constructor with speciel functions for DOWNLOAD and DELETE
 	 * @param type
 	 * @param input1
 	 * @param input2
@@ -45,10 +46,14 @@ public class Message implements Serializable {
 			this.directory=input1;
 			this.filename=input2;
 		}
+		else if(type==11) {
+			this.filename=(String)input1;
+			this.username=(String)input2;
+		}
 	}
 	
 	/**
-	 * Third Constructor 
+	 * Third constructor 
 	 * @param type
 	 * @param directory
 	 * @param file
@@ -62,7 +67,7 @@ public class Message implements Serializable {
 	}
 
 	/**
-	 * Fourth Constructor with special functions for FILELIST and SEARCH constances
+	 * Fourth constructor with special functions for FILELIST and SEARCH
 	 * @param type
 	 * @param input
 	 */
@@ -74,10 +79,12 @@ public class Message implements Serializable {
 			this.directory=(String)input;
 		else if(type==9)
 			this.search=(String)input;
+		else if(type==10)
+			this.username=(String)input;
 	}
 	
 	/**
-	 * Fifth constructor 
+	 * Fifth constructor
 	 * @param type
 	 */
 	public Message(int type) {
@@ -85,7 +92,7 @@ public class Message implements Serializable {
 	}
 
 	/**
-	 * @return the type
+	 * @return type
 	 */
 	public int getType() {
 		return type;

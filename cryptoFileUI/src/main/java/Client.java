@@ -3,17 +3,15 @@ package main.java;
 import java.io.*;
 import java.net.*;
 import java.nio.file.*;
-
 import org.apache.commons.io.FileUtils;
-
 import application.*;
 import main.java.Message;
 import main.java.encryption.Encryption;
 /**
  * Class for the client
- * @author Mattias JÃ¶nnson, Markus Masalkovski
- *
- *	Written 30/05-2019
+ * @author Mattias Jönnson
+ * @version 2.0
+ * @since 30/05-2019
  */
 public class Client {
 	private ObjectOutputStream oos;
@@ -31,11 +29,9 @@ public class Client {
 
 	public Client(UserInterfaceController uic){
 		this.uic=uic;
-		String home = System.getProperty("user.home");
-		String separator = System.getProperty("file.separator");
-		downloadPath = home + separator + "Downloads" + separator;
+		setDownloadPath();
 		try {
-			Socket clientSocket = new Socket("137.135.251.26", 12345);
+			Socket clientSocket = new Socket("localhost", 12345);
 			oos = new ObjectOutputStream(clientSocket.getOutputStream());
 			ois = new ObjectInputStream(clientSocket.getInputStream());
 			new ListenFromServer().start();
@@ -43,6 +39,13 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
+	
+	public void setDownloadPath() {
+		String home = System.getProperty("user.home");
+		String separator = System.getProperty("file.separator");
+		downloadPath = home + separator + "Downloads" + separator;
+	}
+	
 	/**
 	 * Method that sets the userinterface
 	 * @param uic
@@ -51,20 +54,24 @@ public class Client {
 		this.uic=uic;
 	}
 	/**
-	 * Method that sets the searchedUser
+	 * Sets the searchedUser
 	 * @param searchedUser
 	 */
 	public void setSearchedUser(String searchedUser) {
 		this.searchedUser=searchedUser;
 	}
+	
 	/**
+	 * Gets the username of the searched user
+	 * 
 	 * @return the searchedUser
 	 */
 	public String getSearchedUser() {
 		return searchedUser;
 	}
 	/**
-	 * Method that lets the client dowload a file
+	 * Sends the information of the file the user wants to download, to the server 
+	 * 
 	 * @param nameOfDownloadedFile
 	 * @param directory
 	 */
@@ -78,7 +85,8 @@ public class Client {
 		}
 	}
 	/**
-	 * Method that lets the client upload a file
+	 * Sends the information of the file the user wants to upload, to the server 
+	 * 
 	 * @param file
 	 * @param directory
 	 * @param dir
@@ -101,7 +109,8 @@ public class Client {
 		}
 	}
 	/**
-	 * Method that lets the client register as a user
+	 * Sends the information of the user wanting to register 
+	 * 
 	 * @param username
 	 * @param email
 	 * @param password
@@ -115,7 +124,8 @@ public class Client {
 		}
 	}
 	/**
-	 * Method that lets the client login
+	 * Sends the information of the user wanting to login 
+	 * 
 	 * @param username
 	 * @param password
 	 */
@@ -128,7 +138,8 @@ public class Client {
 		}
 	}
 	/**
-	 * Method that lets the client delete a file
+	 * Sends the information of the file the user wants to download 
+	 * 
 	 * @param filename
 	 * @param directory
 	 */
@@ -140,7 +151,14 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
-	void deleteDirectory(Path path) throws IOException {
+	
+	/**
+	 * Deletes a directory
+	 * 
+	 * @param path
+	 * @throws IOException
+	 */
+	private void deleteDirectory(Path path) throws IOException {
 		  if (Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)) {
 		    try (DirectoryStream<Path> entries = Files.newDirectoryStream(path)) {
 		      for (Path entry : entries) {
@@ -152,7 +170,8 @@ public class Client {
 			  Files.delete(path);
 		}
 	/**
-	 * Method that lets the client get the filelist
+	 * Sends the information of the filelist the user want to get
+	 * 
 	 * @param directory
 	 */
 	public void getFilelist(String directory) {
@@ -164,9 +183,10 @@ public class Client {
 		}
 	}
 	/**
-	 * Method that reads a file into a byte array
-	 * @param file
-	 * @return
+	 * Converts a File-object to a byte array
+	 * 
+	 * @param file the file to convert
+	 * @return the file as byte array
 	 */
 	private byte[] readFileToByteArray(File file){
 		FileInputStream fis = null;
@@ -193,8 +213,9 @@ public class Client {
 		}
 	}
 	/**
-	 * Method that deletes a file
-	 * @param filename
+	 * Deletes a file
+	 * 
+	 * @param filename the name of the file being deleted
 	 */
 	private void deleteFile(String filename) {
 		File file = new File(filename);
@@ -202,7 +223,8 @@ public class Client {
 	}
 
 	/**
-	 * Method that lets the client logout
+	 * Sends to the server that the user want to logout 
+	 * 
 	 * @throws IOException
 	 */
 	public void logout() throws IOException {
@@ -226,6 +248,11 @@ public class Client {
 		}
 	}
 
+	/**
+	 * Gets all the files from another users public directory
+	 * 
+	 * @param username  
+	 */
 	public void getUserFiles(String username) {
 		Message message = new Message(10, username);
 		try {
@@ -236,9 +263,15 @@ public class Client {
 	}
 
 
+	/**
+	 * Downloads a file from another users public directory
+	 * 
+	 * @param filename
+	 * @param username
+	 */
 	public void downloadUserFile(String filename, String username) {
 		this.nameOfDownloadedFile=filename;
-		Message message = new Message(12, filename, username);
+		Message message = new Message(11, filename, username);
 		try {
 			oos.writeObject(message);
 		} catch (IOException e) {
@@ -247,26 +280,38 @@ public class Client {
 	}
 
 	/**
-	 * Method that lets the user search
-	 * @param text
+	 * Sends the information of username the user have searched after to the server
+	 *
+	 * @param username
 	 */
-	public void search(String text) {
-		Message message = new Message(9, text);
+	public void search(String username) {
+		Message message = new Message(9, username);
 		try {
 			oos.writeObject(message);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * Deletes all necessary methods when a user logs out
+	 * 
+	 * @throws IOException
+	 */
 	private void loggedout() throws IOException  {
 		deleteFile(privateKey);
 		deleteFile(publicKey);
 		deleteDirectory(Paths.get(new File("temp").getAbsolutePath()));
 	}
 
+	/**
+	 * Inner class that listens on the server
+	 * 
+	 * @author Mattias Jönsson
+	 *
+	 */
 	private class ListenFromServer extends Thread {
-		/**
-		 * Inner class that listens from the server
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#run()
 		 */
 		public synchronized void run() {
 			boolean running=true;
@@ -285,9 +330,10 @@ public class Client {
 						keyPair((byte[][])obj);
 					}
 					else if(obj instanceof Message){
-						if(((Message)obj).getReturnMessage() instanceof String) {
-							String returnMessage = (String) ((Message)obj).getReturnMessage();
-							switch(returnMessage.trim()) {
+						Message msg = (Message)obj;
+						if(msg.getReturnMessage() instanceof String) {
+							String returnMessage = msg.getReturnMessage().toString().trim();
+							switch(returnMessage) {
 							case "Logged in":
 								uic.changeScene(1);
 								break;
@@ -323,8 +369,8 @@ public class Client {
 								break;
 							}
 						}
-						else if (((Message)obj).getReturnMessage() instanceof byte[]) {
-							byte[] key = (byte[])((Message)obj).getReturnMessage();
+						else if (msg.getReturnMessage() instanceof byte[]) {
+							byte[] key = (byte[]) msg.getReturnMessage();
 							System.out.println("user key downloaded");
 							try(OutputStream os = new FileOutputStream("temp/userKey.pub")){
 								os.write(key);
@@ -351,17 +397,18 @@ public class Client {
 			}
 		}
 		/**
+		 * Decrypt and writes downloaded file to the harddrive 
 		 *
-		 * @param obj
+		 * @param byteArray the byteArray of the file
 		 * @return true if the file is downloaded
 		 */
-		private boolean downloadedFile(byte[] obj) {
+		private boolean downloadedFile(byte[] byteArray) {
 			try {
-				FileUtils.writeByteArrayToFile(new File(downloadPath+nameOfDownloadedFile), obj);
+				FileUtils.writeByteArrayToFile(new File(downloadPath+nameOfDownloadedFile), byteArray);
 				if(uic.isPublic())
-					Encryption.decrypt(new File(downloadPath+nameOfDownloadedFile), privateKey, "pvt");
-				else if(uic.isPrivate())
 					Encryption.decrypt(new File(downloadPath+nameOfDownloadedFile), publicKey, "pub");
+				else if(uic.isPrivate())
+					Encryption.decrypt(new File(downloadPath+nameOfDownloadedFile), privateKey, "pvt");
 				else if(uic.isOtherUser())
 					Encryption.decrypt(new File(downloadPath+nameOfDownloadedFile), "temp/userKey.pub", "pub");
 
@@ -375,8 +422,9 @@ public class Client {
 		}
 
 		/**
-		 * Writes a keypair to the server
-		 * @param keyPair
+		 * Writes a keypair to the harddrive
+		 * 
+		 * @param keyPair the encryption keyPair in byte arrays
 		 * @throws FileNotFoundException
 		 * @throws IOException
 		 */
