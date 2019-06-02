@@ -24,9 +24,9 @@
             <Font name="Helvetica Neue" size="14.0" />
          </font>
       </Button>
-      <Label fx:id="incorrectSignIn" layoutX="50.0" layoutY="385.0" prefHeight="18.0" prefWidth="350.0" text="" textFill="#cd0f0f">
+      <Label fx:id="incorrectSignIn" layoutX="122.0" layoutY="388.0" prefHeight="18.0" prefWidth="207.0" textFill="#cd0f0f">
          <font>
-            <Font name="Helvetica Neue Bold" size="14.0" />
+            <Font name="Helvetica Neue" size="14.0" />
          </font>
       </Label>
       <ImageView fitHeight="90.0" fitWidth="350.0" layoutX="51.0" layoutY="60.0" pickOnBounds="true" preserveRatio="true">

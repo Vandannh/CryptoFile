@@ -519,9 +519,9 @@ public class UserInterfaceController{
 					break;
 				case 2:
 					String[] messages = message.split("\n");
-					usernameError.setText(messages[0]);
-					passwordError.setText(messages[2]);
-					emailError.setText(messages[1]);
+					usernameError.setText(messages[1]);
+					passwordError.setText("Password must contain:\n1 number, 1 letter and 8 characters");
+					emailError.setText(messages[2]);
 					signUpRoot.getChildren().remove(loader);
 					usernameSignUp.setDisable(false);
 					passwordSignUp.setDisable(false);
