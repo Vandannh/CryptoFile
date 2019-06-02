@@ -13,7 +13,7 @@ import test2.ConnectionStrings;
  * 
  * @version 1.0
  * @since 2019-04-14
- * @author Mattias Jï¿½nsson
+ * @author Mattias Jönsson
  *
  */
 public class Registration {

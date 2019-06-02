@@ -228,6 +228,11 @@ public class Controller {
 		mssql.delete("users", "id="+userid);
 		mssql.delete("directory", "user_id="+userid);
 		azureFileShareIO.deleteShare("user"+userid);
+		AzureFileShareIO temp = new AzureFileShareIO();
+		temp.connect("keys");
+		temp.deleteFile(userid, "rsa.key");
+		temp.deleteFile(userid, "rsa.pub");
+		temp.deleteDirectory(userid);
 	}
 	
 	/**
@@ -333,7 +338,6 @@ public class Controller {
 		public void run(){
 			while(!Thread.interrupted())
 				if(session.getSecondsPassed() == session.sessionMaxTime) {
-					System.out.println("Logged out");
 //					server.logout();
 					interrupt();
 				}

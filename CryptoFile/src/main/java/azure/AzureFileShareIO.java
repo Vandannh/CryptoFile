@@ -69,8 +69,6 @@ public class AzureFileShareIO {
 			CloudFileDirectory userDir = rootDir.getDirectoryReference(directory);
 			CloudFile cloudFile = userDir.getFileReference(filename);
 			cloudFile.uploadFromByteArray(buffer, 0, buffer.length);
-			System.out.println(directory);
-			System.out.println(checkAvailableSpace()); //MARK: for test purpose
 		} catch (StorageException | URISyntaxException | IOException e) {
 			e.printStackTrace();
 		}
@@ -88,7 +86,6 @@ public class AzureFileShareIO {
 		CloudFileDirectory userDir = rootDir.getDirectoryReference(directory);	
 		CloudFile file = userDir.getFileReference(filename);
 		byte[] buffer = new byte[file.getStreamWriteSizeInBytes()];	
-		System.out.println(filename+"- "+file.getStreamWriteSizeInBytes());
 		file.downloadToByteArray(buffer, 0);
 		return buffer;
 	}

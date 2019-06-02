@@ -21,7 +21,7 @@ import main.java.Client;
  *
  * @author Ramy Behnam, Mattias Jönsson
  * @version 2.0
- * @since 
+ * @since 2019-05-10
  *
  */
 public class UserInterfaceController{

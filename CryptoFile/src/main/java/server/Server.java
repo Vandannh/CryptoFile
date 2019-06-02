@@ -43,7 +43,6 @@ public class Server {
 	 * @throws ClassNotFoundException
 	 */
 	public void start() throws IOException, ClassNotFoundException {
-		System.out.println("Server started");
 		ServerSocket serverSocket = new ServerSocket(12345);
 		running=true;
 		ExecutorService executor = Executors.newFixedThreadPool(10);
@@ -74,7 +73,6 @@ public class Server {
 			this.socket=socket;
 		}
 		public void run() {
-			System.out.println("Client connected");
 			boolean running = true;
 			try {
 				ois = new ObjectInputStream(socket.getInputStream());
@@ -121,7 +119,6 @@ public class Server {
 				return controller.getFiles(msg.getDirectory());
 			case Message.UNREGISTER:
 				controller.unregisterUser();
-				activeSessions.removeSession(session);
 				return new Message(0, "Unregistered");
 			case Message.SEARCH:
 				return "search"+controller.search(msg.getSearch());

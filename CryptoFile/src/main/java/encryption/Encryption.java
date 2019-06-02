@@ -9,9 +9,10 @@ import javax.crypto.spec.*;
 
 /**
  * Contains static methods for generating RSA keypairs, encrypting and decrypting files using AES/RSA encryption.
- * @version 2.0
- * @since 2019-05-24
- * @author Daniel Hï¿½gg
+ * 
+ * @author Daniel Hägg
+ * @version 1.0
+ * @since 2019-05-15
  *
  */
 public class Encryption{
@@ -65,12 +66,21 @@ public class Encryption{
 	 * @return File The encrypted file is returned
 	 * @throws Exception
 	 */
-	public static File encrypt(File inputFile, String key)throws Exception{
-		byte[] keyBytes = Files.readAllBytes(Paths.get(key));
-		PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
-		KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-		PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
-
+	public static File encrypt(File inputFile, String keyPath, String key)throws Exception{
+		Cipher cipherRSA = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+		if(key == "pvt") {
+			byte[] keyBytes = Files.readAllBytes(Paths.get(keyPath));
+			PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
+			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+			PrivateKey pvtKey = keyFactory.generatePrivate(keySpec);
+			cipherRSA.init(Cipher.ENCRYPT_MODE, pvtKey);
+		} else if(key == "pub") {
+			byte[] bytes = Files.readAllBytes(Paths.get(keyPath));
+			X509EncodedKeySpec keySpec = new X509EncodedKeySpec(bytes);
+			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+			PublicKey pubKey = keyFactory.generatePublic(keySpec);
+			cipherRSA.init(Cipher.ENCRYPT_MODE, pubKey);
+		}
 		KeyGenerator keyGen = KeyGenerator.getInstance("AES");
 		keyGen.init(128);
 		SecretKey secretKey = keyGen.generateKey();
@@ -80,8 +90,6 @@ public class Encryption{
 		IvParameterSpec ivSpec = new IvParameterSpec(iv);
 
 		try (FileOutputStream outStream = new FileOutputStream(inputFile + ".enc")) {
-			Cipher cipherRSA = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-			cipherRSA.init(Cipher.ENCRYPT_MODE, privateKey);
 			byte[] fileBytes = cipherRSA.doFinal(secretKey.getEncoded());
 			outStream.write(fileBytes);
 			System.err.println("AES Key Length: " + fileBytes.length);
@@ -104,17 +112,26 @@ public class Encryption{
 	 * @return File The decrypted file is returned
 	 * @throws Exception
 	 */
-	public static File decrypt(File inputFile, String key) throws Exception{
+	public static File decrypt(File inputFile, String keyPath, String key) throws Exception{
 		File decrypted = null;
-		String pubKeyFile = key;
-		byte[] bytes = Files.readAllBytes(Paths.get(pubKeyFile));
-		X509EncodedKeySpec keySpec = new X509EncodedKeySpec(bytes);
-		KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-		PublicKey publicKey = keyFactory.generatePublic(keySpec);
+		Cipher cipherRSA = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+		if(key == "pub") {
+			String pubKeyFile = keyPath;
+			byte[] bytes = Files.readAllBytes(Paths.get(pubKeyFile));
+			X509EncodedKeySpec keySpec = new X509EncodedKeySpec(bytes);
+			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+			PublicKey publicKey = keyFactory.generatePublic(keySpec);
+			cipherRSA.init(Cipher.DECRYPT_MODE, publicKey);
+		} else {
+			byte[] keyBytes = Files.readAllBytes(Paths.get(keyPath));
+			PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
+			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+			PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
+			cipherRSA.init(Cipher.DECRYPT_MODE, privateKey);
+		}
+
 		try (FileInputStream inStream = new FileInputStream(inputFile)) {
 			SecretKeySpec secretKeySpec = null;
-			Cipher cipherRSA = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-			cipherRSA.init(Cipher.DECRYPT_MODE, publicKey);
 			byte[] fileBytes = new byte[256];
 			inStream.read(fileBytes);
 			byte[] keyBytes = cipherRSA.doFinal(fileBytes);
@@ -125,7 +142,7 @@ public class Encryption{
 			Cipher cipherAES = Cipher.getInstance("AES/CBC/PKCS5Padding");
 			cipherAES.init(Cipher.DECRYPT_MODE, secretKeySpec, ivspec);
 			decrypted = new File(inputFile.getPath().replace(".enc", ""));
-			decrypted = getFileName(decrypted);
+			decrypted = setFileName(decrypted);
 			try (FileOutputStream outStream = new FileOutputStream(decrypted)){
 				processFile(cipherAES, inStream, outStream);
 			}
@@ -133,39 +150,36 @@ public class Encryption{
 		return(decrypted);
 	}
 
-	public static File getFileName(File file) {
-        if (file.exists()){
-            String newFileName = file.getName();
-            String simpleName = file.getName().substring(0,newFileName.indexOf("."));
-            String strDigit="";
+	/**
+	 * Sets the filename, adds a number within parentheses if a file with the same name already exits
+	 * 
+	 * @param file 
+	 * @return a file with the new name
+	 * @throws IOException
+	 */
+	public static File setFileName(File file) throws IOException {
+		String filename = file.getPath();
+		String simpleName = file.getPath().substring(0,filename.indexOf("."));            
 
-            try {
-                simpleName = (Integer.parseInt(simpleName)+1+"");
-                File newFile = new File(file.getParent()+"/"+simpleName+getExtension(file.getName()));
-                return getFileName(newFile);
-            }catch (Exception e){}
+		File newFile = new File(filename);
+		int fileNo = 1;
+		String newFileName = "";
+		if (newFile.exists() && !newFile.isDirectory()) {
+			while(newFile.exists()){
+				newFileName = simpleName+"(" + fileNo++ + ")"+getExtension(file.getName());
+				newFile = new File(newFileName);
+			}
+		} 
+		return newFile;
+	}
 
-            for (int i=simpleName.length()-1;i>=0;i--){
-                if (!Character.isDigit(simpleName.charAt(i))){
-                    strDigit = simpleName.substring(i+1);
-                    simpleName = simpleName.substring(0,i+1);
-                    break;
-                }
-            }
-
-            if (strDigit.length()>0){
-                simpleName = simpleName+(Integer.parseInt(strDigit)+1);
-            }else {
-                simpleName+="1";
-            }
-
-            File newFile = new File(file.getParent()+"/"+simpleName+getExtension(file.getName()));
-            return getFileName(newFile);
-        }
-        return file;
-    }
-
+	/**
+	 * Gets the extension of a filename
+	 * 
+	 * @param name
+	 * @return
+	 */
 	public static String getExtension(String name) {
-	        return name.substring(name.lastIndexOf("."));
+		return name.substring(name.lastIndexOf("."));
 	}
 }

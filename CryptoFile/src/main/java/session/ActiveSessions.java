@@ -4,7 +4,10 @@ import java.util.ArrayList;
 
 /**
  * ActiveSessions stores and provides sessions
- * @author Broceps
+ * 
+ * @since 2019-04-29
+ * @version 1.0
+ * @author Robin Andersson
  *
  */
 public class ActiveSessions {

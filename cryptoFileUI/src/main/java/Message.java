@@ -3,9 +3,9 @@ package main.java;
 import java.io.Serializable;
 
 /**
- * @author Ramy Behnam, Mattias JÃ¶nsson, Markus Masalkovski
+ * @author Mattias Jönsson
  * @version 2.0
- * @since 10/05-2019
+ * @since 2019-05-10
  *
  */
 public class Message implements Serializable {

@@ -1,10 +1,11 @@
 package main.java.text;
 
-
 /**
- * @author Mattias JÃ¶nnsson
+ * This class is used to make sure a string is safe
  * 
- * Written 30/05-2019
+ * @author Mattias Jönnsson
+ * @version 1.0
+ * @since 2019-05-22
  *
  */
 public class SafeString {

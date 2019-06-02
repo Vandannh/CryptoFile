@@ -9,7 +9,7 @@ import org.mindrot.jbcrypt.BCrypt;
  * Session has a purpose of being established for every client connected
  * to server. The session keeps track of an active client and disconnects
  * the client after a certain time of inactivity is reached.
- * @author Broceps
+ * @author Robin Andersson
  *
  */
 public class Session {

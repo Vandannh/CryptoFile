@@ -173,6 +173,12 @@ public class Encryption{
 		return newFile;
 	}
 
+	/**
+	 * Gets the extension of a filename
+	 * 
+	 * @param name
+	 * @return
+	 */
 	public static String getExtension(String name) {
 		return name.substring(name.lastIndexOf("."));
 	}
