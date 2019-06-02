@@ -9,22 +9,39 @@ import main.java.Message;
 import main.java.controller.*;
 import main.java.session.ActiveSessions;
 import main.java.session.Session;
-
+/**
+ * Server class
+ * @author Mattias Jönsson
+ *
+ */
 public class Server {
 	private boolean running;
 	private Controller controller;
 	private String userid;
 	private ActiveSessions activeSessions = new ActiveSessions();
 
+	/**
+	 * constructor that initiate controller
+	 */
 	public Server() {
 		controller = new Controller();
 	}
 
+	/**
+	 * Main method
+	 * @param argv
+	 * @throws Exception
+	 */
 	public static void main(String argv[]) throws Exception {
 		Server server = new Server();
 		server.start();
 	}
 
+	/**
+	 * Method that are used for starting the server
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	public void start() throws IOException, ClassNotFoundException {
 		System.out.println("Server started");
 		ServerSocket serverSocket = new ServerSocket(12345);
@@ -42,6 +59,11 @@ public class Server {
 
 	}
 
+	/**
+	 * Inner class that handles the client
+	 * @author Mattias Jönnson
+	 *
+	 */
 	private class ClientHandler extends Thread{
 		Socket socket;
 		ObjectInputStream ois;

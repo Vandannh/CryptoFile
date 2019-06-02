@@ -18,7 +18,7 @@ import main.java.text.*;
  * 
  * @version 1.0
  * @since 2019-04-17
- * @author Mattias J�nsson & Robin Andersson
+ * @author Mattias J?nsson & Robin Andersson
  *
  */
 public class Controller {
@@ -58,6 +58,11 @@ public class Controller {
 		else
 			return null;
 	}
+	
+	/**
+	 * Method that retrieves the key pair
+	 * @return
+	 */
 	public byte[][] getKeyPair() {
 		AzureFileShareIO temp = new AzureFileShareIO();
 		temp.connect("keys");
@@ -165,12 +170,19 @@ public class Controller {
 		return ch>='0'&&ch<='9';
 	}
 
+	/**
+	 * Method that deletes the user from the database
+	 */
 	public void unregisterUser() {
 		mssql.delete("users", "id="+userid);
 		mssql.delete("directory", "user_id="+userid);
 		azureFileShareIO.deleteShare("user"+userid);
 	}
 	
+	/**
+	 * Method that deletes file from database
+	 * @param filename
+	 */
 	private void deleteFile(String filename) {
 		File file = new File(filename);
 		file.delete();
@@ -186,6 +198,11 @@ public class Controller {
 		return true;
 	}
 	
+	/**
+	 * Method that cinverts files to byte array
+	 * @param file
+	 * @return
+	 */
 	public byte[] readFileToByteArray(File file){
 		FileInputStream fis = null;
 		byte[] bArray = new byte[(int) file.length()];
@@ -198,29 +215,65 @@ public class Controller {
 		}
 		return bArray;
 	}
+	
+	/**
+	 * Method that retrieves the files from database
+	 * @param directory
+	 * @return
+	 */
 	public String getFiles(String directory) {
 		return mssql.select("directory", new String[]{"name", "parent_id"}, "type='file' AND user_id='"+userid+"' AND parent_id=(select id from directory where name='"+directory+"' AND user_id="+userid+")");
 	}
 	
+	/**
+	 * Method that searches for the user in the database
+	 * @param username
+	 * @return
+	 */
 	public String search(String username) {
         return mssql.select("Users", new String[] {"username"}, "username Like '%" + username + "%'");
     }
 	
+	/**
+	 * Method thay checks if the file already exists
+	 * @param filename
+	 * @param directory
+	 * @return
+	 */
 	public boolean fileExist(String filename, String directory) {
 		String file = mssql.select("directory", new String[]{"name"}, "name='"+filename+"' AND type='file' AND user_id='"+userid+"' AND parent_id=(select id from directory where name='"+directory+"' AND user_id="+userid+")");
 		return (!file.isEmpty());
 	}
+	
+	/**
+	 * Method that retrieves the available space in the database
+	 * @return
+	 */
 	public double getAvailableSpace() {
 		return azureFileShareIO.checkAvailableSpace();
 	}
+	
+	/**
+	 * Method that retrieves the percentage of the used memory 
+	 * @return
+	 */
 	public double getUsedMemoryPercentage() {
 		return azureFileShareIO.usedMemoryPercentage();
 	}
 	
+	/**
+	 * 
+	 * @param session
+	 */
 	public void startAutomaticLogout(Session session) {
 		new AutomaticLogout(session).start();
 	}
 	
+	/**
+	 * Inner class
+	 * @author Mattias J?nsson & Robin Andersson
+	 *
+	 */
 	private class AutomaticLogout extends Thread{
 		private Session session;
 		public AutomaticLogout(Session session) {
